@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Google&#8217;s AJAX Libraries API - Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="This might be old news (released end of May, I&rsquo;m soooo behind the times), but Google are supporting hosting for popular javascript libraries, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rickerbh.github.io/2008/08/05/googles-ajax-libraries-api">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rickerbh.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Google&#8217;s AJAX Libraries API</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-08-05T15:01:12+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>3:01 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This might be old news (released end of May, I&rsquo;m soooo behind the times), but Google are supporting hosting for popular javascript libraries, and they are promoting people using their copies of the libraries rather than hosting their own.  I only just found this out, and I think it&rsquo;s pretty cool</p>
+
+<p><a href="http://code.google.com/apis/ajaxlibs/" target="_blank"><a href="http://code.google.com/apis/ajaxlibs/">http://code.google.com/apis/ajaxlibs/</a></a></p>
+
+<p>The service supports either <a href="http://code.google.com/apis/ajax/documentation/" target="_blank">programmatic inclusion</a> using the google jsapi library, or <a href="http://code.google.com/apis/ajaxlibs/documentation/index.html#AjaxLibraries" target="_blank">linking directly</a> to their hosted copies.</p>
+
+<p>Good things about this</p>
+
+<ul>
+    <li>You save bandwidth costs, as your users download the libraries from google</li>
+    <li>Your users get faster browsing ON OTHER DOMAINS, because the more people that use a single source, the more caching should happen</li>
+</ul>
+
+
+<p>Bad things about this</p>
+
+<ul>
+    <li>Google have more opportunity to <span style="text-decoration: line-through;">don&#8217;t</span> be evil - the biggest concern for me is their increased ability to understanding which users use your application, and propensity for understanding <em>how</em> they use it.  A malicious individual within the company could put some nasty code in the js to screw with your site, or monitor and transmit back to googlebase what the user is up to.  It&#8217;s <em>very</em> unlikely, but it could happen.</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn"><a href="/about">Hamish Rickerby</a></span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2008-08-05T15:01:12+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>3:01 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rickerbh.github.io/2008/08/05/googles-ajax-libraries-api/" data-via="rickerbh" data-counturl="http://rickerbh.github.io/2008/08/05/googles-ajax-libraries-api/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2008/07/30/there-is-a-better-way-and-its-about-time-i-started-showing-people/" title="Previous Post: There is a better way (and it's about time I started showing people)">&laquo; There is a better way (and it&#8217;s about time I started showing people)</a>
+      
+      
+        <a class="basic-alignment right" href="/2008/08/15/radiant-cms-tutorial-custom-javascript-in-admin-pages/" title="Next Post: Radiant CMS Tutorial - Custom Javascript in Admin Pages">Radiant CMS Tutorial - Custom Javascript in Admin Pages &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/05/17/brief-update/">Brief Update</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>For Hire?</h1>
+  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
+  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rickerbh.github.io/2008/08/05/googles-ajax-libraries-api/';
+        var disqus_url = 'http://rickerbh.github.io/2008/08/05/googles-ajax-libraries-api/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

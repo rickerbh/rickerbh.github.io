@@ -1,0 +1,1213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Hamish Rickerby]]></title>
+  <link href="http://rickerbh.github.io/atom.xml" rel="self"/>
+  <link href="http://rickerbh.github.io/"/>
+  <updated>2016-07-04T13:58:54+10:00</updated>
+  <id>http://rickerbh.github.io/</id>
+  <author>
+    <name><![CDATA[Hamish Rickerby]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Meteor, Heroku, and Bcrypt]]></title>
+    <link href="http://rickerbh.github.io/2016/06/29/meteor-heroku-and-bcrypt/"/>
+    <updated>2016-06-29T11:07:11+10:00</updated>
+    <id>http://rickerbh.github.io/2016/06/29/meteor-heroku-and-bcrypt</id>
+    <content type="html"><![CDATA[<p>Just had a very frustrating day. Was getting a deployment error on Heroku with a Meteor app I&rsquo;m making.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Starting process with command `node build/bundle/main.js`
+</span><span class='line'>/app/build/bundle/programs/server/boot.js:324
+</span><span class='line'>}).run();
+</span><span class='line'>   ^
+</span><span class='line'>Error: Module did not self-register.
+</span><span class='line'>    at Module.require (module.js:365:17)
+</span><span class='line'>    at Module._compile (module.js:460:26)
+</span><span class='line'>    at Module.load (module.js:355:32)
+</span><span class='line'>    at Object.&lt;anonymous&gt; (/app/build/bundle/programs/server/npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt/bcrypt.js:3:35)
+</span><span class='line'>    at Error (native)
+</span><span class='line'>    at require (module.js:384:17)
+</span><span class='line'>    at Function.Module._load (module.js:310:12)
+</span><span class='line'>    at Object.Module._extensions..js (module.js:478:10)
+</span><span class='line'>    at bindings (/app/build/bundle/programs/server/npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt/node_modules/bindings/bindings.js:74:15)
+</span><span class='line'>    at Module.load (module.js:355:32)
+</span><span class='line'>Process exited with status 1
+</span><span class='line'>State changed from starting to crashed</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I was using the build pack at <a href="https://github.com/srbartlett/heroku-buildpack-meteor">https://github.com/srbartlett/heroku-buildpack-meteor</a> due to its support for Meteor 1.3.</p>
+
+<p>The issue seems to be that the <code>npm-bcrypt</code> atmosphere package doesn&rsquo;t force a recompliation of the npm <code>bcrypt</code> package via <code>node-gyp</code> (I could be wrong here, but that&rsquo;s what it seems like). It seems that the atmosphere package includes the wrong (or a fixed?) architecture, where as what we actually need is to recompile for the current target. To fix this, I&rsquo;ve altered the buildpack to remove the bundled <code>bcrypt</code> package, reinstall from source, and copy back to the bundled location. The reinstall from source seems to force <code>node-gyp</code> to compile for the correct architecture.</p>
+
+<p>My altered buildpack is available at <a href="https://github.com/rickerbh/heroku-buildpack-meteor">https://github.com/rickerbh/heroku-buildpack-meteor</a> if anyone wants it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Back to Basics - Editors]]></title>
+    <link href="http://rickerbh.github.io/2016/06/27/back-to-basics-editors/"/>
+    <updated>2016-06-27T20:54:48+10:00</updated>
+    <id>http://rickerbh.github.io/2016/06/27/back-to-basics-editors</id>
+    <content type="html"><![CDATA[<p>My boss bought me a copy of the seminal classic <a href="http://www.bookdepository.com/Pragmatic-Programmer-Andrew-Hunt/9780201616224?a_aid=rickerbh">The Pragmatic Programmer</a>. It&rsquo;s full of sensible advice for both beginners and experienced software professionals.</p>
+
+<p>I have lots of thoughts about the contents of this book but what I&rsquo;d like to cover is usage of text editors, and specifically becoming proficient with a editor that&rsquo;s typically universally available. I can think of 3 of these for UNIX systems. <code>vi</code>, <code>emacs</code>, and <code>nano</code>.</p>
+
+<p>When I was at university I used emacs for all CS course text editing. In my first job, the UNIX servers we had didn&rsquo;t have emacs installed. I wanted to install emacs, but the application vendor didn&rsquo;t allow us to, as they had a support contract and hadn&rsquo;t tested their application with emacs on the box, so no-dice. vi was it for a few years. Then, I just a stopped using these types of editors for about 11 years. The advent of IDEs (Eclipse, Xcode) meant I didn&rsquo;t have to use these &ldquo;basic&rdquo; editors about had a lot of point-and-click, plugins, refactoring etc functionality available.</p>
+
+<p>Until now.</p>
+
+<p>The Pragmatic Programmer has convinced me to relearn basic (and powerful) UNIX tools, and I&rsquo;m starting with emacs. In my job (at the moment) I typically do about 50-80% dev, the rest other stuff (sales, management, architecture, analysis). So I spend a fair amount of time in development environments. I&rsquo;m not a big shortcut key user, and this needs to change - it&rsquo;s just wasting time moving that mouse around to get to menu items and select text.</p>
+
+<p>So far, I&rsquo;ve started with base emacs installations, Haskell packages, git packages, Clojure packages, some convenience packages, and I&rsquo;m about to start with some JavaScript packages. Also getting used to the keystrokes again is a bit tricky, but I&rsquo;m getting there. To help out, I&rsquo;ve moved other IDEs I use (like WebStorm) to use emacs bindings as well.</p>
+
+<p>I&rsquo;m enjoying the ability to use the same environment for text + 3 languages + code control. Super powerful.</p>
+
+<p>If you&rsquo;re interested in my setup, I have an emacs file in my <a href="https://github.com/rickerbh/dotfiles">dotfiles git repo</a>. Check it out (ho ho ho).</p>
+
+<p>If you have any tips for emacs please let me know in the comments or on Twitter - <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Reading Not Reading]]></title>
+    <link href="http://rickerbh.github.io/2016/06/23/reading-not-reading/"/>
+    <updated>2016-06-23T09:14:11+10:00</updated>
+    <id>http://rickerbh.github.io/2016/06/23/reading-not-reading</id>
+    <content type="html"><![CDATA[<p>I recently finished a book called <a href="http://www.bookdepository.com/Apprenticeship-Patterns/9780596518387?a_aid=rickerbh">Apprenticeship Patterns</a> (more on why later) and one of the things it suggested is keeping an online list of books you read, and books you want to read. So here is mine.</p>
+
+<p><a href="http://hamishrickerby.com/books/">http://hamishrickerby.com/books/</a></p>
+
+<p>I&rsquo;m going to add a few more books to the read list as well - ones I think other people may be interested in.</p>
+
+<p>If you&rsquo;ve got any recommendations please let me know in the comments or on Twitter - <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Brief Update]]></title>
+    <link href="http://rickerbh.github.io/2016/05/17/brief-update/"/>
+    <updated>2016-05-17T21:52:33+10:00</updated>
+    <id>http://rickerbh.github.io/2016/05/17/brief-update</id>
+    <content type="html"><![CDATA[<p>It&rsquo;s been ages.</p>
+
+<ul>
+<li>Completed that 1000km run goal</li>
+<li>Sold a house</li>
+<li>Wife got a new job</li>
+<li>Sold another house</li>
+<li>Moved to Sydney</li>
+<li>Getting there with Haskell (thanks to <a href="http://haskellbook.com">Haskell Programming from First Principles</a> - buy it - it&rsquo;s great)</li>
+<li>Bought a house</li>
+<li>Feeling in a really good place professionally</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why I've Taken a Full Time Job]]></title>
+    <link href="http://rickerbh.github.io/2014/09/27/why-ive-taken-a-full-time-job/"/>
+    <updated>2014-09-27T10:08:51+10:00</updated>
+    <id>http://rickerbh.github.io/2014/09/27/why-ive-taken-a-full-time-job</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve relapsed. I swore I&rsquo;d never do it again, but I have. I&rsquo;ve accepted a full time job.</p>
+
+<h2>I&rsquo;m not in it for the money</h2>
+
+<p>I&rsquo;ve been running happtic for just over 2 years now, and it&rsquo;s been quite lucrative. I&rsquo;ve managed to get a small, but reliable base of repeat/ongoing direct clients, and developed some applications that have done very well. I&rsquo;ve only taken on 2 non-direct contracts in that period, so am happy with how that&rsquo;s worked out. Overall, I&rsquo;d say the business has been successful in terms of providing my family with a relatively good income. Sure, having a stable income, holidays, superannuation etc will be great, but that&rsquo;s not why I&rsquo;ve taken the job.</p>
+
+<h2>It&rsquo;s a growth and opportunity thing</h2>
+
+<p>The main issue I&rsquo;ve been struggling with in running happtic is growth. I wanted to turn happtic into a larger business, providing technical consulting and development service with a team of 10 or so. I haven&rsquo;t been able to get enough volume of projects/clients to warrant taking on any extra staff (apart from that time I hired a graduate/entry level developer, and he called in sick on his first day and never got in touch with me again).</p>
+
+<p>I&rsquo;ve learnt that there are things I&rsquo;m good at, and things I&rsquo;m not good at. I&rsquo;m great at systems architecture, technical strategy, software design, and development. What I&rsquo;m not good at is cold business development. Once someone is at the door, the conversion rate is high, but getting them to the door is hard for me to orchestrate.</p>
+
+<p>Joining a larger organisation, with a pre-existing client base and sales team helps me meet my goals of leading a technology team, in a position of influence in an organisation. One key thing that I remember from a corporate management training course many years ago is that in companies (<em>and in real life</em>), the path to achieving a desired outcome may not be the path you expect. If you can recognize that the outcome is what you are after, there are many paths that can take you there, so you shouldn&rsquo;t be precious about how you get the outcome, as long as you get that outcome. The outcome I&rsquo;m after is to lead a technology focussed team of people, providing development, consulting, and technical strategy services, and that&rsquo;s what this job is.</p>
+
+<h2>What&rsquo;s the new job?</h2>
+
+<p>I&rsquo;ll be working as &ldquo;Director of Mobile&rdquo; for <a href="http://simplemachines.com.au">Simple Machines</a>. The job will involve setting up and leading a mobile development team, as well as an office, here in Melbourne.</p>
+
+<p>One particularly exciting thing about the job is the split between client and product work. Simple Machines have clients, as well as their (our!) own products and investments in startups, so there will be varied work which is great. I find working on a single product can feel a bit stale after a while, so having a mix of client and product work will definitely help with that, but also provide the satisifaction you get from growing and evolving a system over time.</p>
+
+<p>If you&rsquo;re looking for any mobile app development (iOS, Android, WP, any platform) or development of complex, high performance, scalable applications, get in touch <a href="mailto:hamish@simplemachines.com.au">hamish@simplemachines.com.au</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[1000km - February]]></title>
+    <link href="http://rickerbh.github.io/2014/03/02/1000km-february/"/>
+    <updated>2014-03-02T14:43:25+11:00</updated>
+    <id>http://rickerbh.github.io/2014/03/02/1000km-february</id>
+    <content type="html"><![CDATA[<p>Progress has been a bit slower this month. Short month, very hot here, and new baby all contributed to slowing progress down. Oh, in other news, we now have a baby!  Exciting.</p>
+
+<p>190km complete at end of Feb, which leaves me with a 30km buffer. The last graph was a little incorrect too - Numbers only puts dates correctly (in relative terms) on the x-axis if the graph type is a scatterplot. Dumb. The new graph below is correct.</p>
+
+<p><img src="http://rickerbh.github.io/images/1000km-Feb.png"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[1000km - January]]></title>
+    <link href="http://rickerbh.github.io/2014/01/31/1000km-january/"/>
+    <updated>2014-01-31T10:17:23+11:00</updated>
+    <id>http://rickerbh.github.io/2014/01/31/1000km-january</id>
+    <content type="html"><![CDATA[<p>Progress on the 1000km is good so far. 109km run in Jan, and I&rsquo;m sticking to the 10km distance per run. Weight is also starting to fall, which is great because I&rsquo;m about 9kg heavier than I should be.</p>
+
+<p>Because I&rsquo;m also a nerd (and if you&rsquo;re reading my blog, you probably are too), here&rsquo;s a graph marking progress. Grey line is what I need to run to get to 1000km this year. Any blue higher than the grey line is kms in the bank for a rainy day.</p>
+
+<p><img src="http://rickerbh.github.io/images/1000km-Jan.png"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Meteor]]></title>
+    <link href="http://rickerbh.github.io/2014/01/23/meteor/"/>
+    <updated>2014-01-23T20:25:22+11:00</updated>
+    <id>http://rickerbh.github.io/2014/01/23/meteor</id>
+    <content type="html"><![CDATA[<p>A couple of days ago I received an email from meetup.com about meetups that I might be interested in. Usually this is full of crap I don&rsquo;t care about, like mothers groups or salsa dancing, but this most recent mail featured an intriguing group called &ldquo;Meteor Melbourne - a better way to build apps&rdquo;. So, I looked into it.</p>
+
+<p><a href="http://meteor.com">Meteor</a> is a framework based on node.js that allows you to write responsive, reactive, real-time web applications in javascript on both the client and server side. I&rsquo;ve always considered javascript as a toy language - I think this opinion comes from my first interaction with JavaScript waaaaaay back in the late 90&rsquo;s (I think it was somewhere between &lsquo;96 and &#8216;98), when all it was really used for was alert boxes and tic-tac-toe implementations. However, I&rsquo;ve recently been doing a lot of work for clients with <a href="http://parse.com">Parse</a> and their &ldquo;cloud code&rdquo; functionality, taking some logic out of mobile apps and running it on the Parse servers - and you use JavaScript to do this. They promoted use of <a href="https://www.parse.com/docs/js_guide#promises">Promises</a>, and I&rsquo;ve been doing a lot with <a href="https://github.com/ReactiveCocoa/ReactiveCocoa">RAC</a> in iPhone apps, so this functional style is something I&rsquo;m familiar with and like. I also have a friend who is helping a mate out on a startup, who is looking at some serious &ldquo;enterprise&rdquo; functionality implemented with server-side javascript, so I thought it was maybe time to seriously look at this thing too, and I checked it out.</p>
+
+<p>Amazeballs. Meteor is <em>MAGIC</em>. Don&rsquo;t believe me? Watch this <a href="https://www.meteor.com/screencast">screencast</a>.</p>
+
+<p>I think the magic for me comes from the real-time (well, super fast at least -> sub second synchronization) nature of the system, and the automate shuffling of data between the server and client to synchronize/update pages with no specific actions on the developers part. The built in support for packages is also really tidy, although having to use a 3rd party packages system (<a href="http://oortcloud.github.io/meteorite/">Meteorite</a> and <a href="https://atmosphere.meteor.com">Atmosphere</a>) for more modern versions of some of the core packages (eg, bootstrap-3 vs bootstrap-2) seems a little undesirable.</p>
+
+<p>It&rsquo;s super fast to get set up (1 line install, 1 line to start), and this includes server, database, sync between client and server. Want user authentication? Two more command line hits (1 for a UI, 1 for a login provider package), and 1 line to get the UI template built in. Amazingly productive.</p>
+
+<p>Where I see huge potential for Meteor is in the mobile space. Having a web app, which automatically pushes changes to a mobile device is super powerful. With the current state of mobile apps you typically need to poll for changes to data, unless you build your own data sync solution or rely on something like iCloud to push changes around for you (haha, yeah right). When I&rsquo;ve done this sort of thing in the past with Parse, I&rsquo;ve actually gone as far as abusing the Apple Push Notification Service to actually trigger a mobile device to re-query a web service to retrieve new data as APNS is the only push mechanism available. Having a service that reliably notifies a client when data changes server side, with sub-second speed, solves a whole bunch of problems for app developers.</p>
+
+<p>This is the tech stack that I&rsquo;m now looking at using for my small business productivity tool, and I&rsquo;m hoping that mobile sync works just as well (and fast) as the client-server sync does. Next up is a small proof of concept to test this out.</p>
+
+<p>I haven&rsquo;t been this excited about web development since I saw DHH&rsquo;s web app in 15 mins rails screencast in 2006.</p>
+
+<p><em>Oh yeah, I went to the meetup too. Nice job meetup.com</em></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[2014]]></title>
+    <link href="http://rickerbh.github.io/2014/01/20/2014/"/>
+    <updated>2014-01-20T11:14:43+11:00</updated>
+    <id>http://rickerbh.github.io/2014/01/20/2014</id>
+    <content type="html"><![CDATA[<p>I&rsquo;m not one for new years resolutions, but there are a couple of things I&rsquo;d like to achieve this year.</p>
+
+<ol>
+<li>Run 1000km</li>
+<li>Design, Develop, and Release a productivity tool for small and medium businesses</li>
+</ol>
+
+
+<p>1000km is something I attempted to achieve last year, but by the time February rolled around, it was obvious that that just was not going to happen. This year is going much better. I&rsquo;ve established a running routine already, and have (as of today) extended my run distance to about 10km. I&rsquo;m sure this will be much tougher when winter rolls around, but I&rsquo;m up for the challenge.</p>
+
+<p>The SME productivity tool is something I&rsquo;ve been toying with the idea of for a while. The idea actually came from my sister and her husband (they run a construction company), and it solves a problem that they spend a few hours a week on. I&rsquo;ve already got my minimum functionality defined, and business model. It works well as a SaaS/subscription style product so fits with the revenue stream style I like. I&rsquo;ll hopefully have a splash/info/signup page soon. I&rsquo;m also looking at a new (new for me) technology stack to power this thing, so I&rsquo;ve also got a lot of learning to be able to create it. Fingers crossed it gets off the ground.</p>
+
+<p>I guess there&rsquo;s a third thing, but it&rsquo;s more of an inevitability, rather than a goal as such. We&rsquo;ll be having a baby soon (hopefully in 3 weeks), so life will be getting much more time-scarce. We&rsquo;ll see how all this holds up under parenthood.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Medical Regulation and Apps]]></title>
+    <link href="http://rickerbh.github.io/2013/03/22/medical-regulation-and-apps/"/>
+    <updated>2013-03-22T10:23:00+11:00</updated>
+    <id>http://rickerbh.github.io/2013/03/22/medical-regulation-and-apps</id>
+    <content type="html"><![CDATA[<p>Yesterday I read an <a href="http://venturebeat.com/2013/03/19/health-app-makers-to-feds-dithering-on-regulation-is-stifling-innovation/">article in Venture Beat</a> covering part of a series of hearings US Congress is holding on regulation of health and medical apps on smartphone and tablet devices. My <em>significantly</em> paraphrased version of the article is that the FDA are unsure if and how health apps should be regulated, and that representatives from the &ldquo;app&rdquo; industry are pushing for no regulation for consumer facing apps.</p>
+
+<p>I have a slightly different take on this. To me, the question is simple (and what is driving health authorities globally to address this issue): can health apps be considered to be medical devices?</p>
+
+<p>Medical devices are subject to legislation worldwide.  In fact, often requiring prior market approval through mechanisms similar to which pharmaceutical companies must obtain approval for medicines. Clear guidance exists on the regulation which surrounds medical devices, and this includes the legislative definition of what constitutes a medical device.  As a snapshot (and these definitions can be considered consistent with legislation in many other countries too), the definition of a medical device in Australia, the EU, and US clearly includes apps which diagnose, prevent, monitor, treat, alleviate disease.</p>
+
+<figure class='code'><figcaption><span>Australian Therapeutic Goods Act 1989</span><a href='http://www.comlaw.gov.au/Series/C2004A03952'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>41BD A medical device is:
+</span><span class='line'>  a. any instrument, apparatus, appliance, material or other article (whether used alone or in combination, and including the software necessary for its proper application) intended, by the person under whose name it is or is to be supplied, to be used for human beings for the purpose of one or more of the following:
+</span><span class='line'>    i. diagnosis, prevention, monitoring, treatment or alleviation of disease;
+</span><span class='line'>    ii. diagnosis, monitoring, treatment, alleviation of or compensation for an injury or handicap;
+</span><span class='line'>    iii. investigation, replacement or modification of the anatomy or of a physiological process;
+</span><span class='line'>    iv. control of conception;
+</span><span class='line'>  and that does not achieve its principal intended action in or on the human body by pharmacological, immunological or metabolic means, but that may be assisted in its function by such means; or
+</span><span class='line'>  b. an accessory to such an instrument, apparatus, appliance, material or other article.</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>EU Directive 2007/47/ec (paraphrased) </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Any instrument, apparatus, appliance, software, material or other article that is used alone or in combination, including software specifically for diagnostic or therapeutic purposes, that the manufacturer intends for use in human beings. Such devices are used for:
+</span><span class='line'> - Diagnosis, prevention, monitoring, treatment, or alleviation of disease
+</span><span class='line'> - Diagnosis, monitoring, treatment, alleviation of, or compensation for an injury or handicap
+</span><span class='line'> - Investigation, replacement, or modification of the anatomy or of a physiological process
+</span><span class='line'> - Control of conception</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>US Food, Drug and Cosmetic Act Section 201(h) </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Medical machine, contrivance, implant, in vitro reagent, or other similar or related article, including a component part, or accessory that is:
+</span><span class='line'> - Recognized in the official National Formulary, or the United States Pharmacopoeia, or any supplement to them
+</span><span class='line'> - Intended for use in the diagnosis of disease or other conditions, or in the cure, mitigation, treatment or prevention of disease, in man or other animals
+</span><span class='line'> - Intended to affect the structure or any function of the body of man or other animals, and does not achieve any of its primary intended purposes through chemical action within or on the body of man or other animals and does not depend on metabolic action to achieve its primary intended purposes.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The key, and common, part to all of these is the use of the device in <em>diagnosis, monitoring, and treatment of a disease</em>.</p>
+
+<p>Regardless of the user of the device, regulation exists. Medical devices such as syringes, contact lenses, condoms, and bandages are all available to the public, and regulated (at least in Australia). If the same rule that is being proposed for apps was applied for these devices, anyone could make devices such as bandages, and the public would have no guarantee as to the quality, safety, and efficacy of these devices.</p>
+
+<p>Devices and medicines are regulated to protect patients (and the general public) from faulty or harmful devices and drugs, and misdiagnosis or mistreatment from inaccurate information being provided to medical professionals who need to make decisions on the basis of that information. The consequences for patients from medical misdiagnosis from a medical app can be a lot more severe than (lets say) the physics calculations not accurately representing gravity in Angry Birds. Death or permanent disability is a real possibility with inaccurate (or just plain wrong) information being captured by medical apps and used for diagnosis.</p>
+
+<p>Getting a medical device approved can be a very costly exercise. Typically, trials with verifiable data are required to show accuracy and stability in the product. There is also the paperwork required to submit the device to the health regulator in a country, and this submission process needs to be repeated for each health regulator in each country you want to sell your device in.<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup> However, due to the high cost (and high barrier to entry<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup> in the marketplace), if you can jump through the regulatory hurdles, you may find a relatively competition-free market. That&rsquo;s the reward for navigating the processes.</p>
+
+<p>There is also a comment in that article that &ldquo;Developers are mystified by the rules in this highly regulated industry&rdquo;. If this is the case, maybe developers need to do the same as other players in the health industry and either employ, or contract in, medical regulatory professionals. Mystification is no excuse for not playing by the rules.</p>
+
+<p><em>Ignorantia juris non excusat</em>.</p>
+
+<h2>Need help?</h2>
+
+<p><a href="http://happtic.com">happtic</a> (my company) provides consulting services related to health regulations for medical apps. If you&rsquo;re looking for help determining if an app would be considered a medical device, help with understanding regulatory processes, or help with regulatory submissions please <a href="mailto:contact@happtic.com">get in touch</a>.</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'><p> Unless you&#8217;re in the EU. There is a single health agency for Europe.
+  <a href='#fnref:1' rev='footnote'>↩</a></p>
+</li><li id='fn:2'><p> Regulatory requirements are only one significant barrier to entry in certain industries. Other industries (such as telecommunications and energy suppliers) also have a large infrastructure requirement requiring both capital investment and significant time. Medical Apps don&#8217;t typically have this barrier.
+<a href='#fnref:2' rev='footnote'>↩</a></p>
+</li>
+    </ol>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[DRYing Out Objective-C - Identification]]></title>
+    <link href="http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification/"/>
+    <updated>2013-02-23T12:09:00+11:00</updated>
+    <id>http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification</id>
+    <content type="html"><![CDATA[<p>I have a large objective-c codebase I&rsquo;ve been working on with a client for over a year now. The application started off as a prototype, and transitioned into a demo client, and is currently undergoing modifications for security/penetration testing and commercialization. Initially for the protoype and demo, the objective was to get a working application as quickly as possible - speed of initial development was the key. With the current change in focus to a more productized codebase, and improving maintainability as part of that, I decided I&rsquo;d actively go hunting for areas in the application that can be tidied up, and particularly, looking for duplicate segments of code and eliminating them where feasible.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY - or Don&rsquo;t Repeat Yourself</a> - is (according to Wikipedia) a <em>principle is stated as &ldquo;Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.&rdquo;</em> &hellip; <em>When the DRY principle is applied successfully, a modification of any single element of a system does not require a change in other logically unrelated elements. Additionally, elements that are logically related all change predictably and uniformly, and are thus kept in sync.</em></p>
+
+<p>One big problem with a larger code base that has been developed over a long period of time is that you may not know where the duplicate code actually is. You know it&rsquo;s there, you&rsquo;re just not sure where.</p>
+
+<h2>Finding Duplicate Code</h2>
+
+<p>What I wanted for DRYing up the code base was for duplicate chunks of code to be identified for me.</p>
+
+<p>Searching out there I stumbled across a project called <a href="http://www.harukizaemon.com/simian/">Simian</a> - it&rsquo;s a java based tool for identifing duplicate code in a set of different programming languages - one being Objective-C. Simian supports output in a number of different formats - plain text being the default, but also supports an XML based output. The project is available on a 15 day evaluation period, and then should be paid for commercial or enterprise use. A Build Server license costs $499 US.</p>
+
+<p>Simian can be run against a codebase just by feeding it include/exclude directory and file patterns.</p>
+
+<pre><code>java -jar simian-2.3.33.jar -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre>
+
+<p>You can also change the format of the output</p>
+
+<pre><code>java -jar simian-2.3.33.jar -formatter=xml -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre>
+
+<p>And even output to a file</p>
+
+<pre><code>java -jar simian-2.3.33.jar -formatter=xml:simian.xml -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre>
+
+<h2>Integration with Jenkins</h2>
+
+<p>I&rsquo;ve previously written here about setting up and using Jenkins as a build/CI system with Objective-C/iOS projects, and I really wanted to integrate this duplicate code reporting as part of my standard build process, along with my unit and application test reports.</p>
+
+<p>To get Simian reports integrated with Jenkins there is a Jenkins extension available called the <a href="https://wiki.jenkins-ci.org/display/JENKINS/DRY+Plugin">DRY Plugin</a>. Just navigate to your Jenkins instance and click&hellip; Manage Jenkins -> Manage Plugins -> Available and type Duplicate in the filter box. The plugin is called &ldquo;Duplicate Code Scanner Plug-in&rdquo;. Install it.</p>
+
+<p>To get the Simian process running is really simple. I added a new project that I could trigger after my unit tests have run, called &ldquo;Code Analysis&rdquo;. This project has a very small number of steps.</p>
+
+<ol>
+<li>Pull the source from your code repo</li>
+<li>Set a Build Trigger for the project to start after your unit test project has completed. <em>This step isn&rsquo;t necessary, but you need some sort of build trigger. I like mine to work after unit tests as then I know the codebase is in a good state.</em></li>
+<li>Add an Execute Shell task. The task should look something like below</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd "&lt;Path to your Jenkins project>/workspace"
+</span><span class='line'>git submodule update --recursive --init
+</span><span class='line'>echo "#!/bin/bash" > simian.sh
+</span><span class='line'>echo "java -jar &lt;Path to your simiar jar>/simian-2.3.33.jar -balanceSquareBrackets=true -formatter=xml:simian.xml -excludes=\"External Libraries\" **/*.m **/*.h" >> simian.sh
+</span><span class='line'>echo "exit 0" >> simian.sh
+</span><span class='line'>chmod u+x simian.sh
+</span><span class='line'>./simian.sh
+</span><span class='line'>rm simian.sh</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What the above task does is change directory to the correct jenkins workspace, ensure all submodules are updated (if you don&rsquo;t use submodules, you probably won&rsquo;t want this), then create a shell script that runs Simian and exits with a 0 return code, sets the script to be executable, runs the script, then cleans up after itself. The reason why the build task needs to create a shell script to run Simian is because the return code from Java/Simian seems to be interpreted by Jenkins as non-0 i.e. a build failure. You don&rsquo;t want that.</p>
+
+<p>The <code>-balanceSquareBrackets=true</code> flag to Simian ensures that code that is split across multiple lines inside square brackets is treated as a single unit. It might be a good idea to use the <code>-balanceParentheses=true</code> flag as well to help matching on things like <code>if</code> statements.</p>
+
+<p>Then it&rsquo;s just a matter of configuring the reporting. If you&rsquo;ve installed the DRY plugin correctly, you should be able to add a Post Build Action of &ldquo;Publish duplicate code analysis results&rdquo;. In the &ldquo;Duplicate code results&rdquo; field, type in the path and filename you gave the output XML from simian - in the example above I called mine <code>simian.xml</code>.</p>
+
+<p>That&rsquo;s it.</p>
+
+<p>Save and &ldquo;Build Now&rdquo; your new project, and after this is complete, click on the project. There should be a fancy trend graph showing Duplicate Code in the upper right of the screen, and a &ldquo;Duplicate Code&rdquo; item on the left navigation menu. That will show you all the files with duplicate code chunks, and the other files they are repeated in.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Value of Contracting]]></title>
+    <link href="http://rickerbh.github.io/2012/10/25/the-value-of-contracting/"/>
+    <updated>2012-10-25T16:20:00+11:00</updated>
+    <id>http://rickerbh.github.io/2012/10/25/the-value-of-contracting</id>
+    <content type="html"><![CDATA[<p>Very unexpectedly, for the past few weeks I&rsquo;ve been working with a Digital Agency here in Melbourne on a sports-themed iPhone app for a very large client of theirs (a worldwide media brand). I was called in at the 11th hour to work with two  other developers (both experienced iOS and ruby contractors), and I knew within the first hour there that the project was going to be a significant challenge. The project had unrealistically tight timelines and a lack of testing and testing platforms/data sets available.</p>
+
+<p>Needless to say, it was an interesting experience. In my previous full time jobs I&rsquo;ve never worked as a developer, and with my current company all projects to date have been single developer projects.  But I definitely found the whole experience really rewarding. It reminded me of the time I was a manager in a large digital agency myself, only there it was me cracking the whip to get development in on time, rather than having the whip cracked on me. :-)
+(It also meant I had to get dressed and leave the house to work!)</p>
+
+<p>In all seriousness though, the key thing that made the whole thing worthwhile was seeing a &ldquo;production&rdquo; codebase from other experienced mobile app developers. My Objective-C design and style is self-taught. It was great to have what I do and the way I do it validated by others, as well as picking up hints and tips for more modular app implementations. This is something that you really miss out on as an indie developer with a one person development team. The shared learning and ability to bounce ideas off people to come up with great solutions is something that is really missing from the indie way of working.</p>
+
+<p>I&rsquo;ll definitely consider doing more contracting work in the future - both for meeting other developers and for picking up new skills. Highly recommended.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[99 Problems (but Haskell Ain't One)]]></title>
+    <link href="http://rickerbh.github.io/2012/07/14/99-problems-but-haskell-aint-one/"/>
+    <updated>2012-07-14T16:47:00+10:00</updated>
+    <id>http://rickerbh.github.io/2012/07/14/99-problems-but-haskell-aint-one</id>
+    <content type="html"><![CDATA[<p>Back in the late 90&rsquo;s I took COSC 122 at the University of Canterbury. We had to learn functional programming as part of that course - HUGS (it&rsquo;s based on Haskell 98). It never really clicked with me - for some reason my brain would just not understand functional programming.</p>
+
+<p><img src="http://rickerbh.github.io/images/tumblr_leretcb0Sa1qfawn6o1_500.jpg"></p>
+
+<p>I&rsquo;ve always regretted that I never &ldquo;got it&rdquo;. It&rsquo;s time to fix that regret.</p>
+
+<p>To (re)learn Haskell, I&rsquo;m using <a href="http://learnyouahaskell.com">Learn You a Haskell for Great Good!</a>, and to ensure that I &ldquo;get it&rdquo;, I&rsquo;m working my way through the <a href="http://www.haskell.org/haskellwiki/99_questions">Haskell 99 Problems</a>.</p>
+
+<p>Follow my progress on Github at <a href="https://github.com/rickerbh/99-Problems">https://github.com/rickerbh/99-Problems</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Updating a UITableView Without Calling reloadData]]></title>
+    <link href="http://rickerbh.github.io/2012/07/06/updating-a-uitableview-without-calling-reloaddata/"/>
+    <updated>2012-07-06T11:21:00+10:00</updated>
+    <id>http://rickerbh.github.io/2012/07/06/updating-a-uitableview-without-calling-reloaddata</id>
+    <content type="html"><![CDATA[<p>For a new app I&rsquo;ve been working on for the past few days I wanted to a nice &ldquo;inline&rdquo; way of gathering data from the user. Typically, if I&rsquo;ve needed to have a user put in more than a single line of text, I would have popped the user to a different screen that has a UITextView as the sole point of focus, get them to type in the data, and then have them navigate back and have the data appear within a tableview.</p>
+
+<p>For this new app, I wanted them to be able to enter large amounts of text inline within a cell of a tableview. This also means that the cell would have to dynamically grow and shrink, as the user is entering the data. The UITextView (where the user is entering the data) would need to resize itself based on the users input, as well as the UITableViewCell that contains the text view, and have the UITableView adjust on the fly to the users input.</p>
+
+<p>What I needed to happen was for the UITableView to go through the process of querying the height of each of the cells via the UITableViewDelegate&rsquo;s tableView:heightForRowAtIndexPath: method, and executing the necessary layout code to push/pull the cells around as an individual cell expands or shrinks. The other complication is that the UITextView that the user is typing in cannot lose focus (i.e., it cannot resignFirstResponder). The obvious way to get the UITableView to perform layout is to call [tableview reloadData], however, this causes the UITextView to lose focus, and the keyboard disappears. This seems to happen when creating the cells via the tableview:cellForRow:atIndexPath: method.</p>
+
+<p>Then I found a sneaky trick.</p>
+
+<p>If you execute the following code the table view will query the height for the individual cells, and lay them out, but not reload the cells, and not cause the UITextView to resignFirstResponder.</p>
+
+<pre><code>[tableview beginUpdates];
+[tableview endUpdates];
+</code></pre>
+
+<p>So, now I have cells that can grow and shrink dynamically, and not lose focus for the user as they are inputting data.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Core Data Migrations and Large Data Sets]]></title>
+    <link href="http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets/"/>
+    <updated>2012-06-04T12:14:00+10:00</updated>
+    <id>http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets</id>
+    <content type="html"><![CDATA[<p>I recently updated <a href="http://click.linksynergy.com/fs-bin/stat?id=*W1h7qYtoaI&amp;offerid=146261&amp;type=3&amp;subid=0&amp;tmpid=1826&amp;RD_PARM1=http%253A%252F%252Fitunes.apple.com%252Fus%252Fapp%252Fmoving-van%252Fid357418069%253Fmt%253D8%2526uo%253D4%2526partnerId%253D30">Moving Van</a> (<em>you should buy it now!</em>) and published the new version in the app store late last week. It was a substantial update to the application - it had a completely new UI with custom interface controls, as well as a whole stack of features that customers had been asking for - things like room autocompletion, saving images to camera roll, more export options, moving items between boxes etc.</p>
+
+<p>As part of this update, I also remodelled the Core Data entities that power the application. The initial model that was used was, let&rsquo;s say, a little naïve in terms of the way that the stored data would impact performance of the application. It stored an image on an item as binary data within the Item entity itself, which in retrospect was a terrible idea because of table view performance. The new version split out the image to a separate entity, which means that when the Item entity loads, the image doesn&rsquo;t get loaded unless explicitly needed because of the faulting behaviour of Core Data and entity relationships.</p>
+
+<p>So, to get out of this historic design decision, a data migration was required. The migration itself was relatively simple, with pretty much everything working from a standard mapping model (add two entities, copy existing entities, create relationships with new entities). I had to use a custom migration policy for one aspect of the migration - two image entities are created for each item (for tableview performance reasons). There is the original image, and a thumbnail version of that image. The custom policy needed to take the original image from the source Item, scale the image down, and set it in the new Thumbnail entity, but that itself was relatively simple.</p>
+
+<p>The migration was tested with all possible permutations of the data that a user could create, including a large data set with over 100 boxes and hundreds of items. The migration would take a few seconds to run, and everything was working well. I submitted, and released the new version.</p>
+
+<p>DISASTER.</p>
+
+<p>It appears that my data sets for testing were inadequate. Quite a few users of the application store images for every one of their items. 300, 400 of them. Some users don&rsquo;t even use the text descriptions for items, they just use images. The larger data sets used for testing were text only - none of the testing involved hundreds of items with images. A database with around 500 images is about 300Mb - I think that&rsquo;s quite a large CD store for the iPhone.</p>
+
+<p>What was happening is that Core Data, while doing the migration, was choking trying to load all the Item entities (with images embedded) into memory. The lightweight migration mechanism seems to try to be fast, over being resource efficient. On the iPhone this is a <em>bad thing</em> if you have a large volume of data - your application will be terminated with little to no warning.</p>
+
+<p>Apple have <a href="http://developer.apple.com/library/ios/#documentation/cocoa/conceptual/CoreDataVersioning/Articles/vmCustomizing.html%23//apple_ref/doc/uid/TP40004399-CH8-SW9">specific recommendations</a> for what do with large core data sets - mainly around splitting a lightweight migration into separate mapping models. This approach is fine if you have a large number of entities, but it a <em>useless</em> strategy if you have a large number (or more precisely, a large data volume) of an individual entity. Their &ldquo;chunks&rdquo; of data refer to a per entity chunk - the approach still attempts to load all instances of an entity into memory. What I needed was a way to have multiple &ldquo;chunks&rdquo; of a specific entity, so the whole set was not loaded into memory at once.</p>
+
+<p>The approach I took to solve this problem is very &ldquo;manual&rdquo;. It consists of the following steps:</p>
+
+<ol>
+<li>Determine if a migration is required - if so, pop a migration controller that informs the user a migration is taking place, and start the migration.</li>
+<li>Create a Core Data stack with the &ldquo;old&rdquo; model, and old version of the store as a source.</li>
+<li>Create another Core Data stack with the &ldquo;new&rdquo; model, and a new store as the destination.</li>
+<li>Request a set of entities from the old data store, with a small batch size to avoid loading all entities at once.</li>
+<li>Traverse the object graph of those old entities, creating each instance of an entity in the new data store.</li>
+<li>Save the new store every 10 or so entities - this is to ensure that the NSManagedContext doesn&rsquo;t consume too much memory with unsaved objects hanging around.</li>
+<li>After this is all finished, backup the original data store, and move the new one to take its place.</li>
+<li>Finally, post a notification for the AppDelegate to receive, that signals the migration is complete and the rest of the startup sequence can continue.</li>
+</ol>
+
+
+<p>The approach works - the application no longer runs out of memory on migration. However, the mapping model is now useless as it&rsquo;s never used, and there are a couple of interesting points. First one is that the migration takes up extra storage space as we are creating an extra store with pretty much the same volume of data in it - just laid out differently. I&rsquo;m not sure if this happens when CD performs a migration - I suspect it is, but what worries me is that if a user is low on space, the migration could cause the disk to fill up. The other thing that I noticed was that the migration is considerably slower that a CD managed lightweight migration. However, it actually works on large data sets, unlike the CD managed lightweight migration, so the positives here outweigh the negatives.</p>
+
+<p>There is probably a way to solve this that utilises more of the Migration classes that Apple provide - specifically subclassing NSMigrationManager - but, I didn&rsquo;t really have enough time available to figure that out - I needed a fix <em>now</em>.</p>
+
+<p>And now some code.</p>
+
+<h2>Determining if your Core Data store needs to be migrated</h2>
+
+<pre><code>// See if a database exists to be migrated
+NSString *sourceStorePath = &lt;Your source store path in the file system&gt;
+if (![[NSFileManager defaultManager] fileExistsAtPath:sourceStorePath]) {
+  // Database doesn't yet exist. No need to test data compatibility"
+  return NO;
+}
+
+// Create a persistence controller that uses the model you've defined as the "current" model
+NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"&lt;Your models directory name&gt;" withExtension:@"momd"];
+NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+
+NSError *error = nil;
+NSURL *sourceStoreURL = [NSURL fileURLWithPath:sourceStorePath];
+NSDictionary *sourceStoreMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType
+                                                                                               URL:sourceStoreURL
+                                                                                             error:&amp;error];
+// Do error checking... Removed from the code sample.
+NSManagedObjectModel *destinationModel = [psc managedObjectModel];
+BOOL pscCompatible = [destinationModel isConfiguration:nil
+                           compatibleWithStoreMetadata:sourceStoreMetadata];
+// if pscCompatible == YES, then you don't need to do a migration.
+</code></pre>
+
+<h2>Loading old and new Core Data Stacks</h2>
+
+<p>You&rsquo;ll need to do this twice - just swap out the model name for old/new models and keep the references to the MOCs that are created. Ensure you have a different store path for your new store!
+For the new model, it&rsquo;s a good idea to also test if a file exists at the new model location - it could be indicative of a migration that&rsquo;s previously failed.
+    NSURL <em>modelURL = [[NSBundle mainBundle] URLForResource:@&ldquo;<source or destination model name>&rdquo; withExtension:@&ldquo;mom&rdquo; subdirectory:@&ldquo;<Your models directory name>.momd&rdquo;];
+    NSManagedObjectModel </em>model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];</p>
+
+<pre><code>// Get the store url
+NSString *sourceStorePath = &lt;Your source/destination store path in the file system&gt;
+NSURL *sourceStoreURL = [NSURL fileURLWithPath:sourceStorePath];
+
+// Use this for source store - ensures you don't accidentally write to the entities
+NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:1]
+                                                    forKey:NSReadOnlyPersistentStoreOption];
+
+// Use this for destination store - makes it writeable
+NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:0]
+                                                    forKey:NSReadOnlyPersistentStoreOption];
+NSError *error = nil;
+[psc addPersistentStoreWithType:NSSQLiteStoreType
+                  configuration:nil
+                            URL:sourceStoreURL
+                        options:options
+                          error:&amp;error];
+// Do error checking... Removed from the code sample.
+NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] init];
+[moc setPersistentStoreCoordinator:psc];
+[moc setUndoManager:nil];
+</code></pre>
+
+<h2>Get your entities from your original store, and create them in the new store</h2>
+
+<p>You can&rsquo;t use your entity classes here, everything has to be done via KVC. This is because your entity classes will no longer map to the old model correctly.
+    NSFetchRequest <em>oldFetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription </em>oldEntity = [NSEntityDescription entityForName:@&ldquo;EntityName&rdquo;
+                                                 inManagedObjectContext:oldContext];
+    [oldFetchRequest setEntity:oldEntity];
+    // Set the batch size so we don&rsquo;t attempt to retrieve all the data at once - this is the key to the whole thing!
+    [oldFetchRequest setFetchBatchSize:10];</p>
+
+<pre><code>NSError *error = nil;
+NSArray *entities = [oldContext executeFetchRequest:oldFetchRequest error:&amp;error];
+int count = 0;
+for (NSManagedObject *oldEntity in entities) {
+  // Creating new entity
+  NSManagedObject *newEntity = [NSEntityDescription insertNewObjectForEntityForName:@"EntityName"
+                                                             inManagedObjectContext:newContext];
+  [newEntity setValue:[oldEntity valueForKey:@"someAttribute"] forKey:@"someAttribute"];
+
+  // If your entity has relationships...
+  for (NSManagedObject *aRelatedEntity in [oldEntity mutableSetValueForKey:@"someRelationship"]) {
+    NSManagedObject *newRelatedEntity = [NSEntityDescription insertNewObjectForEntityForName:@"RelatedEntityName"
+                                                                      inManagedObjectContext:newContext];
+    [newRelatedEntity setValue:[aRelatedEntity valueForKey:@"someOtherAttribute"] forKey:@"someOtherAttribute"];
+  }
+  // Save periodically
+  count++;
+  if (count % 10 == 0) {
+    [newContext save:&amp;error];
+    // Do some error handling
+  }
+}
+[newContext save:&amp;error];
+// Do some error handling
+// Migration is complete, if you've traversed all your entities.
+</code></pre>
+
+<p>When I encountered this problem I couldn&rsquo;t find any example code for how to do this migration - hopefully this helps someone.</p>
+
+<p>If anyone does know of an alternative (better) way to get around this issue, please let me know in the comments.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[UISearchBar's UITextField]]></title>
+    <link href="http://rickerbh.github.io/2012/05/19/uisearchbars-uitextfield/"/>
+    <updated>2012-05-19T10:12:00+10:00</updated>
+    <id>http://rickerbh.github.io/2012/05/19/uisearchbars-uitextfield</id>
+    <content type="html"><![CDATA[<p>For an update that I&rsquo;m making to <a href="http://click.linksynergy.com/fs-bin/stat?id=*W1h7qYtoaI&amp;offerid=146261&amp;type=3&amp;subid=0&amp;tmpid=1826&amp;RD_PARM1=http%253A%252F%252Fitunes.apple.com%252Fus%252Fapp%252Fmoving-van%252Fid357418069%253Fmt%253D8%2526uo%253D4%2526partnerId%253D30">Moving Van</a> (<em>you should buy it now!</em>) I need to customise the font that is displayed in a UISearchBar&rsquo;s text field. The search bar does not actually expose it&rsquo;s UITextField property, but because the search bar is a UIView, it&rsquo;s trivial to access the field to allow customisation.</p>
+
+<pre><code>for (UIView *searchSubview in mySearchBar.subviews) {
+  if ([searchSubview isKindOfClass:[UITextField class]]) {
+    // Do your text field customisation in here
+    [(UITextField *)searchSubview setTextColor:[UIColor redColor]];
+  }
+}
+</code></pre>
+
+<p>HTH.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iBooks Crashing?]]></title>
+    <link href="http://rickerbh.github.io/2012/04/30/ibooks-crashing/"/>
+    <updated>2012-04-30T17:15:00+10:00</updated>
+    <id>http://rickerbh.github.io/2012/04/30/ibooks-crashing</id>
+    <content type="html"><![CDATA[<p>I&rsquo;m having a bit of a play with iBooks today, and some 3D model stuff. iBooks has, for me, always crashed when displaying 3D models. I don&rsquo;t have a jailbroken iPad, so it&rsquo;s not a DRM issue (at least not one caused by that). To tell you the truth, I&rsquo;m not sure what the cause is. But, I do have a fix!</p>
+
+<ul>
+<li>Delete iBooks</li>
+<li>Reinstall iBooks</li>
+</ul>
+
+
+<p>That simple. My books and PDF&rsquo;s were still on the iPad, so there was no issue with having to resyc everything. Now, 3D models are supported :-)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Housekeeping]]></title>
+    <link href="http://rickerbh.github.io/2012/04/10/housekeeping/"/>
+    <updated>2012-04-10T15:09:00+10:00</updated>
+    <id>http://rickerbh.github.io/2012/04/10/housekeeping</id>
+    <content type="html"><![CDATA[<p>I currently have around thirteen or so applications developed for iOS that are live in the App Store (and one in development). I have one Mac application (and one in development). I also run an online accounting system, two T-Shirt stores, a postcard printing and shipping business, and a web hosting and technical website build business.</p>
+
+<p>That&rsquo;s a <em>lot</em> of stuff for one guy to maintain. Because of the amount of time I have available to dedicate to each, it can be a long time before I get to maintain or market any particular application or service that I&rsquo;ve developed. Because of this, the services don&rsquo;t change often, they underperform in the marketplace, and over time the revenues have been decreasing.</p>
+
+<p>With the move to Melbourne, we (my wife and I) decided that I&rsquo;d be concentrating more on what I really enjoy doing. There are essentially two things that fit into this category.</p>
+
+<ol>
+<li>Developing iOS and Mac applications for myself, and others.</li>
+<li>Advising and consulting with people on their technical business ideas.</li>
+</ol>
+
+
+<p>To be able to concentrate on this, I&rsquo;ve decided that it&rsquo;s time for some housekeeping. I&rsquo;ll be shutting the doors on some of the applications and services that I maintain. We&rsquo;ll be saying bye to:</p>
+
+<ol>
+<li>Sendit4.me - iOS application, website and facebook application for sending physical postcards. Apple <a href="http://en.wikipedia.org/wiki/Sherlock_(software)#Related_software">sherlocked</a> me with their Cards app. Since this launched, I&rsquo;ve had virtually no sales via the iOS app, and this was the main sales channel.</li>
+<li>My 2 T-Shirt stores - they cost virtually no money to run, but suffer from a lack of marketing resulting in poor sales. Online T-shirt stores is also a very competitive space.</li>
+<li>Got the GiST (GST accounting package for small businesses in New Zealand) - this is the first application I ever published by myself.</li>
+<li>I&rsquo;ll be looking to do less of the web site development work. It&rsquo;s easy work, the money is OK, but I just don&rsquo;t really enjoy it.</li>
+</ol>
+
+
+<p>I&rsquo;ll be concentrating more on:</p>
+
+<ol>
+<li>The remaining iOS applications that I have that are currently doing OK commercially - these are the CBT applications (Mental Health), Photo Copy, Moving Van, and Gifted TY.</li>
+<li>Crate Digger - this is a labour of love - I use the application myself, and it does need an update. It has good reviews, and although it makes no money, I like developing it - it&rsquo;s a hobby app.</li>
+<li>Marketing my own application consulting, design and development services to other businesses - looking to grow that segment of the work that I do.</li>
+</ol>
+
+
+<p>The other applications I&rsquo;ve released will remain as is. It&rsquo;s unlikely there will be any updates to them, and when they break with a new iOS release, I&rsquo;ll probably pull them from sale.</p>
+
+<p>With the decreased maintenance overhead, I&rsquo;ll hopefully have more time to dedicate to updating and marketing the applications I&rsquo;ve developed. I need to curate a portfolio of <em>quality</em> applications.</p>
+
+<p>If anyone is interested in purchasing the code for any of the applications that are being retired or no longer updated just let me know.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unit Test Code Coverage With Xcode 4.3.2]]></title>
+    <link href="http://rickerbh.github.io/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2/"/>
+    <updated>2012-04-05T13:11:00+10:00</updated>
+    <id>http://rickerbh.github.io/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2</id>
+    <content type="html"><![CDATA[<p>I upgraded to Xcode 4.3.2 and this seemed to break unit tests on iOS for me.</p>
+
+<p>The error that was being reported was:
+    Test rig &lsquo;/Applications/Xcode.app/&hellip;/iPhoneSimulator.platform/&hellip;/otest&rsquo; exited abnormally with code 134 (it may have crashed).</p>
+
+<p>(&hellip; used to save space)</p>
+
+<p>The actual cause of this error was explained in the unit test build/run log files in Xcode:
+    Detected an attempt to call a symbol in system libraries that is not present on the iPhone:
+    fopen$UNIX2003 called from function llvm_gcda_start_file in image UnitTests.</p>
+
+<p>I covered this issue in a prior post, but the short version of how to get around it is to include the below code in one of your test .m files, outside of the @implementation&hellip;@end block. I recommend right down the bottom of one of the files.</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+// Prototype declarations
+FILE *fopen$UNIX2003( const char *filename, const char *mode );
+size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d );
+
+FILE *fopen$UNIX2003( const char *filename, const char *mode ) {
+  return fopen(filename, mode);
+}
+size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
+  return fwrite(a, b, c, d);
+}
+</code></pre>
+
+<p>Other settings for successful execution of the unit tests with code coverage are (in your Project&rsquo;s Unit Test target):</p>
+
+<ul>
+<li>Generate Test Coverage Files = YES</li>
+<li>Instrument Program Flows = YES</li>
+</ul>
+
+
+<p>There is no need for linking libprofile_rt to get coverage to work.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Continuous Integration and iOS]]></title>
+    <link href="http://rickerbh.github.io/2012/01/27/continuous-integration-and-ios/"/>
+    <updated>2012-01-27T14:00:00+11:00</updated>
+    <id>http://rickerbh.github.io/2012/01/27/continuous-integration-and-ios</id>
+    <content type="html"><![CDATA[<p>The client project I&rsquo;m currently working on is quite large. There are over 90 different screens required in the application, and regression testing all of these, with the different data variants and scenarios is not something I&rsquo;d like to attempt by hand, and is not something I would expect my client to pay for me (or anyone for that matter) to do. Both unit and application tests can be automated, and I figured that this was something that I should do for this project to ensure changes I introduce don&rsquo;t break existing functionality, and any bugs found won&rsquo;t be introduced.</p>
+
+<p>To solve this challenge I have introduced a Continuous Integration (CI) server to my workflow. My goals were to have unit and application tests automatically executed when an commit is made to a specific branch in a (local) git repository, and if both of these phases are successful, have the application packaged up, ready for distribution. I also wanted this successful build to be deployed on a daily basis to TestFlight so my client (and any other human testers in the future) could pick it up on their devices. I also wanted code coverage reporting, for both the unit and application tests, so I can see what parts of the application logic and screen flows are actually being tested to give me a level of confidence that the right stuff is getting the attention. The application tests also needed to be executed in a headless manner - I don&rsquo;t have a physically separate machine (or VM) to run the CI server in, so I don&rsquo;t want the simulator popping up and distracting me.</p>
+
+<p><em>Warning - this is long and involved. I&rsquo;ve also written this after the fact. I hope I&rsquo;ve captured all the steps but if something doesn&rsquo;t work for you please let me know and I&rsquo;ll try to help and update this guide.</em></p>
+
+<h2>Toolkit</h2>
+
+<p>I used a set of existing tools to help with this</p>
+
+<ol>
+<li>CI Server - Jenkins</li>
+<li>Unit Tests - SenTest/OCUnit - it&rsquo;s baked right into Xcode and meets my needs. It&rsquo;s hard for me to justify using something else like GHUnit because of the pre-integration.</li>
+<li>Application (UI) Tests - Frank - I wanted to use a behaviour driven approach to UI testing, as well as something my client could actually specify tests in. Frank is cucumber based, so uses an english language syntax, making it easy for non-developers to specify and understand tests.</li>
+<li>Deployment - Curl - low tech, but the TestFlight API is simple to use, so nothing more complex is really required here. It could be wrapped in a Jenkins plugin, but I&rsquo;m not the guy to create that&hellip;</li>
+</ol>
+
+
+<p>And this is how I did it. I cobbled together all the tools I needed with help from various blogs, stack overflow answers, and vendor documentation. I&rsquo;ve referenced the sources where I can. Hat tips to all.</p>
+
+<h2>Installation of Prerequisites</h2>
+
+<h3>Install rvm</h3>
+
+<p>You&rsquo;ll need ruby for compiling Frank, and I recommend you use <a href="http://beginrescueend.com/">rvm</a> for this. Paste the following into a shell and follow the instructions.</p>
+
+<p><code>bash -s stable &lt; &lt;(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)</code></p>
+
+<p>Extra install instructions (head builds, multi-user etc) are available at <a href="http://beginrescueend.com/rvm/install/">http://beginrescueend.com/rvm/install/</a></p>
+
+<p>You&rsquo;ll need to close and open shell after following the instructions (including modification of your <code>.bash_profile</code>). You&rsquo;ll also need to install your favourite ruby. I recommend installing 1.9.2 with <code>rvm install 1.9.2</code></p>
+
+<p>You&rsquo;ll also need rake (for managing Frank&rsquo;s build process), so you can get that with <code>gem install rake</code></p>
+
+<h3>Install homebrew</h3>
+
+<p>I used <a href="http://mxcl.github.com/homebrew/">homebrew</a> to install Jenkins. It&rsquo;s a good package manager for OSX, and well maintained. Instructions are at <a href="https://github.com/mxcl/homebrew/wiki/installation">https://github.com/mxcl/homebrew/wiki/installation</a> but you can just paste the following into a shell and it&rsquo;ll install.</p>
+
+<p><code>/usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"</code></p>
+
+<h3>Install Python and gcovr</h3>
+
+<p>gcovr (and python) are needed to generate the coverage files from the unit and application test output. <em>If you already have a modern python installation (2.7) then skip the python installation step and just install gcovr with your own copy of easy_install</em></p>
+
+<p>You can use homebrew to install python. Do so with:</p>
+
+<p><code>brew install python</code></p>
+
+<p>Then you will need easy_install (or the distribute tools)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>curl -O http://peak.telecommunity.com/dist/ez_setup.py
+</span><span class='line'>/usr/local/bin/python ez_setup.py</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will then need to get gcovr.</p>
+
+<p><code>/usr/local/share/python/easy_install gcovr</code></p>
+
+<h2>Install and configure Jenkins</h2>
+
+<p>Thanks to homebrew, the installation step is very easy. Just paste the following into the shell and it&rsquo;ll install.</p>
+
+<p><code>brew install jenkins</code></p>
+
+<p>There are a couple of configuration steps that are required as well. Thanks to <a href="http://mattonrails.wordpress.com/2011/06/08/jenkins-homebrew-mac-daemo/">http://mattonrails.wordpress.com/2011/06/08/jenkins-homebrew-mac-daemo/</a> for the configuration required.</p>
+
+<h3>Create a service account</h3>
+
+<p>First of all find an ID that is free on your system. <code>dscl . -search /Users uid 600</code> searches for users with ID 600, and <code>dscl . -search /Groups gid 600</code> looks for groups with ID 600. Change the number until you find an empty ID. Then (with appropriate ID changes)&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo mkdir /var/jenkins
+</span><span class='line'>sudo /usr/sbin/dseditgroup -o create -r 'Jenkins CI Group' -i 600 _jenkins
+</span><span class='line'>sudo dscl . -append /Groups/_jenkins passwd "*"
+</span><span class='line'>sudo dscl . -create /Users/_jenkins
+</span><span class='line'>sudo dscl . -append /Users/_jenkins RecordName jenkins
+</span><span class='line'>sudo dscl . -append /Users/_jenkins RealName "Jenkins CI Server"
+</span><span class='line'>sudo dscl . -append /Users/_jenkins uid 600
+</span><span class='line'>sudo dscl . -append /Users/_jenkins gid 600
+</span><span class='line'>sudo dscl . -append /Users/_jenkins shell /usr/bin/false
+</span><span class='line'>sudo dscl . -append /Users/_jenkins home /var/jenkins
+</span><span class='line'>sudo dscl . -append /Users/_jenkins passwd "*"
+</span><span class='line'>sudo dscl . -append /Groups/_jenkins GroupMembership _jenkins
+</span><span class='line'>sudo chown -R jenkins /var/jenkins</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Starting up Jenkins</h3>
+
+<p>Create a file at <code>/Library/LaunchDaemons/org.jenkins-ci.plist</code> with the following contents (check the version number in directory for Jenkins!). This will ensure Jenkins starts when the system boots.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+</span><span class='line'>&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+</span><span class='line'>&lt;plist version="1.0"&gt;
+</span><span class='line'>&lt;dict&gt;
+</span><span class='line'>    &lt;key&gt;Label&lt;/key&gt;
+</span><span class='line'>    &lt;string&gt;Jenkins&lt;/string&gt;
+</span><span class='line'>    &lt;key&gt;ProgramArguments&lt;/key&gt;
+</span><span class='line'>    &lt;array&gt;
+</span><span class='line'>    &lt;string&gt;/usr/bin/java&lt;/string&gt;
+</span><span class='line'>    &lt;string&gt;-jar&lt;/string&gt;
+</span><span class='line'>    &lt;string&gt;/usr/local/Cellar/jenkins/1.428/lib/jenkins.war&lt;/string&gt;
+</span><span class='line'>    &lt;/array&gt;
+</span><span class='line'>    &lt;key&gt;OnDemand&lt;/key&gt;
+</span><span class='line'>    &lt;false/&gt;
+</span><span class='line'>    &lt;key&gt;RunAtLoad&lt;/key&gt;
+</span><span class='line'>    &lt;true/&gt;
+</span><span class='line'>    &lt;key&gt;UserName&lt;/key&gt;
+</span><span class='line'>    &lt;string&gt;jenkins&lt;/string&gt;
+</span><span class='line'>&lt;/dict&gt;
+</span><span class='line'>&lt;/plist&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and load it with <code>sudo launchctl load /Library/LaunchDaemons/org.jenkins-ci.plist</code></p>
+
+<p>At this point, Jenkins should be installed and running. Head to <a href="http://localhost:8080">http://localhost:8080</a> and it should be running.</p>
+
+<h3>Configuring Jenkins</h3>
+
+<p>In the Jenkins menu, click on Manage Jenkins, Manage Plugins, and then Available. Install the following plugins and make sure the &ldquo;Restart Jenkins when installation is complete and no jobs are running&rdquo; checkbox (on the screen after the &ldquo;Install&rdquo; button) is checked.</p>
+
+<ul>
+<li>Jenkins Cobertura Plugin - <em>for code coverage report processing</em></li>
+<li>Jenkins GIT plugin - <em>for integration with git</em></li>
+<li>Xcode Integration - <em>for execution and understanding of Xcode files</em></li>
+</ul>
+
+
+<p>Install the github plugins if your project is on github. I won&rsquo;t be covering configuration of this here, but it should be relatively simple.</p>
+
+<p>Once these are installed and Jenkins has restarted, you&rsquo;ll need to configure the plugins. In the Jenkins menu, click on Manage Jenkins, Configure System and fill in the parameters for your git installation(s) and Xcode Builder paths.  Click Save and we&rsquo;re ready to go.</p>
+
+<h2>Configure your Xcode project</h2>
+
+<p>We&rsquo;re going to take a little departure from Jenkins for the moment to prep Xcode for integration. We are going to setup our project for unit tests and Frank.</p>
+
+<h3>Unit Tests</h3>
+
+<p>If you don&rsquo;t have one already, you&rsquo;ll need to set up a new target for Unit Tests in your Xcode project. Select your top level project in the in Project Navigator, and then &ldquo;Add Target&rdquo;. Under iOS -> Other choose the &ldquo;Cocoa Touch Unit Testing Bundle&rdquo;. Give it a name and then write some tests.</p>
+
+<p>The other thing we&rsquo;ll need to do here is set up Code Coverage. In the Build Phases area of your new Target, under Link Binary With Libraries, hit the + and select Add Other. Then navigate to <code>/Developer/usr/lib</code> and select <code>libprofile_rt.dylib</code>. This is the library that enables the profiling goodness. After this, select the Build Settings area, and set &ldquo;Generate Test Coverage Files&rdquo; and &ldquo;Instrument Program Flow&rdquo; both to Yes in the column for your Unit Test target. Ensure that &ldquo;Library Search Paths&rdquo; includes <code>$(DEVELOPER_DIR)/usr/lib</code>, but this should be there already.</p>
+
+<p>You should be set up for code coverage now. If you want to check this is working, ensure your build target (up the top on the right on the Run &amp; Stop buttons) is set to your Unit Test target and iPhone Simulator, then build and test your unit test target. Then, open Organizer, choose the Projects item from the toolbar, select your project, and then click the little arrow next to the Derived Data directory. This will open the build location in Finder. In here, open the selected directory, then navigate to <code>Build/Intermediates/&lt;Your Project&gt;.build/Debug-iphonesimulator/&lt;Your Unit Test Target&gt;.build/Objects-normal/i386/</code> and in there there should be a set of <code>.gcno</code> (generated at build) and <code>.gcda</code> (generated when your test target executed and finished) files. These are the code coverage files. If you&rsquo;d like to have a look at them before we integrate back into Jenkins, get <a href="http://code.google.com/p/coverstory/">CoverStory</a> and open them up.</p>
+
+<h3>Application (UI) Tests with Frank</h3>
+
+<p>Now we&rsquo;ll set up the application test target with <a href="https://github.com/moredip/Frank">Frank</a>. First of all, we need to install Frank and cucumber.</p>
+
+<p>We will need to use a customised version of Frank to enable the iOS Simulator to exit after execution of the tests. The standard build does not include a method to terminate an application so we&rsquo;ll need to build this in. Thanks to Martin Hauner at <a href="http://softnoise.wordpress.com/2010/11/14/ios-running-cucumberfrank-with-code-coverage-in-hudson/">http://softnoise.wordpress.com/2010/11/14/ios-running-cucumberfrank-with-code-coverage-in-hudson/</a> for the tip on this. I&rsquo;ve forked frank and included this exit method, and you can get it from <a href="https://github.com/rickerbh/Frank/tree/exitCommand">https://github.com/rickerbh/Frank/tree/exitCommand</a> with the command <code>git clone git@github.com:rickerbh/Frank.git</code> and then switch to the exitCommand branch. You&rsquo;ll also need to <code>git submodule init</code> and <code>git submodule update</code>, and then check the submodules that are pulled in as I recall the submodules have submodules :-/</p>
+
+<p>Once all that is done, you&rsquo;ll need to be in the root directory of Frank that you cloned, and compile my branch of Frank with the following command.</p>
+
+<p><code>rake build_lib</code></p>
+
+<p>After this is finished, there should be a file at <code>dist/libFrank.a</code>. This is the customised library that we&rsquo;ll need to use with the exit command built in.</p>
+
+<p>(Full Frank installation instructions available at <a href="http://www.testingwithfrank.com/installing.html">http://www.testingwithfrank.com/installing.html</a> - I&rsquo;ll paraphrase here with a couple of sightly different steps for the custom library and code coverage inclusion) For convenience of installation, I actually installed the proper Frank gem rather than my customised build. You can do this with <code>gem install frank-cucumber</code>. Then, <code>cd</code> to your project directory, and run <code>frank-skeleton</code>. This installs Frank in your project directory. It also copies a version of the official <code>libFrank.a</code> file into <code>Frank/</code>. You&rsquo;ll need to replace that with the version that we built.</p>
+
+<p>To add Frank to your Xcode project, you&rsquo;ll need a new target (you don&rsquo;t want the Frank server installed in the Release version of your application). Duplicate your main application target by right clicking on it and selecting Duplicate. Rename the new target &ldquo;\<Your app name\> Frankified&rdquo;. Then, add the Frank directory (that was created when you ran <code>frank-skeleton</code>) to your Xcode project. Ensure that it&rsquo;s only added to your frankified target, not your main application target. Add <code>CFNetwork.framework</code> to the Frankified &ldquo;Link Binary With Libraries&rdquo; section of the Build Phases. Then, add <code>-all_load</code> and <code>-ObjC</code> to the &ldquo;Other Linker Flags&rdquo; Build Setting.</p>
+
+<p>To enable code coverage for Frank,  add <code>--coverage</code> to the &ldquo;Other Linker Flags&rdquo; Build Setting, and set &ldquo;Generate Test Coverage Files&rdquo; and &ldquo;Instrument Program Flow&rdquo; both to Yes in the column for your Frankified target.</p>
+
+<p>If you build and run the Frankified target for the iPhone simulator of your application, it should build OK and start the simulator. Head to <a href="http://localhost:37265"> http://localhost:37265</a> and you should see the Symbiote browser of your iPhone application.</p>
+
+<p>If you want to see if the coverage is working, head to <code>Build/Intermediates/&lt;Your Project&gt;.build/Debug-iphonesimulator/&lt;Your Frankified Target&gt;.build/Objects-normal/i386/</code> just like with the Unit Tests area above.</p>
+
+<p>You should then write some tests in cucumber and make sure they work.</p>
+
+<h4>Troubleshooting Frank and Code Coverage</h4>
+
+<p>I had a lot of trial and error (mostly <em>error</em> actually) getting coverage working with Frank. I had to play a bit with the &ldquo;Library Search Paths&rdquo; Build Setting so it could find the correct coverage library to include. I have <code>$(Developer)/Platforms/iPhoneOS.platform/Developer/usr/lib</code> added in the setting, but can&rsquo;t recall if this is required or not - apologies for this.</p>
+
+<p>If you are getting the <code>.gcno</code> created but not the <code>.gcda</code> files, it could be an issue of your application not exiting correctly when the simulator terminates (as the <code>.gcda</code> files are only written when the application terminates). If this is the case, head into the Info area for your Frankified build target. Add/Set the &ldquo;Application does not run in background&rdquo; property to the application, and set it to YES. This will ensure the app terminates when the home button is pressed, and the <code>.gcda</code> files are created.</p>
+
+<p>I also had an issue when the application was attempting to write the <code>.gcda</code> files. It was complaining that <code>fopen$UNIX2003 called from function llvm_gcda_start_file</code>. I found <a href="http://stackoverflow.com/questions/8732393/code-coverage-with-xcode-4-2-missing-files">this entry in stackoverflow</a> and created the c methods in my main.m file and it enabled the application to write the files correctly.</p>
+
+<p>You may also need to enable the Accessibility inspector in the iPhone Simulators Settings app under General > Accessibility - instructions from <a href="http://developer.apple.com/library/ios/#documentation/UserExperience/Conceptual/iPhoneAccessibility/Testing_Accessibility/Testing_Accessibility.html">Apple</a>.</p>
+
+<p>If you are getting a message that says <code>Couldn't register XXXX with the bootstrap server. Error: unknown error code. This generally means that another instance of this process was already running or is hung in the debugger.</code> this means that either the Simulator is already running (it must be quit for the headless build to run) or that there is a previous version of the headless test exection that has hung. You can find these with <code>ps -ef | grep Fran</code> (Fran for frankified). Kill them with the <code>kill</code> command.</p>
+
+<h3>Configuring Frank for Headless Tests under Jenkins</h3>
+
+<p>There will be a file in your Xcode project under the Frank directory at <code>support/env.rb</code> - this will contain some environmental settings that are used for executing the cucumber tests. Replace the content with the below with the appropriate text replacements. You will need different settings for manual command line based test execution, and the Jenkins based tests, so there is an environment based conditional in the file. Default is for command line based testing.</p>
+
+<p><em>For the replacement text for </em><Your UI Testing Jenkins Job Name><em>, just type in what you&rsquo;ll call your Jenkins UI test job, and remember this for later.</em></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require 'frank-cucumber'
+</span><span class='line'>
+</span><span class='line'>ENV['TESTING_ENV'] ||= 'command_line'
+</span><span class='line'>environment = ENV['TESTING_ENV']
+</span><span class='line'>
+</span><span class='line'>if environment == 'command_line'
+</span><span class='line'> BASE_DIR = "&lt;Your home directory&gt;/Library/Developer/Xcode/DerivedData/&lt;Your long and random derived data dir from Xcodes project organizer&gt;/"
+</span><span class='line'> APP_BUNDLE_PATH =  "#{BASE_DIR}Build/Products/Debug-iphonesimulator/&lt;Your frankified target&gt;.app"
+</span><span class='line'> APP_DIR = "#{BASE_DIR}Build/Intermediates/&lt;Your project name&gt;.build/Debug-iphonesimulator/&lt;Your frankified target&gt;.build"
+</span><span class='line'>elsif environment == 'jenkins'
+</span><span class='line'> BASE_DIR = "&lt;Your Jenkins install location&gt;/jobs/&lt;Your UI Testing Jenkins Job Name&gt;/workspace/"
+</span><span class='line'> APP_BUNDLE_PATH =  "#{BASE_DIR}build/Debug-iphonesimulator/&lt;Your frankified target&gt;.app"
+</span><span class='line'> APP_DIR = "#{BASE_DIR}build/&lt;Your project name&gt;.build/Debug-iphonesimulator/&lt;Your frankified target&gt;.build"
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>#### Common ####
+</span><span class='line'>SDK_DIR = "/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk"
+</span><span class='line'>APP_BINARY = "#{APP_BUNDLE_PATH}/&lt;Your frankified target&gt;"
+</span><span class='line'>USER_DIR = "iPhone Simulator/User"
+</span><span class='line'>PREF_DIR = "#{USER_DIR}/Library/Preferences"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In your Xcode project under the Frank directory, there will be another directory named <code>step_definitions</code>. This should contain a .rb file that has some ruby and cucumber/frank definitions it it. We need to add a couple of things to that file. <em>Again thanks to <a href="http://softnoise.wordpress.com/2010/11/14/ios-running-cucumberfrank-with-code-coverage-in-hudson">Martin Hauner</a> here.</em></p>
+
+<p>Add the following lines to the top of the ruby file in the step_definitions directory. I&rsquo;ll explain what these are&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require 'fileutils'
+</span><span class='line'>
+</span><span class='line'>ACCESIBILITY_PLIST   = "com.apple.Accessibility.plist"
+</span><span class='line'>ACCESIBILITY_CONTENT = &lt;&lt;PLIST
+</span><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+</span><span class='line'>&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+</span><span class='line'>&lt;plist version="1.0"&gt;
+</span><span class='line'>&lt;dict&gt;
+</span><span class='line'>&lt;key&gt;ApplicationAccessibilityEnabled&lt;/key&gt;
+</span><span class='line'>&lt;true/&gt;
+</span><span class='line'>&lt;/dict&gt;
+</span><span class='line'>&lt;/plist&gt;
+</span><span class='line'>PLIST
+</span><span class='line'>
+</span><span class='line'>Before do
+</span><span class='line'>  # check that pwd contains the "build" dir as we are creating
+</span><span class='line'>  # items relative to it.
+</span><span class='line'>  #Dir["build"].length.should == 1
+</span><span class='line'>
+</span><span class='line'>  # make sure we do start with a clean environment
+</span><span class='line'>  FileUtils.remove_dir("#{USER_DIR}",true)
+</span><span class='line'>
+</span><span class='line'>  pwd     = "#{Dir.pwd}"
+</span><span class='line'>  prefdir = "#{PREF_DIR}"
+</span><span class='line'>  FileUtils.mkdir_p prefdir
+</span><span class='line'>
+</span><span class='line'>  File.open("#{PREF_DIR}/#{ACCESIBILITY_PLIST}", 'w') do |f|
+</span><span class='line'>    f &lt;&lt;ACCESIBILITY_CONTENT
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  ENV['SDKROOT']               = "#{SDK_DIR}"
+</span><span class='line'>  ENV['DYLD_ROOT_PATH']        = "#{SDK_DIR}"
+</span><span class='line'>  ENV['IPHONE_SIMULATOR_ROOT'] = "#{SDK_DIR}"
+</span><span class='line'>  ENV['TEMP_FILES_DIR']        = "#{APP_DIR}"
+</span><span class='line'>  ENV['CFFIXED_USER_HOME']     = "#{pwd}/#{USER_DIR}"
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>After do
+</span><span class='line'>  frankly_exit
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>def launch_app_headless
+</span><span class='line'>  @apppid = fork do
+</span><span class='line'>    exec(APP_BINARY, "-RegisterForSystemEvents")
+</span><span class='line'>  end
+</span><span class='line'>  wait_for_frank_to_come_up
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>def frankly_exit
+</span><span class='line'>  get_to_uispec_server('exit')
+</span><span class='line'>  # calling exit in the app will not return any response
+</span><span class='line'>  # so we simply catch the error caused by exiting.
+</span><span class='line'>  rescue EOFError
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>Given /^I launch the headless app$/ do
+</span><span class='line'>  launch_app_headless
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>Before</code> block gets executed before any tests are run. The accessibility plist/content section sets up a file that enables the accessibility settings for the simulator. This is created every time the cucumber tests are run to ensure accessibility is in the correct state. The <code>SDKROOT</code>, <code>DYLD_ROOT_PATH</code>, <code>IPHONE_SIMULATOR_ROOT</code>, <code>TEMP_FILES_DIR</code>, and <code>CFFIXED_USER_HOME</code> are all directories for the simulator to function correctly. Thanks to <a href="http://cocoawithlove.com/2008/11/automated-user-interface-testing-on.html">Matt Gallagher&rsquo;s blog entry</a> for aiding my understanding of these.</p>
+
+<p>The <code>launch_app_headless</code> method adds a flag when launching the application so it launches headlessly. If you wanted, you could actually add a conditional so that the headless method is only used when launching under jenkins.</p>
+
+<p>The <code>frankly_exit</code> method will call the new exit method that we built into <code>libFrank.a</code>. This is called from the <code>After</code> block, which gets called after the tests are executed.</p>
+
+<p>That should be all the configuration you need. If you alter your frank/cucumber tests to use the &ldquo;Given I launch the headless app&rdquo; call to start the application, you should now be able to run it in a headless manner. Execute <code>cucumber</code> in your Frank directory inside your Xcode project dir to test it out.</p>
+
+<h2>Setting up the jobs in Jenkins</h2>
+
+<p>The way I have structured my tasks in jenkins is that I have 4 different jobs. I have a unit test execution job that triggers off a git push. If this is successful, I have the UI test job that executes. If this is successful, I then package and archive the binary that was generated from that push. The last job that is configured is a daily distribution of the last successfully tested application to a group on TestFlight.</p>
+
+<h3>Setting up the unit test job in Jenkins</h3>
+
+<p>Navigate to <a href="http://localhost:8080">Jenkins</a> and click on &ldquo;New Job&rdquo;. Give it a name (I called mine &ldquo;Project Unit Tests&rdquo;), and select the &ldquo;Build a free-style software project&rdquo; radio button, then click OK.</p>
+
+<p>You should now be in a screen to configure the build settings for your unit test target. In the source code management area, choose git. Enter your repo name (something like <code>git@localhost:my-project.git</code>). If you have a specific branch you want to build from put it in the &ldquo;Branches to build&rdquo; box (mine is <code>*/develop</code>). In the &ldquo;Build Triggers&rdquo; area below, select &ldquo;Poll SCM&rdquo;. I&rsquo;ve set my schedule to <code>* * * * *</code> meaning it&rsquo;ll look every minute for a new push.</p>
+
+<p>Navigate down the screen until you find the &ldquo;Add build step&rdquo; button. Click it and select Xcode. Then, fill in the following boxes.</p>
+
+<ul>
+<li>Clean before build - check this box. I like clean builds before testing.</li>
+<li>Target - set this to the unit test target name from Xcode (no escaping of spaces required)</li>
+<li>SDK - set this to the SDK you want to build for. Mine is <code>/Developer/Platform/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/</code></li>
+<li>Configuration - set this to <code>DEBUG</code></li>
+<li>Keychain path - this should already be set to <code>${HOME}/Library/Keychains/login.keychain</code></li>
+</ul>
+
+
+<p>That&rsquo;s all the Xcode build information set up. Now, to generate the coverage test files. Add an &ldquo;Execute Shell&rdquo; build step with the &ldquo;Add build step&rdquo; button. In the &ldquo;Command&rdquo; box, call gcovr (<code>which gcovr</code> to find your own install location) with <code>/usr/local/share/python/gcovr -r "&lt;Your Jenkins install location&gt;/jobs/Project Unit Tests/workspace" --exclude '.*UnitTests.*' --xml &gt; "&lt;Your Jenkins install location&gt;/jobs/Project Unit Tests/workspace/coverage.xml"</code></p>
+
+<p>In the Post-build Actions section, check the &ldquo;Archive the artifacts&rdquo; box and set the &ldquo;Files to archive&rdquo; field to <code>build/Debug-iphoneos/*.ipa</code></p>
+
+<p>Check the &ldquo;Publish Cobertura Coverage Report&rdquo; box and set the &ldquo;Cobertura xml report pattern&rdquo; to <code>**/coverage.xml</code>.</p>
+
+<p>Also check the &ldquo;Publish JUnit test result report&rdquo; box and set the &ldquo;Test report XMLs&rdquo; to <code>test-reports/*.xml</code>.</p>
+
+<p>Click the Save button down the bottom, and then attempt to run your unit tests manually. The code should be checked out from your git repo, build the unit test target, run the tests and produce the unit test reports and coverage results.</p>
+
+<h3>Setting up the application test job in Jenkins</h3>
+
+<p>Navigate to <a href="http://localhost:8080">Jenkins</a> and click on &ldquo;New Job&rdquo;. Give it a name (I called mine &ldquo;Project UI Tests&rdquo;), and select the radio button to copy the unit test job that was previously set up. In the Configuration screen for the new job, alter the following fields.</p>
+
+<ul>
+<li>Build Triggers - set this to be &ldquo;Build after other projects are built&rdquo; and type in the name of your unit test job.</li>
+<li>Build Triggers - uncheck poll scm</li>
+<li>Target - Set this to your Frankified target name from Xcode</li>
+</ul>
+
+
+<p>Change the existing &ldquo;Execute shell&rdquo; step to use your UI Test build job name rather than the unit test job name. <code>/usr/local/share/python/gcovr -r "&lt;Your Jenkins install location&gt;/jobs/Project UI Tests/workspace" --exclude '.*UnitTests.*' --xml &gt; "&lt;Your Jenkins install location&gt;/jobs/Project UI Tests/workspace/coverage.xml"</code></p>
+
+<p>Create a new &ldquo;Execute shell build step&rdquo;, and click and drag it (with the little 4x4 set of boxes on the right of the &ldquo;Execute shell&rdquo; label on screen) to move it inbetween the Xcode step and the gcovr step. Insert the following commands in the shell box.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>source &lt;Your home dir&gt;/.rvm/environments/&lt;your ruby version&gt;
+</span><span class='line'>export TESTING_ENV="jenkins"
+</span><span class='line'>cd "&lt;Your Jenkins install location&gt;/jobs/Project UI Tests/workspace/Frank"
+</span><span class='line'>cucumber -f junit --out ../test-reports</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>The source line sets up the environment for rvm so the frank gem is included correctly - set it to the appropriate ruby version in the ~/.rvm/environments directory. Mine is ~/.rvm/environments/ruby-1.9.2-p290</em></p>
+
+<p>Uncheck the &ldquo;Archive the artifacts&rdquo; option, and click save. You can now attempt to run your application tests via Frank. This will check out the code, build the Frankified target, execute the tests and then process the unit test and coverage reports.</p>
+
+<p><em>FYI - my unit test reports for this step are empty. If someone figures out how to get cucumber to put something useful in them please let me know!</em></p>
+
+<h3>Setting up the archive job</h3>
+
+<p>Similar to the application test job, create a new job that copies the Unit Test job. I called mine Project Developer Build. In the Configuration screen for the new job, alter the following fields.</p>
+
+<ul>
+<li>Build Triggers - set this to be &ldquo;Build after other projects are built&rdquo; and type in the name of your application/UI test job.</li>
+<li>Build Triggers - uncheck poll scm</li>
+<li>Target - Set this to your application target name from Xcode (mine is Project TestFlight - I have a specific target that includes the TestFlight SDK)</li>
+<li>Configuration - I have this set to release. Be sure to setup and test the signing identities correctly in Xcode for this. You must use the adhoc profile that should be used in TestFlight.</li>
+<li>Build IPA - check this.</li>
+</ul>
+
+
+<p>Remove the execute shell build step with the Delete button.</p>
+
+<p>Uncheck the Cobertura and Unit test report generation Post-build actions. Change the Archive files location to <code>build/Release-iphoneos/*.ipa</code></p>
+
+<p>Click save, and now whenever both your unit and application test steps pass, you&rsquo;ll have a version of the application built and archived ready to go to TestFlight.</p>
+
+<h3>Distributing to TestFlight</h3>
+
+<p><em>Thanks to the Shine Technologies team for their <a href="http://blog.shinetech.com/2011/06/23/ci-with-jenkins-for-ios-apps-build-distribution-via-testflightapp-tutorial/">blog entry</a> that helped here.</em></p>
+
+<p>Create another free-style software project job (last one, I promise!) in Jenkins - I&rsquo;ve called mine Project TestFlight Deployment. Set the build triggers to &ldquo;Build periodically&rdquo; and set the schedule to whatever time you want to upload the application to TestFlight. Mine is set to 10pm (<code>0 22 * * *</code>).</p>
+
+<p>Add an Execute shell build step. This will call curl to upload the application to TestFlight. You will need your API token and Team token from Testflight. Set the Command to the following</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ../..
+</span><span class='line'>curl http://testflightapp.com/api/builds.json -F file=@Project\ TestFlight/lastSuccessful/archive/build/Release-iphoneos/Project\ TestFlight-Release.ipa -F api_token=’&lt;api token&gt;’ -F team_token=’&lt;team token&gt;’ -F notes=’This is an auto deploy build of the develop branch with Release configuration’ -F notify=True -F distribution_lists=’&lt;name of test distribution list&gt;’</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The ipa that&rsquo;s being uploaded there is the version that was saved in the last build job. For the name, just look inside the Project TestFlight job and it&rsquo;ll have the name of the &ldquo;Last Successful Artifact&rdquo; - this is what you need to upload.</p>
+
+<p>That should be it.</p>
+
+<h2>End - finally</h2>
+
+<p>If you experience issues with this, have corrections or useful troubleshooting steps then please let me know. This process was a bit of a pain to get working correctly so I hope this guide is useful for someone. You should also <a href="http://twitter.com/rickerbh">follow me</a> on twitter <a href="http://twitter.com/rickerbh">@rickerbh</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

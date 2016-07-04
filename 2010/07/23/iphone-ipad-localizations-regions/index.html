@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>iPhone & iPad (iOS) Localizations and Regions - Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="Recently I have been doing some localizations of an iOS app from English (US) to English (UK). The iPhone development guides from Apple describe how &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rickerbh.github.io/2010/07/23/iphone-ipad-localizations-regions">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rickerbh.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">iPhone & iPad (iOS) Localizations and Regions</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-07-23T07:45:12+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>7:45 am</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Recently I have been doing some localizations of an iOS app from English (US) to English (UK). The iPhone development guides from Apple describe how to support multiple languages (such as English, German, Japanese), but fail to describe how to support multiple variants of a single language. By this I mean support support for US English, English, NZ English, AU English. The word I needed to regionalize was Behavior (or Behaviour, depending where you come from).</p>
+
+<p>In the Apple Developer Library, it explicitly states that for MacOS applications take both the Language and Regional preferences of the user into account, but only look at the preferred <em>language</em> on iOS - <a href="http://developer.apple.com/iphone/library/documentation/MacOSX/Conceptual/BPInternational/Articles/InternatSupport.html">Support for Internationalization</a>.  This means that a single variant <em>per language</em> is supported.</p>
+
+<p>However, these is a way around this. I&rsquo;m not sure if this is a <em>good</em> thing to do, but it works for me and I haven&rsquo;t noticed any ill side effects yet.</p>
+
+<p>To support both US English and British English in your iOS application, create 2x Localization.strings files just as you would for multiple language. Put the US English translation file Localization.strings in a directory in your iPhone app called English.lproj (Apple defaults) and the British English translation in a directory named en_GB.lproj (just in case they decide to support regions in the future).</p>
+
+<p>Then, you&rsquo;ll need to create some code to manually set the preferred localization. In your main.m file (yup, main.m is being edited) alter it so it performs some logic similar to below.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>  <span class="bp">NSAutoreleasePool</span> <span class="o">*</span> <span class="n">pool</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSAutoreleasePool</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>  <span class="bp">NSString</span> <span class="o">*</span><span class="n">language</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSLocale</span> <span class="n">preferredLanguages</span><span class="p">]</span> <span class="nl">objectAtIndex</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>  <span class="bp">NSString</span> <span class="o">*</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSLocale</span> <span class="n">currentLocale</span><span class="p">]</span> <span class="nl">objectForKey</span><span class="p">:</span> <span class="n">NSLocaleCountryCode</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">([</span><span class="n">language</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="s">@&quot;en&quot;</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">locale</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="s">@&quot;GB&quot;</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>      <span class="p">[[</span><span class="bp">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="nl">setObject</span><span class="p">:[</span><span class="bp">NSArray</span> <span class="nl">arrayWithObjects</span><span class="p">:</span><span class="s">@&quot;en_GB&quot;</span><span class="p">,</span> <span class="s">@&quot;en&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">]</span> <span class="nl">forKey</span><span class="p">:</span><span class="s">@&quot;AppleLanguages&quot;</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">retVal</span> <span class="o">=</span> <span class="n">UIApplicationMain</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="nb">nil</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">pool</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">retVal</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When the line</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">int</span> <span class="n">retVal</span> <span class="o">=</span> <span class="n">UIApplicationMain</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="nb">nil</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>gets executed, it seems to set up all the Localization bundles before calling the application:didFinishLaunchingWithOptions method on your app delegate, so putting Localization code in the app delegate is too late. So, what the code above does is retrieve the users current language and region, and compares those against pre-determined values - en for the language and gb for the region. If these match, then I force a new setting in the NSUserDefaults to overwrite the users preferred language. Then, when the UIApplicationManager function gets called, it appears to retrieve the users preferred language setting, and look up the Localization for that - which in my case I&rsquo;ve forced to be en_GB.</p>
+
+<p>One thing you need to be careful about is persistence of this NSUserDefault setting.  It is saved once it&rsquo;s set, and persists through multiple application executions. To get around this (lets say the user changes their region back to US), you need to remove the setting after the bundle initialization has taken place.  In you app delegates application:didFinishLaunchingWithOptions method, just execute the following code.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[[</span><span class="bp">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="nl">removeObjectForKey</span><span class="p">:</span><span class="s">@&quot;AppleLanguages&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This wipes out the NSUserDefault setting that the app made in the main.m file.</p>
+
+<p>If anyone knows of issues with this approach (apart from being a dirty hack), or faults with my code please let me know in the comments below. I wish Apple supported different regions per language natively in iOS but they don&rsquo;t. This is the only way I&rsquo;ve found to do this, and continue to use localization functions such as NSLocalizedString.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn"><a href="/about">Hamish Rickerby</a></span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2010-07-23T07:45:12+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>7:45 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rickerbh.github.io/2010/07/23/iphone-ipad-localizations-regions/" data-via="rickerbh" data-counturl="http://rickerbh.github.io/2010/07/23/iphone-ipad-localizations-regions/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2010/03/04/moving-van/" title="Previous Post: Moving Van">&laquo; Moving Van</a>
+      
+      
+        <a class="basic-alignment right" href="/2011/10/22/big-changes/" title="Next Post: Big Changes">Big Changes &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/05/17/brief-update/">Brief Update</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>For Hire?</h1>
+  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
+  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rickerbh.github.io/2010/07/23/iphone-ipad-localizations-regions/';
+        var disqus_url = 'http://rickerbh.github.io/2010/07/23/iphone-ipad-localizations-regions/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

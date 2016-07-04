@@ -1,0 +1,1161 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="makeuseof.com have recently posted about 11 cool iPhone keypad codes - these are special codes (known as USSD codes) that send messages via the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rickerbh.github.io/page/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rickerbh.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/07/31/ussd-codes-on-iphone/">USSD Codes on iPhone</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-31T11:51:04+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2009</span></span> <span class='time'>11:51 am</span></time>
+        
+           | <a href="/2009/07/31/ussd-codes-on-iphone/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/07/31/ussd-codes-on-iphone/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>makeuseof.com have recently posted about <a href="http://www.makeuseof.com/tag/cool-iphone-keypad-codes/">11 cool iPhone keypad codes</a> - these are special codes (known as <a href="http://en.wikipedia.org/wiki/Unstructured_Supplementary_Service_Data">USSD</a> codes) that send messages via the signalling channel direct to the core of a mobile operators network.  These codes are nothing new, they have been around for years and years.  They are also not generally universal (there are some standard, but they provide relatively boring functionality).  Different networks can enable different functionality on different codes.</p>
+
+<p>The codes can do boring things like retrieve your divert status from the network, return your <a href="http://en.wikipedia.org/wiki/IMEI">IMEI</a> or perhaps <a href="http://en.wikipedia.org/wiki/ICCID">ICCID</a>, but they can also interact with specialised applications driven via <a href="http://en.wikipedia.org/wiki/USSD_Gateway">USSD Gateways</a> to return useful information and execute transactions.  These are applications that are sent specific codes by an operators core network, perform some processing on the data received, and return a response.  Things that are non-standard that are enabled by USSD Gateways are services such as USSD-based prepay balance retrieval, USSD-topup, or interactions with <a href="http://en.wikipedia.org/wiki/NGIN">NGIN</a> features to alter a network based service.</p>
+
+<p>I looked into USSD codes on the iPhone a while back, not to be used by users typing them in, but more to be used by applications querying information from the network via them.  The reason why I wanted to programatically access them?  To look at what&rsquo;s possible for network operators or enterprises to release as iPhone based network service management applications.</p>
+
+<p>Sadly, Apple have disable the use of USSD codes from within the (legitimate) iPhone sandbox available to developers (via the open URL methods, passing in a tel://xxxxxx URL).  This means that there won&rsquo;t be any applications from your operators that will make it easy to retrieve and change network settings that can be released thru the app store - at least not until Apple change their mind about interactions with USSD codes.  Which is a pity - there are lots of useful services that would be useful to expose simple interfaces for usage for to the operators end users.  USSD is an efficient, fast way to configure the network, using capabilities that most operators already have.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/07/30/yahoo-and-microsoft-micro-hoo-or-bingy/">Yahoo and Microsoft - Micro-hoo, or Bingy!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-30T08:50:32+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>8:50 am</span></time>
+        
+           | <a href="/2009/07/30/yahoo-and-microsoft-micro-hoo-or-bingy/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/07/30/yahoo-and-microsoft-micro-hoo-or-bingy/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The recent deal announced between Microsoft and Yahoo strikes me as odd.</p>
+
+<p>I understand that they are looking to create a competitor to Google in both search and advertising, but the &ldquo;price paid&rdquo; seems very high - at least on the part of Yahoo.</p>
+
+<p>Major terms of the deal:</p>
+
+<ul>
+    <li>Microsoft will be powering Yahoo search</li>
+    <li>Microsoft have licensed Yahoo&#8217;s search technology for 10(!) years</li>
+    <li>Microsoft will run paid search via their search engine</li>
+    <li>Yahoo will be providing the advertising sales force for their combined &#8220;paid search&#8221; capability</li>
+    <li>Each company will still maintain separate advertising sales forces for other advertising</li>
+    <li>They enter a revenue sharing agreement, but Microsoft guarantee Yahoo will get at least existing revenues for the next 18 months</li>
+    <li>Microsoft pay most of its traffic acquisition costs</li>
+</ul>
+
+
+<p>So, boiling it down, it appears Yahoo are giving up their search engine technologies (for at least 10 years) in conjunction for (at least current) revenues to be paid by Microsoft for algorithmic search advertising.</p>
+
+<p>Microsoft have to maintain a sales force to sell other advertising, so they aren&rsquo;t saving costs there.  They are still having to maintain search so they aren&rsquo;t saving costs there.  They are paying Yahoo for traffic acquisition, and revenue for algorithmic search advertising, so they are losing money there.  Their benefit seems to be</p>
+
+<ol>
+    <li>Acquisition of a license for Yahoo&#8217;s search technology - given they&#8217;ve just released their own shiny new engine, is this an asset or liability?</li>
+    <li>Traffic - this is what Microsoft are in the deal for for.  Traffic from Yahoo.</li>
+</ol>
+
+
+<p>10 years is a long time.  Search changes a lot in 10 years.  Google was only just starting out 10 years ago.  Altavista (at least where I was using the web) was top dog back then.  I&rsquo;d be interested to see if Yahoo are going to maintain their search technology, or just let it die off.  Is this a sign that they no longer want to compete in search, but be a destination that pulls together other properties (harking back to their very early days I guess).  I guess time will tell if Yahoo&rsquo;s apparent specialisation strategy was a sensible or dumb move.  Microsoft are banking on Bing becoming a google killer, or at least a serious competitor, in the long term.  They also apparently believe that paid search results are the way of the future - that&rsquo;s why they want the traffic.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/07/29/itunes-connect-now-has-keywords/">iTunes Connect Now Has Keywords</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-07-29T10:38:22+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>10:38 am</span></time>
+        
+           | <a href="/2009/07/29/itunes-connect-now-has-keywords/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/07/29/itunes-connect-now-has-keywords/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Apple have added an extra attribute to applications on iTunes store - keywords.</p>
+
+<p>You can configure your keywords with the &ldquo;Edit Information&rdquo; link against the application.  <a href="http://sendit4.me">SendIt4.me</a> (<a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=302871160&mt=8&s=143441">iTMS</a>) has already been updated :-)</p>
+
+<p>Be careful though.  It appears you can only update your keywords ONCE per application update - so make sure you choose the right ones the first time around - otherwise you&rsquo;ll have to go through the painful approvals process to get it corrected.</p>
+
+<p>The keywords <em>should</em> help with searching for your application within the store.  Fingers crossed.</p>
+
+<p>&mdash; EDIT &mdash;</p>
+
+<p>You can also only have up to 100 characters for the keywords.  Don&rsquo;t get caught out!  If you submit with more than 100, it tells you too late - you&rsquo;ll have to resubmit your app to fix it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/05/11/my-first-iphone-app-approved-finally/">My First iPhone App Approved - Finally</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-05-11T19:50:09+10:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>7:50 pm</span></time>
+        
+           | <a href="/2009/05/11/my-first-iphone-app-approved-finally/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/05/11/my-first-iphone-app-approved-finally/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Send real postcards to your family and friends with <a href="http://sendit4.me">SendIt4.me</a>, now available as an <a href="http://is.gd/yVcY">iPhone client</a>.  The application is 100% free and each postcard you send will cost $2USD.  The postcards can be sent anywhere in the world, and postage time is dependent on your international and local mail services (they are posted from the US, so if you live there you should get it quicker).</p>
+
+<p><a href="http://is.gd/yVcY">Download now!</a></p>
+
+<p><a href="http://is.gd/yVcY"><img src="http://hamishrickerby.com/wp-content/uploads/2009/05/sendit4me-208x300.png" alt="sendit4me" title="sendit4me" width="208" height="300" class="alignnone size-medium wp-image-327" /></a></p>
+
+<p><em>Sidenote: I submitted this application initially to Apple on the 18th Jan 2009.  It was finally approved tonight.  There was only 1 &ldquo;Please wait&rdquo; mail, and one &ldquo;We need some help testing it&rdquo; mail - too long in my opinion. </em></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/03/20/feedzirra/">Feedzirra</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-03-20T07:51:46+11:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>7:51 am</span></time>
+        
+           | <a href="/2009/03/20/feedzirra/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/03/20/feedzirra/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://github.com/pauldix/feedzirra/tree/master">Feedzirra</a> is an RSS feed fetching and parsing library that I quite like.  For a project I&rsquo;m working on with a mate we need to be able to parse and receive updates from (potentially) a large number of RSS feeds.  Feedzirra seemed the ticket, but didn&rsquo;t have support for itunes style RSS feeds - so I added it.</p>
+
+<p>This was basically my first (well, second, but that wasn&rsquo;t public) go with github, and first contribution to an open source project.  <a href="http://www.pauldix.net/2009/03/feedzirra-release-adds-simple-custom-parsing-and-more.html">Paul Dix accepted my code</a>, and I&rsquo;m oddly excited about it all.</p>
+
+<p>AND to make things even better, someone has already started to enhance my contribution.  Woo hoo!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/03/02/esta-and-confusion/">ESTA and Confusion</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-03-02T21:26:00+11:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2009</span></span> <span class='time'>9:26 pm</span></time>
+        
+           | <a href="/2009/03/02/esta-and-confusion/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/03/02/esta-and-confusion/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I went to look at the ESTA website today as my girlfriend needs to apply for one of these authorisations to be allowed to travel to the US.</p>
+
+<p>The website was very intimidating, and confusing.</p>
+
+<ol>
+    <li>The URL - if you&#8217;re providing an online site that every traveller to the US has to visit to get an authorisation to travel my advice would be choose a URL that is easier to remember than <a href="https://esta.cbp.dhs.gov/">https://esta.cbp.dhs.gov/</a></li>
+    <li>The warning message - one sure fire way to scare users is to show them a message that looks like this when they connect to the site<br/>
+<a href="http://hamishrickerby.com/wp-content/uploads/2009/03/picture-5.png"><img src="http://hamishrickerby.com/wp-content/uploads/2009/03/picture-5-256x300.png" alt="picture-5" title="picture-5" width="256" height="300" class="alignnone size-medium wp-image-302" /></a><br/>Note: <em>There is no expectation of privacy when you use this computer system</em></li>
+    <li>Make it doubly confusing by completely contradicting the previous message on a &#8220;Help&#8221; page within the site.<br/><a href="http://hamishrickerby.com/wp-content/uploads/2009/03/picture-4.png"><img src="http://hamishrickerby.com/wp-content/uploads/2009/03/picture-4-300x133.png" alt="picture-4" title="picture-4" width="300" height="133" class="alignnone size-medium wp-image-301" /></a><br/>Note: <em>Is this Web site secure and private?  Yes.</em></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/02/26/dealing-with-semantichacker-in-ruby/">Dealing With SemanticHacker in Ruby</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-02-26T19:42:04+11:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>7:42 pm</span></time>
+        
+           | <a href="/2009/02/26/dealing-with-semantichacker-in-ruby/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/02/26/dealing-with-semantichacker-in-ruby/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m having a bit of a play with <a href="http://www.semantichacker.com/">SemanticHacker</a> at the moment, seeing what their service thinks of some text I&rsquo;m poking at it.  To make this a bit simpler I created a small ruby lib that wraps their API to make my life a little easier.  And hopefully it&rsquo;ll make someone elses life easier - enjoy.</p>
+
+<p>(It requires <a href="http://github.com/why/hpricot/tree/master">hpricot</a> for XML parsing - make sure it&rsquo;s installed)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;hpricot&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;cgi&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;open-uri&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">SemanticHacker</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="no">URL</span> <span class="o">=</span> <span class="s2">&quot;http://api.semantichacker.com&quot;</span>
+</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:token</span><span class="p">,</span> <span class="ss">:doc</span><span class="p">,</span> <span class="ss">:content</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@token</span> <span class="o">=</span> <span class="n">token</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">get_signature</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@content</span> <span class="o">=</span> <span class="o">::</span><span class="no">CGI</span><span class="o">::</span><span class="n">escape</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">URL</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="vi">@token</span><span class="si">}</span><span class="s2">/signature?content=</span><span class="si">#{</span><span class="vi">@content</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="vi">@doc</span> <span class="o">=</span> <span class="no">Hpricot</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">get_concepts</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@content</span> <span class="o">=</span> <span class="o">::</span><span class="no">CGI</span><span class="o">::</span><span class="n">escape</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">URL</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="vi">@token</span><span class="si">}</span><span class="s2">/concept?content=</span><span class="si">#{</span><span class="vi">@content</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="vi">@doc</span> <span class="o">=</span> <span class="no">Hpricot</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">get_categories</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@content</span> <span class="o">=</span> <span class="o">::</span><span class="no">CGI</span><span class="o">::</span><span class="n">escape</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">URL</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="vi">@token</span><span class="si">}</span><span class="s2">/category?content=</span><span class="si">#{</span><span class="vi">@content</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="vi">@doc</span> <span class="o">=</span> <span class="no">Hpricot</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">type</span>
+</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:about</span><span class="o">/</span><span class="ss">:systemType</span><span class="p">)</span><span class="o">.</span><span class="n">inner_html</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">config_id</span>
+</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:about</span><span class="o">/</span><span class="ss">:configId</span><span class="p">)</span><span class="o">.</span><span class="n">inner_html</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">categories</span>
+</span><span class='line'>    <span class="n">response</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:categorizer</span><span class="o">/</span><span class="ss">:categorizerResponse</span><span class="o">/</span><span class="ss">:categories</span><span class="o">/</span><span class="ss">:category</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">response</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:id</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;id&#39;</span><span class="o">]</span><span class="p">,</span> <span class="ss">:weight</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;weight&#39;</span><span class="o">]</span><span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">response</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">concepts</span>
+</span><span class='line'>    <span class="n">response</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:conceptExtractor</span><span class="o">/</span><span class="ss">:conceptExtractorResponse</span><span class="o">/</span><span class="ss">:concepts</span><span class="o">/</span><span class="ss">:concept</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">response</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:label</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;label&#39;</span><span class="o">]</span><span class="p">,</span> <span class="ss">:weight</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;weight&#39;</span><span class="o">]</span><span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">response</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">signatures</span>
+</span><span class='line'>    <span class="n">response</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:siggen</span><span class="o">/</span><span class="ss">:siggenResponse</span><span class="o">/</span><span class="ss">:signature</span><span class="o">/</span><span class="ss">:dimension</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">response</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:index</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;index&#39;</span><span class="o">]</span><span class="p">,</span> <span class="ss">:weight</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;weight&#39;</span><span class="o">]</span><span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">response</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And to make things happen</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sh</span> <span class="o">=</span> <span class="no">SemanticHacker</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;mysecrettoken&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">sh</span><span class="o">.</span><span class="n">get_signature</span><span class="p">(</span><span class="s2">&quot;Wow!  Some semantic analysis on my text&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">sh</span><span class="o">.</span><span class="n">signatures</span><span class="o">.</span><span class="n">inspect</span>
+</span><span class='line'><span class="c1">#returns an array of hashes with the weights and indexes of the categories</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/02/20/installing-f2c-on-a-mac/">Installing F2c on a Mac</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-02-20T07:22:49+11:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>7:22 am</span></time>
+        
+           | <a href="/2009/02/20/installing-f2c-on-a-mac/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/02/20/installing-f2c-on-a-mac/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have recently had to install f2c on my mac to convert Fortran to C code - for the gory details about this library check <a href="http://www.netlib.org/f2c/f2c.pdf" target="_blank"><a href="http://www.netlib.org/f2c/f2c.pdf">http://www.netlib.org/f2c/f2c.pdf</a></a></p>
+
+<p>Also, don&rsquo;t ask why I&rsquo;m installing this - lets just say there is some maths that needs doing, and fortran has the libraries to help with it.</p>
+
+<p>The installation process on the mac isn&rsquo;t really catered for with the package, and it&rsquo;s not available via macports.  I found an install script at <a href="http://hpc.sourceforge.net/buildf2c" target="_blank"><a href="http://hpc.sourceforge.net/buildf2c">http://hpc.sourceforge.net/buildf2c</a></a> but I found it doesn&rsquo;t work as advertised.</p>
+
+<p>Below is a fixed version of this script - hope this helps someone.  This will download the source as well as build and install it.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+<span class='line-number'>162</span>
+<span class='line-number'>163</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/sh
+</span><span class='line'>############################################################
+</span><span class='line'># This UNIX script builds the f2c FORTRAN --&gt; C translator #
+</span><span class='line'># under Mac OS X.                                          #
+</span><span class='line'># Make this script executable with "chmod +x buildf2c"     #
+</span><span class='line'>############################################################
+</span><span class='line'>echo "==================================="
+</span><span class='line'>echo "Build f2c FORTRAN --&gt; C translator."
+</span><span class='line'>echo "==================================="
+</span><span class='line'>echo "USAGE:  ./buildf2c"
+</span><span class='line'>
+</span><span class='line'>######################################
+</span><span class='line'># Set trap to allow abort on signal: #
+</span><span class='line'>######################################
+</span><span class='line'>trap 'echo "Interrupted by signal" &gt;&2; exit' 1 2 3 15
+</span><span class='line'>
+</span><span class='line'>########################################################
+</span><span class='line'># 1. Download f2c source from Bell Labs.               #
+</span><span class='line'># (Tar file is not visible - it's created on the fly.) #
+</span><span class='line'>########################################################
+</span><span class='line'>echo "--------------------------------------------"
+</span><span class='line'>echo "1. Downloading f2c source from Bell Labs ..."
+</span><span class='line'>echo "--------------------------------------------"
+</span><span class='line'># wget --passive-ftp ftp://netlib.bell-labs.com/netlib/f2c.tar
+</span><span class='line'>curl http://netlib.sandia.gov/cgi-bin/netlib/netlibfiles.tar?filename=netlib/f2c -o "f2c.tar"
+</span><span class='line'>echo "... done."
+</span><span class='line'>
+</span><span class='line'>#####################################
+</span><span class='line'># 2. Uncompress f2c tarred archive: #
+</span><span class='line'>#####################################
+</span><span class='line'>echo "-------------------------------"
+</span><span class='line'>echo "2. Uncompressing f2c source ..."
+</span><span class='line'>echo "-------------------------------"
+</span><span class='line'>tar -xvf f2c.tar
+</span><span class='line'>gunzip -rf f2c/*
+</span><span class='line'>cd f2c
+</span><span class='line'>mkdir libf2c
+</span><span class='line'>mv libf2c.zip libf2c
+</span><span class='line'>cd libf2c
+</span><span class='line'>unzip libf2c.zip
+</span><span class='line'>cd ../..
+</span><span class='line'>echo "... done."
+</span><span class='line'>
+</span><span class='line'>###############################################################
+</span><span class='line'># 3. Prepare the unix makefiles for building the f2c library. #
+</span><span class='line'>#    Note: CC compiler switched from 'cc' to '/usr/bin/cc'   #
+</span><span class='line'>###############################################################
+</span><span class='line'>echo "-------------------------------------------"
+</span><span class='line'>echo "3. Preparing makefiles for building f2c ..."
+</span><span class='line'>echo "-------------------------------------------"
+</span><span class='line'>sed 's/CC = cc/CC = \/usr\/bin\/cc/' f2c/libf2c/makefile.u &gt; f2c/libf2c/makefile
+</span><span class='line'>sed 's/CC = cc/CC = \/usr\/bin\/cc/' f2c/src/makefile.u &gt; f2c/src/makefile
+</span><span class='line'>echo "... done."
+</span><span class='line'>
+</span><span class='line'>##########################################
+</span><span class='line'># 4. Create and install f2c header file. #
+</span><span class='line'># If you use a C++ compiler:  make hadd  #
+</span><span class='line'># Otherwise:                  make f2c.h #
+</span><span class='line'>##########################################
+</span><span class='line'>echo "----------------------------------------------------"
+</span><span class='line'>echo "4. Creating and installing f2c header file f2c.h ..."
+</span><span class='line'>echo "----------------------------------------------------"
+</span><span class='line'>cd f2c/libf2c
+</span><span class='line'>make f2c.h
+</span><span class='line'>if test ! -d /usr/local/include; then
+</span><span class='line'>mkdir -p /usr/local/include
+</span><span class='line'>fi
+</span><span class='line'>cp f2c.h /usr/local/include/
+</span><span class='line'>echo "... done."
+</span><span class='line'>
+</span><span class='line'>################################################
+</span><span class='line'># 5. Create and install f2c library "libf2c.a" #
+</span><span class='line'>################################################
+</span><span class='line'>echo "-----------------------------------------------------"
+</span><span class='line'>echo "5. Creating and installing f2c library "libf2c.a" ..."
+</span><span class='line'>echo "-----------------------------------------------------"
+</span><span class='line'>make
+</span><span class='line'>if test ! -d /usr/local/lib; then
+</span><span class='line'>mkdir -p /usr/local/lib
+</span><span class='line'>fi
+</span><span class='line'>cp libf2c.a /usr/local/lib/
+</span><span class='line'>ranlib /usr/local/lib/libf2c.a
+</span><span class='line'>echo "... done."
+</span><span class='line'>
+</span><span class='line'>######################################
+</span><span class='line'># 6. Make executable f2c translator: #
+</span><span class='line'>######################################
+</span><span class='line'>echo "---------------------------------------------"
+</span><span class='line'>echo "6. Creating and installing f2c translator ..."
+</span><span class='line'>echo "---------------------------------------------"
+</span><span class='line'>cd ../src
+</span><span class='line'>make
+</span><span class='line'>if test ! -d /usr/local/bin; then
+</span><span class='line'>mkdir -p /usr/local/bin
+</span><span class='line'>fi
+</span><span class='line'>cp f2c /usr/local/bin/
+</span><span class='line'>ln -s /usr/local/bin/f2c /bin/f2c
+</span><span class='line'>echo "... done."
+</span><span class='line'>
+</span><span class='line'>################################################################
+</span><span class='line'># 7. Install fc script:                                        #
+</span><span class='line'>#                                                              #
+</span><span class='line'># 1. Remove "-Olimit 2000" in the -O processing options within #
+</span><span class='line'>#    the 'fc' script.                                          #
+</span><span class='line'># 2. Eliminate all references to the math library (-lm) in     #
+</span><span class='line'>#    the script 'fc' since it is included the System framework #
+</span><span class='line'>#    and is linked by default under Mac OS X.                  #
+</span><span class='line'># 3. Eliminate '-u MAIN__' at the bottom of the 'fc' script.   #
+</span><span class='line'>#    You will have to explitly load FORTRAN MAIN programs      #
+</span><span class='line'>#    (explicitly mention the relevant .f or .o file).          #
+</span><span class='line'>################################################################
+</span><span class='line'>echo "---------------------------"
+</span><span class='line'>echo "7. Installing fc script ..."
+</span><span class='line'>echo "---------------------------"
+</span><span class='line'>cd ..
+</span><span class='line'>mv fc fc.orig
+</span><span class='line'>sed 's/ -Olimit 2000//g; s/ -lm//g; s/ -u MAIN__//g' fc.orig &gt; fc
+</span><span class='line'>chmod +x fc
+</span><span class='line'>cp fc /usr/local/bin/
+</span><span class='line'>ln -s /usr/local/bin/fc /bin/fc
+</span><span class='line'>ln -s /usr/local/bin/fc /bin/f77
+</span><span class='line'>echo "... done."
+</span><span class='line'>
+</span><span class='line'>#########################
+</span><span class='line'># 8. Install man pages: #
+</span><span class='line'>#########################
+</span><span class='line'>echo "---------------------------"
+</span><span class='line'>echo "8. Installing man pages ..."
+</span><span class='line'>echo "---------------------------"
+</span><span class='line'>cp f2c.1t /usr/share/man/man1/f2c.1
+</span><span class='line'>echo "... done."
+</span><span class='line'>
+</span><span class='line'>################
+</span><span class='line'># 9. Clean up: #
+</span><span class='line'>################
+</span><span class='line'>echo "------------------"
+</span><span class='line'>echo "9. Cleaning up ..."
+</span><span class='line'>echo "------------------"
+</span><span class='line'>cd src
+</span><span class='line'>make clean
+</span><span class='line'>cd ../libf2c
+</span><span class='line'>make clean
+</span><span class='line'>cd ../..
+</span><span class='line'>echo "... All done!"
+</span><span class='line'>
+</span><span class='line'>#############################################
+</span><span class='line'># 10. Test f2c on your FORTRAN source code: #
+</span><span class='line'>#############################################
+</span><span class='line'>echo "======================================================"
+</span><span class='line'>echo "======================================================"
+</span><span class='line'>echo "======================================================"
+</span><span class='line'>echo "   === To test f2c on your FORTRAN source code: ==="
+</span><span class='line'>echo "   === cd ~/wherever/your/code/is               ==="
+</span><span class='line'>echo "   === 1. f2c myprog.f                          ==="
+</span><span class='line'>echo "   ===    cc -O -o myprog.exe myprog.c -lf2c    ==="
+</span><span class='line'>echo "   ===    myprog.exe                            ==="
+</span><span class='line'>echo "   === 2. fc -O -w -o myprog.exe myprog.f       ==="
+</span><span class='line'>echo "   ===    myprog.exe                            ==="
+</span><span class='line'>echo "======================================================"
+</span><span class='line'>echo "======================================================"
+</span><span class='line'>echo "======================================================"
+</span><span class='line'>
+</span><span class='line'>exit</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/02/01/cocos2d-iphone-blocking-touch-events/">Cocos2d-iphone Blocking Touch Events</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-02-01T08:59:05+11:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2009</span></span> <span class='time'>8:59 am</span></time>
+        
+           | <a href="/2009/02/01/cocos2d-iphone-blocking-touch-events/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/02/01/cocos2d-iphone-blocking-touch-events/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The game development is going well so far.  From yesterday when I knew NOTHING about game development I&rsquo;ve managed to figure out how to use sprites, labels, timed actions, sequenced actions, scenes and layers with cocos2d-iphone.</p>
+
+<p>I did hit a strange error though.  On the simulator the touch events were working correctly - screens transitioning, sprite/label touches generating events and triggering animation and so on.  On the actual device the story was quite different.  My menu items were triggering correctly, but no subsequent touch events were doing anything on the phone.  When the application exited (home button) all the touch events were then passed through as I could see them all fly up the screen in the console.</p>
+
+<p>A long search in google yielded the following page:  <a href="http://groups.google.com/group/cocos2d-iphone-discuss/browse_thread/thread/8aae440d81721ff4" target="_blank"><a href="http://groups.google.com/group/cocos2d-iphone-discuss/browse_thread/thread/8aae440d81721ff4">http://groups.google.com/group/cocos2d-iphone-discuss/browse_thread/thread/8aae440d81721ff4</a></a></p>
+
+<p>I don&rsquo;t know what causes the actual issue, but the fix is to alter the Director.m&rsquo;s main method - adding the following code fixed the issue right up.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">while</span> <span class="p">(</span><span class="n">CFRunLoopRunInMode</span><span class="p">(</span><span class="n">kCFRunLoopDefaultMode</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">YES</span><span class="p">)</span> <span class="o">==</span> <span class="err"> </span><span class="n">kCFRunLoopRunHandledSource</span><span class="p">)</span> <span class="p">{};</span><span class="err"> </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The odd thing is (and let me know if I&rsquo;m wrong here) that that code doesn&rsquo;t actually do anything.  It performs a test, but changes nothing.  I don&rsquo;t get why this fix works.</p>
+
+<p>?</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/01/31/error-on-line-1987/">Error on Line 1987</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-01-31T07:37:48+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2009</span></span> <span class='time'>7:37 am</span></time>
+        
+           | <a href="/2009/01/31/error-on-line-1987/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/01/31/error-on-line-1987/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I am having a bit of a play with the <a href="http://code.google.com/p/cocos2d-iphone/">cocos2d</a> game engine for iPhone and encountered a very strange error in the console - I don&rsquo;t believe it&rsquo;s at all related to the game engine itself, so it&rsquo;s just coincidence that I was trying something new out.</p>
+
+<p>error while killing target (killing anyway): warning: error on line 1987 of &ldquo;/SourceCache/gdb/gdb-962/src/gdb/macosx/macosx-nat-inferior.c&rdquo; in function &ldquo;macosx_kill_inferior_safe&rdquo;: (os/kern) failure (0x5x)</p>
+
+<p>I figured out that it had to do with definition of a selector&hellip;  Naughty code below.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">MenuItem</span> <span class="o">*</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="n">MenuItemFont</span> <span class="nl">itemFromString</span><span class="p">:</span><span class="s">@&quot;Start Game&quot;</span>
+</span><span class='line'>                                        <span class="nl">target</span><span class="p">:</span><span class="nb">self</span>
+</span><span class='line'>                                      <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">startGame</span><span class="p">)];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The problem is that the method name inside @selector() MUST have a colon on the back of it.</p>
+
+<p>Good code</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">MenuItem</span> <span class="o">*</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="n">MenuItemFont</span> <span class="nl">itemFromString</span><span class="p">:</span><span class="s">@&quot;Start Game&quot;</span>
+</span><span class='line'>                                        <span class="nl">target</span><span class="p">:</span><span class="nb">self</span>
+</span><span class='line'>                                      <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">startGame</span><span class="p">:)];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hope that&rsquo;s useful to someone.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/6">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/4">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/05/17/brief-update/">Brief Update</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>For Hire?</h1>
+  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
+  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
+</section>
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,1 +1,791 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="Just had a very frustrating day. Was getting a deployment error on Heroku with a Meteor app I&rsquo;m making. 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rickerbh.github.io">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rickerbh.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-06-29T11:07:11+10:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:07 am</span></time>
+        
+           | <a href="/2016/06/29/meteor-heroku-and-bcrypt/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2016/06/29/meteor-heroku-and-bcrypt/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just had a very frustrating day. Was getting a deployment error on Heroku with a Meteor app I&rsquo;m making.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Starting process with command `node build/bundle/main.js`
+</span><span class='line'>/app/build/bundle/programs/server/boot.js:324
+</span><span class='line'>}).run();
+</span><span class='line'>   ^
+</span><span class='line'>Error: Module did not self-register.
+</span><span class='line'>    at Module.require (module.js:365:17)
+</span><span class='line'>    at Module._compile (module.js:460:26)
+</span><span class='line'>    at Module.load (module.js:355:32)
+</span><span class='line'>    at Object.&lt;anonymous&gt; (/app/build/bundle/programs/server/npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt/bcrypt.js:3:35)
+</span><span class='line'>    at Error (native)
+</span><span class='line'>    at require (module.js:384:17)
+</span><span class='line'>    at Function.Module._load (module.js:310:12)
+</span><span class='line'>    at Object.Module._extensions..js (module.js:478:10)
+</span><span class='line'>    at bindings (/app/build/bundle/programs/server/npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt/node_modules/bindings/bindings.js:74:15)
+</span><span class='line'>    at Module.load (module.js:355:32)
+</span><span class='line'>Process exited with status 1
+</span><span class='line'>State changed from starting to crashed</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I was using the build pack at <a href="https://github.com/srbartlett/heroku-buildpack-meteor">https://github.com/srbartlett/heroku-buildpack-meteor</a> due to its support for Meteor 1.3.</p>
+
+<p>The issue seems to be that the <code>npm-bcrypt</code> atmosphere package doesn&rsquo;t force a recompliation of the npm <code>bcrypt</code> package via <code>node-gyp</code> (I could be wrong here, but that&rsquo;s what it seems like). It seems that the atmosphere package includes the wrong (or a fixed?) architecture, where as what we actually need is to recompile for the current target. To fix this, I&rsquo;ve altered the buildpack to remove the bundled <code>bcrypt</code> package, reinstall from source, and copy back to the bundled location. The reinstall from source seems to force <code>node-gyp</code> to compile for the correct architecture.</p>
+
+<p>My altered buildpack is available at <a href="https://github.com/rickerbh/heroku-buildpack-meteor">https://github.com/rickerbh/heroku-buildpack-meteor</a> if anyone wants it.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-06-27T20:54:48+10:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>8:54 pm</span></time>
+        
+           | <a href="/2016/06/27/back-to-basics-editors/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2016/06/27/back-to-basics-editors/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>My boss bought me a copy of the seminal classic <a href="http://www.bookdepository.com/Pragmatic-Programmer-Andrew-Hunt/9780201616224?a_aid=rickerbh">The Pragmatic Programmer</a>. It&rsquo;s full of sensible advice for both beginners and experienced software professionals.</p>
+
+<p>I have lots of thoughts about the contents of this book but what I&rsquo;d like to cover is usage of text editors, and specifically becoming proficient with a editor that&rsquo;s typically universally available. I can think of 3 of these for UNIX systems. <code>vi</code>, <code>emacs</code>, and <code>nano</code>.</p>
+
+<p>When I was at university I used emacs for all CS course text editing. In my first job, the UNIX servers we had didn&rsquo;t have emacs installed. I wanted to install emacs, but the application vendor didn&rsquo;t allow us to, as they had a support contract and hadn&rsquo;t tested their application with emacs on the box, so no-dice. vi was it for a few years. Then, I just a stopped using these types of editors for about 11 years. The advent of IDEs (Eclipse, Xcode) meant I didn&rsquo;t have to use these &ldquo;basic&rdquo; editors about had a lot of point-and-click, plugins, refactoring etc functionality available.</p>
+
+<p>Until now.</p>
+
+<p>The Pragmatic Programmer has convinced me to relearn basic (and powerful) UNIX tools, and I&rsquo;m starting with emacs. In my job (at the moment) I typically do about 50-80% dev, the rest other stuff (sales, management, architecture, analysis). So I spend a fair amount of time in development environments. I&rsquo;m not a big shortcut key user, and this needs to change - it&rsquo;s just wasting time moving that mouse around to get to menu items and select text.</p>
+
+<p>So far, I&rsquo;ve started with base emacs installations, Haskell packages, git packages, Clojure packages, some convenience packages, and I&rsquo;m about to start with some JavaScript packages. Also getting used to the keystrokes again is a bit tricky, but I&rsquo;m getting there. To help out, I&rsquo;ve moved other IDEs I use (like WebStorm) to use emacs bindings as well.</p>
+
+<p>I&rsquo;m enjoying the ability to use the same environment for text + 3 languages + code control. Super powerful.</p>
+
+<p>If you&rsquo;re interested in my setup, I have an emacs file in my <a href="https://github.com/rickerbh/dotfiles">dotfiles git repo</a>. Check it out (ho ho ho).</p>
+
+<p>If you have any tips for emacs please let me know in the comments or on Twitter - <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-06-23T09:14:11+10:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2016</span></span> <span class='time'>9:14 am</span></time>
+        
+           | <a href="/2016/06/23/reading-not-reading/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2016/06/23/reading-not-reading/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I recently finished a book called <a href="http://www.bookdepository.com/Apprenticeship-Patterns/9780596518387?a_aid=rickerbh">Apprenticeship Patterns</a> (more on why later) and one of the things it suggested is keeping an online list of books you read, and books you want to read. So here is mine.</p>
+
+<p><a href="http://hamishrickerby.com/books/">http://hamishrickerby.com/books/</a></p>
+
+<p>I&rsquo;m going to add a few more books to the read list as well - ones I think other people may be interested in.</p>
+
+<p>If you&rsquo;ve got any recommendations please let me know in the comments or on Twitter - <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/05/17/brief-update/">Brief Update</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-05-17T21:52:33+10:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:52 pm</span></time>
+        
+           | <a href="/2016/05/17/brief-update/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2016/05/17/brief-update/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s been ages.</p>
+
+<ul>
+<li>Completed that 1000km run goal</li>
+<li>Sold a house</li>
+<li>Wife got a new job</li>
+<li>Sold another house</li>
+<li>Moved to Sydney</li>
+<li>Getting there with Haskell (thanks to <a href="http://haskellbook.com">Haskell Programming from First Principles</a> - buy it - it&rsquo;s great)</li>
+<li>Bought a house</li>
+<li>Feeling in a really good place professionally</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-27T10:08:51+10:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:08 am</span></time>
+        
+           | <a href="/2014/09/27/why-ive-taken-a-full-time-job/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2014/09/27/why-ive-taken-a-full-time-job/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve relapsed. I swore I&rsquo;d never do it again, but I have. I&rsquo;ve accepted a full time job.</p>
+
+<h2>I&rsquo;m not in it for the money</h2>
+
+<p>I&rsquo;ve been running happtic for just over 2 years now, and it&rsquo;s been quite lucrative. I&rsquo;ve managed to get a small, but reliable base of repeat/ongoing direct clients, and developed some applications that have done very well. I&rsquo;ve only taken on 2 non-direct contracts in that period, so am happy with how that&rsquo;s worked out. Overall, I&rsquo;d say the business has been successful in terms of providing my family with a relatively good income. Sure, having a stable income, holidays, superannuation etc will be great, but that&rsquo;s not why I&rsquo;ve taken the job.</p>
+
+<h2>It&rsquo;s a growth and opportunity thing</h2>
+
+<p>The main issue I&rsquo;ve been struggling with in running happtic is growth. I wanted to turn happtic into a larger business, providing technical consulting and development service with a team of 10 or so. I haven&rsquo;t been able to get enough volume of projects/clients to warrant taking on any extra staff (apart from that time I hired a graduate/entry level developer, and he called in sick on his first day and never got in touch with me again).</p>
+
+<p>I&rsquo;ve learnt that there are things I&rsquo;m good at, and things I&rsquo;m not good at. I&rsquo;m great at systems architecture, technical strategy, software design, and development. What I&rsquo;m not good at is cold business development. Once someone is at the door, the conversion rate is high, but getting them to the door is hard for me to orchestrate.</p>
+
+<p>Joining a larger organisation, with a pre-existing client base and sales team helps me meet my goals of leading a technology team, in a position of influence in an organisation. One key thing that I remember from a corporate management training course many years ago is that in companies (<em>and in real life</em>), the path to achieving a desired outcome may not be the path you expect. If you can recognize that the outcome is what you are after, there are many paths that can take you there, so you shouldn&rsquo;t be precious about how you get the outcome, as long as you get that outcome. The outcome I&rsquo;m after is to lead a technology focussed team of people, providing development, consulting, and technical strategy services, and that&rsquo;s what this job is.</p>
+
+<h2>What&rsquo;s the new job?</h2>
+
+<p>I&rsquo;ll be working as &ldquo;Director of Mobile&rdquo; for <a href="http://simplemachines.com.au">Simple Machines</a>. The job will involve setting up and leading a mobile development team, as well as an office, here in Melbourne.</p>
+
+<p>One particularly exciting thing about the job is the split between client and product work. Simple Machines have clients, as well as their (our!) own products and investments in startups, so there will be varied work which is great. I find working on a single product can feel a bit stale after a while, so having a mix of client and product work will definitely help with that, but also provide the satisifaction you get from growing and evolving a system over time.</p>
+
+<p>If you&rsquo;re looking for any mobile app development (iOS, Android, WP, any platform) or development of complex, high performance, scalable applications, get in touch <a href="mailto:hamish@simplemachines.com.au">hamish@simplemachines.com.au</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/03/02/1000km-february/">1000km - February</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-03-02T14:43:25+11:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>2:43 pm</span></time>
+        
+           | <a href="/2014/03/02/1000km-february/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2014/03/02/1000km-february/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Progress has been a bit slower this month. Short month, very hot here, and new baby all contributed to slowing progress down. Oh, in other news, we now have a baby!  Exciting.</p>
+
+<p>190km complete at end of Feb, which leaves me with a 30km buffer. The last graph was a little incorrect too - Numbers only puts dates correctly (in relative terms) on the x-axis if the graph type is a scatterplot. Dumb. The new graph below is correct.</p>
+
+<p><img src="/images/1000km-Feb.png"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/01/31/1000km-january/">1000km - January</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-01-31T10:17:23+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>10:17 am</span></time>
+        
+           | <a href="/2014/01/31/1000km-january/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2014/01/31/1000km-january/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Progress on the 1000km is good so far. 109km run in Jan, and I&rsquo;m sticking to the 10km distance per run. Weight is also starting to fall, which is great because I&rsquo;m about 9kg heavier than I should be.</p>
+
+<p>Because I&rsquo;m also a nerd (and if you&rsquo;re reading my blog, you probably are too), here&rsquo;s a graph marking progress. Grey line is what I need to run to get to 1000km this year. Any blue higher than the grey line is kms in the bank for a rainy day.</p>
+
+<p><img src="/images/1000km-Jan.png"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/01/23/meteor/">Meteor</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-01-23T20:25:22+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>8:25 pm</span></time>
+        
+           | <a href="/2014/01/23/meteor/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2014/01/23/meteor/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A couple of days ago I received an email from meetup.com about meetups that I might be interested in. Usually this is full of crap I don&rsquo;t care about, like mothers groups or salsa dancing, but this most recent mail featured an intriguing group called &ldquo;Meteor Melbourne - a better way to build apps&rdquo;. So, I looked into it.</p>
+
+<p><a href="http://meteor.com">Meteor</a> is a framework based on node.js that allows you to write responsive, reactive, real-time web applications in javascript on both the client and server side. I&rsquo;ve always considered javascript as a toy language - I think this opinion comes from my first interaction with JavaScript waaaaaay back in the late 90&rsquo;s (I think it was somewhere between &lsquo;96 and &#8216;98), when all it was really used for was alert boxes and tic-tac-toe implementations. However, I&rsquo;ve recently been doing a lot of work for clients with <a href="http://parse.com">Parse</a> and their &ldquo;cloud code&rdquo; functionality, taking some logic out of mobile apps and running it on the Parse servers - and you use JavaScript to do this. They promoted use of <a href="https://www.parse.com/docs/js_guide#promises">Promises</a>, and I&rsquo;ve been doing a lot with <a href="https://github.com/ReactiveCocoa/ReactiveCocoa">RAC</a> in iPhone apps, so this functional style is something I&rsquo;m familiar with and like. I also have a friend who is helping a mate out on a startup, who is looking at some serious &ldquo;enterprise&rdquo; functionality implemented with server-side javascript, so I thought it was maybe time to seriously look at this thing too, and I checked it out.</p>
+
+<p>Amazeballs. Meteor is <em>MAGIC</em>. Don&rsquo;t believe me? Watch this <a href="https://www.meteor.com/screencast">screencast</a>.</p>
+
+<p>I think the magic for me comes from the real-time (well, super fast at least -> sub second synchronization) nature of the system, and the automate shuffling of data between the server and client to synchronize/update pages with no specific actions on the developers part. The built in support for packages is also really tidy, although having to use a 3rd party packages system (<a href="http://oortcloud.github.io/meteorite/">Meteorite</a> and <a href="https://atmosphere.meteor.com">Atmosphere</a>) for more modern versions of some of the core packages (eg, bootstrap-3 vs bootstrap-2) seems a little undesirable.</p>
+
+<p>It&rsquo;s super fast to get set up (1 line install, 1 line to start), and this includes server, database, sync between client and server. Want user authentication? Two more command line hits (1 for a UI, 1 for a login provider package), and 1 line to get the UI template built in. Amazingly productive.</p>
+
+<p>Where I see huge potential for Meteor is in the mobile space. Having a web app, which automatically pushes changes to a mobile device is super powerful. With the current state of mobile apps you typically need to poll for changes to data, unless you build your own data sync solution or rely on something like iCloud to push changes around for you (haha, yeah right). When I&rsquo;ve done this sort of thing in the past with Parse, I&rsquo;ve actually gone as far as abusing the Apple Push Notification Service to actually trigger a mobile device to re-query a web service to retrieve new data as APNS is the only push mechanism available. Having a service that reliably notifies a client when data changes server side, with sub-second speed, solves a whole bunch of problems for app developers.</p>
+
+<p>This is the tech stack that I&rsquo;m now looking at using for my small business productivity tool, and I&rsquo;m hoping that mobile sync works just as well (and fast) as the client-server sync does. Next up is a small proof of concept to test this out.</p>
+
+<p>I haven&rsquo;t been this excited about web development since I saw DHH&rsquo;s web app in 15 mins rails screencast in 2006.</p>
+
+<p><em>Oh yeah, I went to the meetup too. Nice job meetup.com</em></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/01/20/2014/">2014</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-01-20T11:14:43+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:14 am</span></time>
+        
+           | <a href="/2014/01/20/2014/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2014/01/20/2014/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m not one for new years resolutions, but there are a couple of things I&rsquo;d like to achieve this year.</p>
+
+<ol>
+<li>Run 1000km</li>
+<li>Design, Develop, and Release a productivity tool for small and medium businesses</li>
+</ol>
+
+
+<p>1000km is something I attempted to achieve last year, but by the time February rolled around, it was obvious that that just was not going to happen. This year is going much better. I&rsquo;ve established a running routine already, and have (as of today) extended my run distance to about 10km. I&rsquo;m sure this will be much tougher when winter rolls around, but I&rsquo;m up for the challenge.</p>
+
+<p>The SME productivity tool is something I&rsquo;ve been toying with the idea of for a while. The idea actually came from my sister and her husband (they run a construction company), and it solves a problem that they spend a few hours a week on. I&rsquo;ve already got my minimum functionality defined, and business model. It works well as a SaaS/subscription style product so fits with the revenue stream style I like. I&rsquo;ll hopefully have a splash/info/signup page soon. I&rsquo;m also looking at a new (new for me) technology stack to power this thing, so I&rsquo;ve also got a lot of learning to be able to create it. Fingers crossed it gets off the ground.</p>
+
+<p>I guess there&rsquo;s a third thing, but it&rsquo;s more of an inevitability, rather than a goal as such. We&rsquo;ll be having a baby soon (hopefully in 3 weeks), so life will be getting much more time-scarce. We&rsquo;ll see how all this holds up under parenthood.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/03/22/medical-regulation-and-apps/">Medical Regulation and Apps</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-22T10:23:00+11:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2013</span></span> <span class='time'>10:23 am</span></time>
+        
+           | <a href="/2013/03/22/medical-regulation-and-apps/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2013/03/22/medical-regulation-and-apps/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Yesterday I read an <a href="http://venturebeat.com/2013/03/19/health-app-makers-to-feds-dithering-on-regulation-is-stifling-innovation/">article in Venture Beat</a> covering part of a series of hearings US Congress is holding on regulation of health and medical apps on smartphone and tablet devices. My <em>significantly</em> paraphrased version of the article is that the FDA are unsure if and how health apps should be regulated, and that representatives from the &ldquo;app&rdquo; industry are pushing for no regulation for consumer facing apps.</p>
+
+<p>I have a slightly different take on this. To me, the question is simple (and what is driving health authorities globally to address this issue): can health apps be considered to be medical devices?</p>
+
+<p>Medical devices are subject to legislation worldwide.  In fact, often requiring prior market approval through mechanisms similar to which pharmaceutical companies must obtain approval for medicines. Clear guidance exists on the regulation which surrounds medical devices, and this includes the legislative definition of what constitutes a medical device.  As a snapshot (and these definitions can be considered consistent with legislation in many other countries too), the definition of a medical device in Australia, the EU, and US clearly includes apps which diagnose, prevent, monitor, treat, alleviate disease.</p>
+
+<figure class='code'><figcaption><span>Australian Therapeutic Goods Act 1989</span><a href='http://www.comlaw.gov.au/Series/C2004A03952'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>41BD A medical device is:
+</span><span class='line'>  a. any instrument, apparatus, appliance, material or other article (whether used alone or in combination, and including the software necessary for its proper application) intended, by the person under whose name it is or is to be supplied, to be used for human beings for the purpose of one or more of the following:
+</span><span class='line'>    i. diagnosis, prevention, monitoring, treatment or alleviation of disease;
+</span><span class='line'>    ii. diagnosis, monitoring, treatment, alleviation of or compensation for an injury or handicap;
+</span><span class='line'>    iii. investigation, replacement or modification of the anatomy or of a physiological process;
+</span><span class='line'>    iv. control of conception;
+</span><span class='line'>  and that does not achieve its principal intended action in or on the human body by pharmacological, immunological or metabolic means, but that may be assisted in its function by such means; or
+</span><span class='line'>  b. an accessory to such an instrument, apparatus, appliance, material or other article.</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>EU Directive 2007/47/ec (paraphrased) </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Any instrument, apparatus, appliance, software, material or other article that is used alone or in combination, including software specifically for diagnostic or therapeutic purposes, that the manufacturer intends for use in human beings. Such devices are used for:
+</span><span class='line'> - Diagnosis, prevention, monitoring, treatment, or alleviation of disease
+</span><span class='line'> - Diagnosis, monitoring, treatment, alleviation of, or compensation for an injury or handicap
+</span><span class='line'> - Investigation, replacement, or modification of the anatomy or of a physiological process
+</span><span class='line'> - Control of conception</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>US Food, Drug and Cosmetic Act Section 201(h) </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Medical machine, contrivance, implant, in vitro reagent, or other similar or related article, including a component part, or accessory that is:
+</span><span class='line'> - Recognized in the official National Formulary, or the United States Pharmacopoeia, or any supplement to them
+</span><span class='line'> - Intended for use in the diagnosis of disease or other conditions, or in the cure, mitigation, treatment or prevention of disease, in man or other animals
+</span><span class='line'> - Intended to affect the structure or any function of the body of man or other animals, and does not achieve any of its primary intended purposes through chemical action within or on the body of man or other animals and does not depend on metabolic action to achieve its primary intended purposes.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The key, and common, part to all of these is the use of the device in <em>diagnosis, monitoring, and treatment of a disease</em>.</p>
+
+<p>Regardless of the user of the device, regulation exists. Medical devices such as syringes, contact lenses, condoms, and bandages are all available to the public, and regulated (at least in Australia). If the same rule that is being proposed for apps was applied for these devices, anyone could make devices such as bandages, and the public would have no guarantee as to the quality, safety, and efficacy of these devices.</p>
+
+<p>Devices and medicines are regulated to protect patients (and the general public) from faulty or harmful devices and drugs, and misdiagnosis or mistreatment from inaccurate information being provided to medical professionals who need to make decisions on the basis of that information. The consequences for patients from medical misdiagnosis from a medical app can be a lot more severe than (lets say) the physics calculations not accurately representing gravity in Angry Birds. Death or permanent disability is a real possibility with inaccurate (or just plain wrong) information being captured by medical apps and used for diagnosis.</p>
+
+<p>Getting a medical device approved can be a very costly exercise. Typically, trials with verifiable data are required to show accuracy and stability in the product. There is also the paperwork required to submit the device to the health regulator in a country, and this submission process needs to be repeated for each health regulator in each country you want to sell your device in.<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup> However, due to the high cost (and high barrier to entry<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup> in the marketplace), if you can jump through the regulatory hurdles, you may find a relatively competition-free market. That&rsquo;s the reward for navigating the processes.</p>
+
+<p>There is also a comment in that article that &ldquo;Developers are mystified by the rules in this highly regulated industry&rdquo;. If this is the case, maybe developers need to do the same as other players in the health industry and either employ, or contract in, medical regulatory professionals. Mystification is no excuse for not playing by the rules.</p>
+
+<p><em>Ignorantia juris non excusat</em>.</p>
+
+<h2>Need help?</h2>
+
+<p><a href="http://happtic.com">happtic</a> (my company) provides consulting services related to health regulations for medical apps. If you&rsquo;re looking for help determining if an app would be considered a medical device, help with understanding regulatory processes, or help with regulatory submissions please <a href="mailto:contact@happtic.com">get in touch</a>.</p>
+
+<div class="footnotes">
+    <ol>
+        <li id='fn:1'><p> Unless you&#8217;re in the EU. There is a single health agency for Europe.
+  <a href='#fnref:1' rev='footnote'>↩</a></p>
+</li><li id='fn:2'><p> Regulatory requirements are only one significant barrier to entry in certain industries. Other industries (such as telecommunications and energy suppliers) also have a large infrastructure requirement requiring both capital investment and significant time. Medical Apps don&#8217;t typically have this barrier.
+<a href='#fnref:2' rev='footnote'>↩</a></p>
+</li>
+    </ol>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/2">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/05/17/brief-update/">Brief Update</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>For Hire?</h1>
+  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
+  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
+</section>
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

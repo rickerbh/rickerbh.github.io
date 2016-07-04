@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>CASE and Requirements Management - Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="I&rsquo;ve started the feature &amp; function planning for my application - or really, I&rsquo;ve started to identify the requirements for it. I& &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rickerbh.github.io/2011/11/07/case-and-requirements-management">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rickerbh.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">CASE and Requirements Management</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-11-07T09:09:00+11:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>9:09 am</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;ve started the feature &amp; function planning for my application - or really, I&rsquo;ve started to identify the requirements for it. I&rsquo;m starting by evaluating existing applications in the marketplace, considering the functions they support, the data they collect, and how the user navigates through the application. So far, I have about 300 screenshots from various applications,  strewn all over the floor of my office, and 4 coloured pens for me to mark up the screenshots. The colours refer to the following areas of requirements or commentary.</p>
+
+<ol>
+<li>Brick red - bad UI</li>
+<li>Blue - data to collect</li>
+<li>Green - good UI</li>
+<li>Pink - application function, feature, or derived data</li>
+</ol>
+
+
+<p>The functions are further classified into &ldquo;things that should be there for a first release&rdquo; and &ldquo;things that can wait until later&rdquo;.</p>
+
+<p>What I&rsquo;m looking for now is a sensible way to capture and manage all this information. Carrying around 300 pages of screenshots is just silly. I could have electronically marked up the Keynote presentation rather than do this on paper, but I don&rsquo;t see myself reusing the information if it&rsquo;s stored in that format.</p>
+
+<p>As part of a contract my company has right now, I&rsquo;m using a <a href="http://en.wikipedia.org/wiki/Computer-aided_software_engineering">CASE</a> tool for a project with a client. The business analysts on this project are tracking all requirements, use cases and UI modules within a tool called Enterprise Architect by Sparx Systems. I&rsquo;m currently leading the technical workstream and we are also using it to produce our technical application design. It seems like a very comprehensive tool, but it&rsquo;s Windows only. I&rsquo;d love for a tool like that to be native on the Mac.</p>
+
+<p>Other CASE and UML tools I&rsquo;ve used in the past are:</p>
+
+<ul>
+<li>Popkin System Architect (became Telelogic, then IBM and consumed into the Rational suite)</li>
+<li>Rational Rose</li>
+<li>ArgoUML</li>
+<li>Troux Architect</li>
+<li>Various Eclipse plugins</li>
+</ul>
+
+
+<p>The issue I have with all of these is that it seems they will be disconnected from the development workflow if you use a mac, or are working on a non-Java project. These tools are supposed to help with the development process, but I can&rsquo;t see how that will work if they aren&rsquo;t connected to it. Yes, I understand the value in the whole planning and design side, but the disconnect to development seems large. If I didn&rsquo;t care about having the process connected, I&rsquo;d just use OmniOutliner as I have in the past for other personal projects - it can track requirements, feature/release planning, data model elements etc. But because of the potential size of this application, I feel I should be using something more structured.</p>
+
+<p>Maybe the project should change to creating a decent CASE tool for the Mac :-)</p>
+
+<p>At the moment the plan is to use Enterprise Architect, and we&rsquo;ll see how that goes. One good thing is that I can export data out of it if the process doesn&rsquo;t work out, so there will be little wasted effort.</p>
+
+<p>If anyone has used CASE tools on the mac for Objective-C based projects, I&rsquo;d love to hear what was used, and how the experience was - good or bad.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Hamish Rickerby</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2011-11-07T09:09:00+11:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>9:09 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rickerbh.github.io/2011/11/07/case-and-requirements-management/" data-via="rickerbh" data-counturl="http://rickerbh.github.io/2011/11/07/case-and-requirements-management/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2011/10/28/6-%3C-36/" title="Previous Post: 6 < 36">&laquo; 6 < 36</a>
+      
+      
+        <a class="basic-alignment right" href="/2011/11/27/im-on-a-list/" title="Next Post: I'm on a list">I&#8217;m on a list &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/05/17/brief-update/">Brief Update</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>For Hire?</h1>
+  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
+  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rickerbh.github.io/2011/11/07/case-and-requirements-management/';
+        var disqus_url = 'http://rickerbh.github.io/2011/11/07/case-and-requirements-management/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

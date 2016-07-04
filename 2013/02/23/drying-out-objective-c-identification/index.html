@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>DRYing Out Objective-C - Identification - Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="I have a large objective-c codebase I&rsquo;ve been working on with a client for over a year now. The application started off as a prototype, and &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rickerbh.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">DRYing Out Objective-C - Identification</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-23T12:09:00+11:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2013</span></span> <span class='time'>12:09 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I have a large objective-c codebase I&rsquo;ve been working on with a client for over a year now. The application started off as a prototype, and transitioned into a demo client, and is currently undergoing modifications for security/penetration testing and commercialization. Initially for the protoype and demo, the objective was to get a working application as quickly as possible - speed of initial development was the key. With the current change in focus to a more productized codebase, and improving maintainability as part of that, I decided I&rsquo;d actively go hunting for areas in the application that can be tidied up, and particularly, looking for duplicate segments of code and eliminating them where feasible.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY - or Don&rsquo;t Repeat Yourself</a> - is (according to Wikipedia) a <em>principle is stated as &ldquo;Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.&rdquo;</em> &hellip; <em>When the DRY principle is applied successfully, a modification of any single element of a system does not require a change in other logically unrelated elements. Additionally, elements that are logically related all change predictably and uniformly, and are thus kept in sync.</em></p>
+
+<p>One big problem with a larger code base that has been developed over a long period of time is that you may not know where the duplicate code actually is. You know it&rsquo;s there, you&rsquo;re just not sure where.</p>
+
+<h2>Finding Duplicate Code</h2>
+
+<p>What I wanted for DRYing up the code base was for duplicate chunks of code to be identified for me.</p>
+
+<p>Searching out there I stumbled across a project called <a href="http://www.harukizaemon.com/simian/">Simian</a> - it&rsquo;s a java based tool for identifing duplicate code in a set of different programming languages - one being Objective-C. Simian supports output in a number of different formats - plain text being the default, but also supports an XML based output. The project is available on a 15 day evaluation period, and then should be paid for commercial or enterprise use. A Build Server license costs $499 US.</p>
+
+<p>Simian can be run against a codebase just by feeding it include/exclude directory and file patterns.</p>
+
+<pre><code>java -jar simian-2.3.33.jar -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre>
+
+<p>You can also change the format of the output</p>
+
+<pre><code>java -jar simian-2.3.33.jar -formatter=xml -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre>
+
+<p>And even output to a file</p>
+
+<pre><code>java -jar simian-2.3.33.jar -formatter=xml:simian.xml -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre>
+
+<h2>Integration with Jenkins</h2>
+
+<p>I&rsquo;ve previously written here about setting up and using Jenkins as a build/CI system with Objective-C/iOS projects, and I really wanted to integrate this duplicate code reporting as part of my standard build process, along with my unit and application test reports.</p>
+
+<p>To get Simian reports integrated with Jenkins there is a Jenkins extension available called the <a href="https://wiki.jenkins-ci.org/display/JENKINS/DRY+Plugin">DRY Plugin</a>. Just navigate to your Jenkins instance and click&hellip; Manage Jenkins -> Manage Plugins -> Available and type Duplicate in the filter box. The plugin is called &ldquo;Duplicate Code Scanner Plug-in&rdquo;. Install it.</p>
+
+<p>To get the Simian process running is really simple. I added a new project that I could trigger after my unit tests have run, called &ldquo;Code Analysis&rdquo;. This project has a very small number of steps.</p>
+
+<ol>
+<li>Pull the source from your code repo</li>
+<li>Set a Build Trigger for the project to start after your unit test project has completed. <em>This step isn&rsquo;t necessary, but you need some sort of build trigger. I like mine to work after unit tests as then I know the codebase is in a good state.</em></li>
+<li>Add an Execute Shell task. The task should look something like below</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd "&lt;Path to your Jenkins project>/workspace"
+</span><span class='line'>git submodule update --recursive --init
+</span><span class='line'>echo "#!/bin/bash" > simian.sh
+</span><span class='line'>echo "java -jar &lt;Path to your simiar jar>/simian-2.3.33.jar -balanceSquareBrackets=true -formatter=xml:simian.xml -excludes=\"External Libraries\" **/*.m **/*.h" >> simian.sh
+</span><span class='line'>echo "exit 0" >> simian.sh
+</span><span class='line'>chmod u+x simian.sh
+</span><span class='line'>./simian.sh
+</span><span class='line'>rm simian.sh</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What the above task does is change directory to the correct jenkins workspace, ensure all submodules are updated (if you don&rsquo;t use submodules, you probably won&rsquo;t want this), then create a shell script that runs Simian and exits with a 0 return code, sets the script to be executable, runs the script, then cleans up after itself. The reason why the build task needs to create a shell script to run Simian is because the return code from Java/Simian seems to be interpreted by Jenkins as non-0 i.e. a build failure. You don&rsquo;t want that.</p>
+
+<p>The <code>-balanceSquareBrackets=true</code> flag to Simian ensures that code that is split across multiple lines inside square brackets is treated as a single unit. It might be a good idea to use the <code>-balanceParentheses=true</code> flag as well to help matching on things like <code>if</code> statements.</p>
+
+<p>Then it&rsquo;s just a matter of configuring the reporting. If you&rsquo;ve installed the DRY plugin correctly, you should be able to add a Post Build Action of &ldquo;Publish duplicate code analysis results&rdquo;. In the &ldquo;Duplicate code results&rdquo; field, type in the path and filename you gave the output XML from simian - in the example above I called mine <code>simian.xml</code>.</p>
+
+<p>That&rsquo;s it.</p>
+
+<p>Save and &ldquo;Build Now&rdquo; your new project, and after this is complete, click on the project. There should be a fancy trend graph showing Duplicate Code in the upper right of the screen, and a &ldquo;Duplicate Code&rdquo; item on the left navigation menu. That will show you all the files with duplicate code chunks, and the other files they are repeated in.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Hamish Rickerby</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-23T12:09:00+11:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2013</span></span> <span class='time'>12:09 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification/" data-via="rickerbh" data-counturl="http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2012/10/25/the-value-of-contracting/" title="Previous Post: The Value of Contracting">&laquo; The Value of Contracting</a>
+      
+      
+        <a class="basic-alignment right" href="/2013/03/22/medical-regulation-and-apps/" title="Next Post: Medical Regulation and Apps">Medical Regulation and Apps &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/05/17/brief-update/">Brief Update</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>For Hire?</h1>
+  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
+  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification/';
+        var disqus_url = 'http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

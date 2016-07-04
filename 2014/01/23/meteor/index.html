@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Meteor - Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="A couple of days ago I received an email from meetup.com about meetups that I might be interested in. Usually this is full of crap I don&rsquo;t care &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rickerbh.github.io/2014/01/23/meteor">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rickerbh.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Meteor</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-01-23T20:25:22+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>8:25 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>A couple of days ago I received an email from meetup.com about meetups that I might be interested in. Usually this is full of crap I don&rsquo;t care about, like mothers groups or salsa dancing, but this most recent mail featured an intriguing group called &ldquo;Meteor Melbourne - a better way to build apps&rdquo;. So, I looked into it.</p>
+
+<p><a href="http://meteor.com">Meteor</a> is a framework based on node.js that allows you to write responsive, reactive, real-time web applications in javascript on both the client and server side. I&rsquo;ve always considered javascript as a toy language - I think this opinion comes from my first interaction with JavaScript waaaaaay back in the late 90&rsquo;s (I think it was somewhere between &lsquo;96 and &#8216;98), when all it was really used for was alert boxes and tic-tac-toe implementations. However, I&rsquo;ve recently been doing a lot of work for clients with <a href="http://parse.com">Parse</a> and their &ldquo;cloud code&rdquo; functionality, taking some logic out of mobile apps and running it on the Parse servers - and you use JavaScript to do this. They promoted use of <a href="https://www.parse.com/docs/js_guide#promises">Promises</a>, and I&rsquo;ve been doing a lot with <a href="https://github.com/ReactiveCocoa/ReactiveCocoa">RAC</a> in iPhone apps, so this functional style is something I&rsquo;m familiar with and like. I also have a friend who is helping a mate out on a startup, who is looking at some serious &ldquo;enterprise&rdquo; functionality implemented with server-side javascript, so I thought it was maybe time to seriously look at this thing too, and I checked it out.</p>
+
+<p>Amazeballs. Meteor is <em>MAGIC</em>. Don&rsquo;t believe me? Watch this <a href="https://www.meteor.com/screencast">screencast</a>.</p>
+
+<p>I think the magic for me comes from the real-time (well, super fast at least -> sub second synchronization) nature of the system, and the automate shuffling of data between the server and client to synchronize/update pages with no specific actions on the developers part. The built in support for packages is also really tidy, although having to use a 3rd party packages system (<a href="http://oortcloud.github.io/meteorite/">Meteorite</a> and <a href="https://atmosphere.meteor.com">Atmosphere</a>) for more modern versions of some of the core packages (eg, bootstrap-3 vs bootstrap-2) seems a little undesirable.</p>
+
+<p>It&rsquo;s super fast to get set up (1 line install, 1 line to start), and this includes server, database, sync between client and server. Want user authentication? Two more command line hits (1 for a UI, 1 for a login provider package), and 1 line to get the UI template built in. Amazingly productive.</p>
+
+<p>Where I see huge potential for Meteor is in the mobile space. Having a web app, which automatically pushes changes to a mobile device is super powerful. With the current state of mobile apps you typically need to poll for changes to data, unless you build your own data sync solution or rely on something like iCloud to push changes around for you (haha, yeah right). When I&rsquo;ve done this sort of thing in the past with Parse, I&rsquo;ve actually gone as far as abusing the Apple Push Notification Service to actually trigger a mobile device to re-query a web service to retrieve new data as APNS is the only push mechanism available. Having a service that reliably notifies a client when data changes server side, with sub-second speed, solves a whole bunch of problems for app developers.</p>
+
+<p>This is the tech stack that I&rsquo;m now looking at using for my small business productivity tool, and I&rsquo;m hoping that mobile sync works just as well (and fast) as the client-server sync does. Next up is a small proof of concept to test this out.</p>
+
+<p>I haven&rsquo;t been this excited about web development since I saw DHH&rsquo;s web app in 15 mins rails screencast in 2006.</p>
+
+<p><em>Oh yeah, I went to the meetup too. Nice job meetup.com</em></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Hamish Rickerby</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-01-23T20:25:22+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>8:25 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rickerbh.github.io/2014/01/23/meteor/" data-via="rickerbh" data-counturl="http://rickerbh.github.io/2014/01/23/meteor/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2014/01/20/2014/" title="Previous Post: 2014">&laquo; 2014</a>
+      
+      
+        <a class="basic-alignment right" href="/2014/01/31/1000km-january/" title="Next Post: 1000km - January">1000km - January &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/05/17/brief-update/">Brief Update</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>For Hire?</h1>
+  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
+  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rickerbh.github.io/2014/01/23/meteor/';
+        var disqus_url = 'http://rickerbh.github.io/2014/01/23/meteor/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

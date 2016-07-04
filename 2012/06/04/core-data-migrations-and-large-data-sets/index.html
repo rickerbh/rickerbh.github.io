@@ -1,0 +1,450 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Core Data Migrations and Large Data Sets - Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="I recently updated Moving Van (you should buy it now!) and published the new version in the app store late last week. It was a substantial update to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rickerbh.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Core Data Migrations and Large Data Sets</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-06-04T12:14:00+10:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:14 pm</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I recently updated <a href="http://click.linksynergy.com/fs-bin/stat?id=*W1h7qYtoaI&amp;offerid=146261&amp;type=3&amp;subid=0&amp;tmpid=1826&amp;RD_PARM1=http%253A%252F%252Fitunes.apple.com%252Fus%252Fapp%252Fmoving-van%252Fid357418069%253Fmt%253D8%2526uo%253D4%2526partnerId%253D30">Moving Van</a> (<em>you should buy it now!</em>) and published the new version in the app store late last week. It was a substantial update to the application - it had a completely new UI with custom interface controls, as well as a whole stack of features that customers had been asking for - things like room autocompletion, saving images to camera roll, more export options, moving items between boxes etc.</p>
+
+<p>As part of this update, I also remodelled the Core Data entities that power the application. The initial model that was used was, let&rsquo;s say, a little naïve in terms of the way that the stored data would impact performance of the application. It stored an image on an item as binary data within the Item entity itself, which in retrospect was a terrible idea because of table view performance. The new version split out the image to a separate entity, which means that when the Item entity loads, the image doesn&rsquo;t get loaded unless explicitly needed because of the faulting behaviour of Core Data and entity relationships.</p>
+
+<p>So, to get out of this historic design decision, a data migration was required. The migration itself was relatively simple, with pretty much everything working from a standard mapping model (add two entities, copy existing entities, create relationships with new entities). I had to use a custom migration policy for one aspect of the migration - two image entities are created for each item (for tableview performance reasons). There is the original image, and a thumbnail version of that image. The custom policy needed to take the original image from the source Item, scale the image down, and set it in the new Thumbnail entity, but that itself was relatively simple.</p>
+
+<p>The migration was tested with all possible permutations of the data that a user could create, including a large data set with over 100 boxes and hundreds of items. The migration would take a few seconds to run, and everything was working well. I submitted, and released the new version.</p>
+
+<p>DISASTER.</p>
+
+<p>It appears that my data sets for testing were inadequate. Quite a few users of the application store images for every one of their items. 300, 400 of them. Some users don&rsquo;t even use the text descriptions for items, they just use images. The larger data sets used for testing were text only - none of the testing involved hundreds of items with images. A database with around 500 images is about 300Mb - I think that&rsquo;s quite a large CD store for the iPhone.</p>
+
+<p>What was happening is that Core Data, while doing the migration, was choking trying to load all the Item entities (with images embedded) into memory. The lightweight migration mechanism seems to try to be fast, over being resource efficient. On the iPhone this is a <em>bad thing</em> if you have a large volume of data - your application will be terminated with little to no warning.</p>
+
+<p>Apple have <a href="http://developer.apple.com/library/ios/#documentation/cocoa/conceptual/CoreDataVersioning/Articles/vmCustomizing.html%23//apple_ref/doc/uid/TP40004399-CH8-SW9">specific recommendations</a> for what do with large core data sets - mainly around splitting a lightweight migration into separate mapping models. This approach is fine if you have a large number of entities, but it a <em>useless</em> strategy if you have a large number (or more precisely, a large data volume) of an individual entity. Their &ldquo;chunks&rdquo; of data refer to a per entity chunk - the approach still attempts to load all instances of an entity into memory. What I needed was a way to have multiple &ldquo;chunks&rdquo; of a specific entity, so the whole set was not loaded into memory at once.</p>
+
+<p>The approach I took to solve this problem is very &ldquo;manual&rdquo;. It consists of the following steps:</p>
+
+<ol>
+<li>Determine if a migration is required - if so, pop a migration controller that informs the user a migration is taking place, and start the migration.</li>
+<li>Create a Core Data stack with the &ldquo;old&rdquo; model, and old version of the store as a source.</li>
+<li>Create another Core Data stack with the &ldquo;new&rdquo; model, and a new store as the destination.</li>
+<li>Request a set of entities from the old data store, with a small batch size to avoid loading all entities at once.</li>
+<li>Traverse the object graph of those old entities, creating each instance of an entity in the new data store.</li>
+<li>Save the new store every 10 or so entities - this is to ensure that the NSManagedContext doesn&rsquo;t consume too much memory with unsaved objects hanging around.</li>
+<li>After this is all finished, backup the original data store, and move the new one to take its place.</li>
+<li>Finally, post a notification for the AppDelegate to receive, that signals the migration is complete and the rest of the startup sequence can continue.</li>
+</ol>
+
+
+<p>The approach works - the application no longer runs out of memory on migration. However, the mapping model is now useless as it&rsquo;s never used, and there are a couple of interesting points. First one is that the migration takes up extra storage space as we are creating an extra store with pretty much the same volume of data in it - just laid out differently. I&rsquo;m not sure if this happens when CD performs a migration - I suspect it is, but what worries me is that if a user is low on space, the migration could cause the disk to fill up. The other thing that I noticed was that the migration is considerably slower that a CD managed lightweight migration. However, it actually works on large data sets, unlike the CD managed lightweight migration, so the positives here outweigh the negatives.</p>
+
+<p>There is probably a way to solve this that utilises more of the Migration classes that Apple provide - specifically subclassing NSMigrationManager - but, I didn&rsquo;t really have enough time available to figure that out - I needed a fix <em>now</em>.</p>
+
+<p>And now some code.</p>
+
+<h2>Determining if your Core Data store needs to be migrated</h2>
+
+<pre><code>// See if a database exists to be migrated
+NSString *sourceStorePath = &lt;Your source store path in the file system&gt;
+if (![[NSFileManager defaultManager] fileExistsAtPath:sourceStorePath]) {
+  // Database doesn't yet exist. No need to test data compatibility"
+  return NO;
+}
+
+// Create a persistence controller that uses the model you've defined as the "current" model
+NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"&lt;Your models directory name&gt;" withExtension:@"momd"];
+NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+
+NSError *error = nil;
+NSURL *sourceStoreURL = [NSURL fileURLWithPath:sourceStorePath];
+NSDictionary *sourceStoreMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType
+                                                                                               URL:sourceStoreURL
+                                                                                             error:&amp;error];
+// Do error checking... Removed from the code sample.
+NSManagedObjectModel *destinationModel = [psc managedObjectModel];
+BOOL pscCompatible = [destinationModel isConfiguration:nil
+                           compatibleWithStoreMetadata:sourceStoreMetadata];
+// if pscCompatible == YES, then you don't need to do a migration.
+</code></pre>
+
+<h2>Loading old and new Core Data Stacks</h2>
+
+<p>You&rsquo;ll need to do this twice - just swap out the model name for old/new models and keep the references to the MOCs that are created. Ensure you have a different store path for your new store!
+For the new model, it&rsquo;s a good idea to also test if a file exists at the new model location - it could be indicative of a migration that&rsquo;s previously failed.
+    NSURL <em>modelURL = [[NSBundle mainBundle] URLForResource:@&ldquo;<source or destination model name>&rdquo; withExtension:@&ldquo;mom&rdquo; subdirectory:@&ldquo;<Your models directory name>.momd&rdquo;];
+    NSManagedObjectModel </em>model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];</p>
+
+<pre><code>// Get the store url
+NSString *sourceStorePath = &lt;Your source/destination store path in the file system&gt;
+NSURL *sourceStoreURL = [NSURL fileURLWithPath:sourceStorePath];
+
+// Use this for source store - ensures you don't accidentally write to the entities
+NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:1]
+                                                    forKey:NSReadOnlyPersistentStoreOption];
+
+// Use this for destination store - makes it writeable
+NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:0]
+                                                    forKey:NSReadOnlyPersistentStoreOption];
+NSError *error = nil;
+[psc addPersistentStoreWithType:NSSQLiteStoreType
+                  configuration:nil
+                            URL:sourceStoreURL
+                        options:options
+                          error:&amp;error];
+// Do error checking... Removed from the code sample.
+NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] init];
+[moc setPersistentStoreCoordinator:psc];
+[moc setUndoManager:nil];
+</code></pre>
+
+<h2>Get your entities from your original store, and create them in the new store</h2>
+
+<p>You can&rsquo;t use your entity classes here, everything has to be done via KVC. This is because your entity classes will no longer map to the old model correctly.
+    NSFetchRequest <em>oldFetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription </em>oldEntity = [NSEntityDescription entityForName:@&ldquo;EntityName&rdquo;
+                                                 inManagedObjectContext:oldContext];
+    [oldFetchRequest setEntity:oldEntity];
+    // Set the batch size so we don&rsquo;t attempt to retrieve all the data at once - this is the key to the whole thing!
+    [oldFetchRequest setFetchBatchSize:10];</p>
+
+<pre><code>NSError *error = nil;
+NSArray *entities = [oldContext executeFetchRequest:oldFetchRequest error:&amp;error];
+int count = 0;
+for (NSManagedObject *oldEntity in entities) {
+  // Creating new entity
+  NSManagedObject *newEntity = [NSEntityDescription insertNewObjectForEntityForName:@"EntityName"
+                                                             inManagedObjectContext:newContext];
+  [newEntity setValue:[oldEntity valueForKey:@"someAttribute"] forKey:@"someAttribute"];
+
+  // If your entity has relationships...
+  for (NSManagedObject *aRelatedEntity in [oldEntity mutableSetValueForKey:@"someRelationship"]) {
+    NSManagedObject *newRelatedEntity = [NSEntityDescription insertNewObjectForEntityForName:@"RelatedEntityName"
+                                                                      inManagedObjectContext:newContext];
+    [newRelatedEntity setValue:[aRelatedEntity valueForKey:@"someOtherAttribute"] forKey:@"someOtherAttribute"];
+  }
+  // Save periodically
+  count++;
+  if (count % 10 == 0) {
+    [newContext save:&amp;error];
+    // Do some error handling
+  }
+}
+[newContext save:&amp;error];
+// Do some error handling
+// Migration is complete, if you've traversed all your entities.
+</code></pre>
+
+<p>When I encountered this problem I couldn&rsquo;t find any example code for how to do this migration - hopefully this helps someone.</p>
+
+<p>If anyone does know of an alternative (better) way to get around this issue, please let me know in the comments.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Hamish Rickerby</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2012-06-04T12:14:00+10:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:14 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets/" data-via="rickerbh" data-counturl="http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2012/05/19/uisearchbars-uitextfield/" title="Previous Post: UISearchBar's UITextField">&laquo; UISearchBar&#8217;s UITextField</a>
+      
+      
+        <a class="basic-alignment right" href="/2012/07/06/updating-a-uitableview-without-calling-reloaddata/" title="Next Post: Updating a UITableView without calling reloadData">Updating a UITableView without calling reloadData &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/05/17/brief-update/">Brief Update</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>For Hire?</h1>
+  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
+  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets/';
+        var disqus_url = 'http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
