@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Recent blog post from 37 signals - What you expect from clients is what you get It&rsquo;s interesting - I see exactly the same thing in &hellip;">
+  <meta name="description" content="This might be old news (released end of May, I&rsquo;m soooo behind the times), but Google are supporting hosting for popular javascript libraries, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/08/05/googles-ajax-libraries-api/">Google&#8217;s AJAX Libraries API</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-08-05T15:01:12+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>3:01 pm</span></time>
+        
+           | <a href="/2008/08/05/googles-ajax-libraries-api/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2008/08/05/googles-ajax-libraries-api/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This might be old news (released end of May, I&rsquo;m soooo behind the times), but Google are supporting hosting for popular javascript libraries, and they are promoting people using their copies of the libraries rather than hosting their own.  I only just found this out, and I think it&rsquo;s pretty cool</p>
+
+<p><a href="http://code.google.com/apis/ajaxlibs/" target="_blank"><a href="http://code.google.com/apis/ajaxlibs/">http://code.google.com/apis/ajaxlibs/</a></a></p>
+
+<p>The service supports either <a href="http://code.google.com/apis/ajax/documentation/" target="_blank">programmatic inclusion</a> using the google jsapi library, or <a href="http://code.google.com/apis/ajaxlibs/documentation/index.html#AjaxLibraries" target="_blank">linking directly</a> to their hosted copies.</p>
+
+<p>Good things about this</p>
+
+<ul>
+    <li>You save bandwidth costs, as your users download the libraries from google</li>
+    <li>Your users get faster browsing ON OTHER DOMAINS, because the more people that use a single source, the more caching should happen</li>
+</ul>
+
+
+<p>Bad things about this</p>
+
+<ul>
+    <li>Google have more opportunity to <span style="text-decoration: line-through;">don&#8217;t</span> be evil - the biggest concern for me is their increased ability to understanding which users use your application, and propensity for understanding <em>how</em> they use it.  A malicious individual within the company could put some nasty code in the js to screw with your site, or monitor and transmit back to googlebase what the user is up to.  It&#8217;s <em>very</em> unlikely, but it could happen.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -508,44 +559,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/03/06/flash/">Flash!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-03-06T09:54:11+11:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>9:54 am</span></time>
-        
-           | <a href="/2008/03/06/flash/#disqus_thread"
-             data-disqus-identifier="http://rickerbh.github.io/2008/03/06/flash/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m doing a bit of Flash work for a <a href="http://broomemedia.com.au">mate</a> who is setting up a website to host video.  One of the problems I just solved was how to get some text to flow around an image.  I was hoping there would be some sort of way to make a textfield of arbitrary shape (with vectors or something) because I really wanted an L shaped textfield, so I could place an image in the upper left corner, but sadly, they are just rectangles.  I found <a href="http://www.actionscript.org/forums/showthread.php3?t=133932">this post</a> though, and the solution was so simple.</p>
-
-<p>Just convert the textfield to Render text as HTML!  Put your normal HTML tags in, and it&rsquo;s all good bro.</p>
-
-<p>That&rsquo;s what I like about this whole Flash thing - it&rsquo;s very easy to merge the richness of Flash with the simplicity of the web.</p>
-
-<p>What I don&rsquo;t like is that the content isn&rsquo;t searchable by Mr. Google :-(</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/9">&larr; Older</a>
@@ -563,6 +576,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
       </li>
     
@@ -576,10 +593,6 @@
     
       <li class="post">
         <a href="/2016/05/17/brief-update/">Brief Update</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
       </li>
     
   </ul>

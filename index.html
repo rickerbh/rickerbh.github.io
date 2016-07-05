@@ -9,22 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Just had a very frustrating day. Was getting a deployment error on Heroku with a Meteor app I&rsquo;m making. 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16 &hellip;">
+  <meta name="description" content="I&rsquo;m working on a web based productivity application at the moment, and have been modifying some old code. This code deals with synchronisation &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,6 +81,174 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-07-05T16:26:31+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>4:26 pm</span></time>
+        
+           | <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2016/07/05/a-small-functional-refactoring-of-some-javascript/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m working on a web based productivity application at the moment, and have been modifying some old code. This code deals with synchronisation of data with external services, and storage of metadata about the synchronisation of that data. The application had quite a bit of duplication in dealing with this metadata; specifically in extracting data from the stored structures. In the interests of having very DRY Javascript, it was time to refactor.</p>
+
+<p>The configuration/metadata structures typically look like</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>  ...
+</span><span class='line'>  config: [{ key: 'attribute-name', value: { value: 'attribute-value' }}],
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>Sidenote: value is embedded in value because the top-level value item actually receives an object to store, so other fields can be added in the future</em></p>
+
+<p>The metadata object was then optionally attached to other user-entered data entities, and queried when updates that require synchronisation to be triggered.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>const containerObject = {...
+</span><span class='line'>  config: [
+</span><span class='line'>      { key: 'itemId', value: { value: 12345 }}, 
+</span><span class='line'>      { key: 'itemState', value: { value: 'active' }}
+</span><span class='line'>    ],
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The application was already using <a href="http://ramdajs.com/">RamdaJS</a> to extract data from these types of structures.  To query, there was a whole bunch of duplicated code that traversed the containing objects, and extracted data. Example below.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Extract config object, maybe.
+</span><span class='line'>const syncData = R.propOr({}, 'config')(containerObject);
+</span><span class='line'>// Find a structure with a specific key value
+</span><span class='line'>const itemSyncData = R.find(R.propEq('key', 'itemId'), syncData) || {};
+</span><span class='line'>// Extract the value from the entity with that key
+</span><span class='line'>const itemId = R.path(['value', 'value'], itemSyncData);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To DRY all this up, I looked at the possibility of using <a href="https://en.wikipedia.org/wiki/Currying">Currying</a> and <a href="https://en.wikipedia.org/wiki/Partial_application">Partial Application</a> to help me define generic extraction functions, and reuse them.</p>
+
+<p>First of all, I turned the above into a composed function, with the results of one step flowing as the inputs to the next.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// compose reads from the bottom up, like you're feeding in the object from
+</span><span class='line'>// the end and it's consuming it, right to left.
+</span><span class='line'>const composedFunction = R.compose(
+</span><span class='line'>  R.path(['value', 'value'],
+</span><span class='line'>  R.find(R.propEq('key', 'itemId')),
+</span><span class='line'>  R.propOr({}, 'config')
+</span><span class='line'>); 
+</span><span class='line'>
+</span><span class='line'>// How to use?
+</span><span class='line'>const itemId = composedFunction(containerObject);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>However, this only supports <code>config</code> objects in the container, and <code>itemId</code>&rsquo;s inside that. We can make this more generic.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>const composedGenericFunction = (data, key) =&gt; R.compose(
+</span><span class='line'>  R.path(['value', 'value'],
+</span><span class='line'>  R.find(R.propEq('key', key)),
+</span><span class='line'>  R.propOr({}, data)
+</span><span class='line'>); 
+</span><span class='line'>
+</span><span class='line'>// How to use?
+</span><span class='line'>const itemId = composedGenericFunction('config', 'itemId')(containerObject);
+</span><span class='line'>const itemState = composedGenericFunction('config', 'itemState')(containerObject);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Better because we get more reuse, but we still are repeating ourselves with the definition of the attribute that houses the config. So, lets make our function even more reusable with currying and partial application.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>const composedGenericCurriedFunction = R.curry((data, key) =&gt; R.compose(
+</span><span class='line'>  R.path(['value', 'value'],
+</span><span class='line'>  R.find(R.propEq('key', key)),
+</span><span class='line'>  R.propOr({}, data)
+</span><span class='line'>)); 
+</span><span class='line'>
+</span><span class='line'>// How to use?
+</span><span class='line'>const configGetter = composedGenericCurriedFunction('config'); // Partial Application
+</span><span class='line'>const itemId = configGetter('itemId')(containerObject);
+</span><span class='line'>const itemState = configGetter('itemState')(containerObject);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can take this a step further with something like below, and generate a getter that will retrieve the itemId from different containerObjects.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>const idGetter = configGetter('itemId');
+</span><span class='line'>const idOne = idGetter(containerObject);
+</span><span class='line'>const idTwo = idGetter(containerObjectTwo);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can also extract fields from other objects that conform to the same structure, but aren&rsquo;t under a <code>config</code> key.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>const syncDataGetter = composedGenericCurriedFunction('syncData');</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So, with the use of currying and partial application with Ramda, we can create generic, reusable functions that are then used to generate other functions that we can use in our application. Super easy and effective way to DRY out your javascript.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -517,115 +670,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/03/22/medical-regulation-and-apps/">Medical Regulation and Apps</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-03-22T10:23:00+11:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2013</span></span> <span class='time'>10:23 am</span></time>
-        
-           | <a href="/2013/03/22/medical-regulation-and-apps/#disqus_thread"
-             data-disqus-identifier="http://rickerbh.github.io/2013/03/22/medical-regulation-and-apps/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Yesterday I read an <a href="http://venturebeat.com/2013/03/19/health-app-makers-to-feds-dithering-on-regulation-is-stifling-innovation/">article in Venture Beat</a> covering part of a series of hearings US Congress is holding on regulation of health and medical apps on smartphone and tablet devices. My <em>significantly</em> paraphrased version of the article is that the FDA are unsure if and how health apps should be regulated, and that representatives from the &ldquo;app&rdquo; industry are pushing for no regulation for consumer facing apps.</p>
-
-<p>I have a slightly different take on this. To me, the question is simple (and what is driving health authorities globally to address this issue): can health apps be considered to be medical devices?</p>
-
-<p>Medical devices are subject to legislation worldwide.  In fact, often requiring prior market approval through mechanisms similar to which pharmaceutical companies must obtain approval for medicines. Clear guidance exists on the regulation which surrounds medical devices, and this includes the legislative definition of what constitutes a medical device.  As a snapshot (and these definitions can be considered consistent with legislation in many other countries too), the definition of a medical device in Australia, the EU, and US clearly includes apps which diagnose, prevent, monitor, treat, alleviate disease.</p>
-
-<figure class='code'><figcaption><span>Australian Therapeutic Goods Act 1989</span><a href='http://www.comlaw.gov.au/Series/C2004A03952'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>41BD A medical device is:
-</span><span class='line'>  a. any instrument, apparatus, appliance, material or other article (whether used alone or in combination, and including the software necessary for its proper application) intended, by the person under whose name it is or is to be supplied, to be used for human beings for the purpose of one or more of the following:
-</span><span class='line'>    i. diagnosis, prevention, monitoring, treatment or alleviation of disease;
-</span><span class='line'>    ii. diagnosis, monitoring, treatment, alleviation of or compensation for an injury or handicap;
-</span><span class='line'>    iii. investigation, replacement or modification of the anatomy or of a physiological process;
-</span><span class='line'>    iv. control of conception;
-</span><span class='line'>  and that does not achieve its principal intended action in or on the human body by pharmacological, immunological or metabolic means, but that may be assisted in its function by such means; or
-</span><span class='line'>  b. an accessory to such an instrument, apparatus, appliance, material or other article.</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>EU Directive 2007/47/ec (paraphrased) </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Any instrument, apparatus, appliance, software, material or other article that is used alone or in combination, including software specifically for diagnostic or therapeutic purposes, that the manufacturer intends for use in human beings. Such devices are used for:
-</span><span class='line'> - Diagnosis, prevention, monitoring, treatment, or alleviation of disease
-</span><span class='line'> - Diagnosis, monitoring, treatment, alleviation of, or compensation for an injury or handicap
-</span><span class='line'> - Investigation, replacement, or modification of the anatomy or of a physiological process
-</span><span class='line'> - Control of conception</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>US Food, Drug and Cosmetic Act Section 201(h) </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Medical machine, contrivance, implant, in vitro reagent, or other similar or related article, including a component part, or accessory that is:
-</span><span class='line'> - Recognized in the official National Formulary, or the United States Pharmacopoeia, or any supplement to them
-</span><span class='line'> - Intended for use in the diagnosis of disease or other conditions, or in the cure, mitigation, treatment or prevention of disease, in man or other animals
-</span><span class='line'> - Intended to affect the structure or any function of the body of man or other animals, and does not achieve any of its primary intended purposes through chemical action within or on the body of man or other animals and does not depend on metabolic action to achieve its primary intended purposes.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The key, and common, part to all of these is the use of the device in <em>diagnosis, monitoring, and treatment of a disease</em>.</p>
-
-<p>Regardless of the user of the device, regulation exists. Medical devices such as syringes, contact lenses, condoms, and bandages are all available to the public, and regulated (at least in Australia). If the same rule that is being proposed for apps was applied for these devices, anyone could make devices such as bandages, and the public would have no guarantee as to the quality, safety, and efficacy of these devices.</p>
-
-<p>Devices and medicines are regulated to protect patients (and the general public) from faulty or harmful devices and drugs, and misdiagnosis or mistreatment from inaccurate information being provided to medical professionals who need to make decisions on the basis of that information. The consequences for patients from medical misdiagnosis from a medical app can be a lot more severe than (lets say) the physics calculations not accurately representing gravity in Angry Birds. Death or permanent disability is a real possibility with inaccurate (or just plain wrong) information being captured by medical apps and used for diagnosis.</p>
-
-<p>Getting a medical device approved can be a very costly exercise. Typically, trials with verifiable data are required to show accuracy and stability in the product. There is also the paperwork required to submit the device to the health regulator in a country, and this submission process needs to be repeated for each health regulator in each country you want to sell your device in.<sup id='fnref:1'><a href='#fn:1' rel='footnote'>1</a></sup> However, due to the high cost (and high barrier to entry<sup id='fnref:2'><a href='#fn:2' rel='footnote'>2</a></sup> in the marketplace), if you can jump through the regulatory hurdles, you may find a relatively competition-free market. That&rsquo;s the reward for navigating the processes.</p>
-
-<p>There is also a comment in that article that &ldquo;Developers are mystified by the rules in this highly regulated industry&rdquo;. If this is the case, maybe developers need to do the same as other players in the health industry and either employ, or contract in, medical regulatory professionals. Mystification is no excuse for not playing by the rules.</p>
-
-<p><em>Ignorantia juris non excusat</em>.</p>
-
-<h2>Need help?</h2>
-
-<p><a href="http://happtic.com">happtic</a> (my company) provides consulting services related to health regulations for medical apps. If you&rsquo;re looking for help determining if an app would be considered a medical device, help with understanding regulatory processes, or help with regulatory submissions please <a href="mailto:contact@happtic.com">get in touch</a>.</p>
-
-<div class="footnotes">
-    <ol>
-        <li id='fn:1'><p> Unless you&#8217;re in the EU. There is a single health agency for Europe.
-  <a href='#fnref:1' rev='footnote'>↩</a></p>
-</li><li id='fn:2'><p> Regulatory requirements are only one significant barrier to entry in certain industries. Other industries (such as telecommunications and energy suppliers) also have a large infrastructure requirement requiring both capital investment and significant time. Medical Apps don&#8217;t typically have this barrier.
-<a href='#fnref:2' rev='footnote'>↩</a></p>
-</li>
-    </ol>
-</div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/2">&larr; Older</a>
@@ -641,6 +685,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
       </li>
     
@@ -654,10 +702,6 @@
     
       <li class="post">
         <a href="/2016/05/17/brief-update/">Brief Update</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
       </li>
     
   </ul>

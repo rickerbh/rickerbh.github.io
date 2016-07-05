@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Getting and setting user preferences on iPhone is pretty darn easy.  I was looking for a way to automagically store a users email address between &hellip;">
+  <meta name="description" content="I am having a bit of a play with the cocos2d game engine for iPhone and encountered a very strange error in the console - I don&rsquo;t believe it& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/01/31/error-on-line-1987/">Error on Line 1987</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-01-31T07:37:48+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2009</span></span> <span class='time'>7:37 am</span></time>
+        
+           | <a href="/2009/01/31/error-on-line-1987/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2009/01/31/error-on-line-1987/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I am having a bit of a play with the <a href="http://code.google.com/p/cocos2d-iphone/">cocos2d</a> game engine for iPhone and encountered a very strange error in the console - I don&rsquo;t believe it&rsquo;s at all related to the game engine itself, so it&rsquo;s just coincidence that I was trying something new out.</p>
+
+<p>error while killing target (killing anyway): warning: error on line 1987 of &ldquo;/SourceCache/gdb/gdb-962/src/gdb/macosx/macosx-nat-inferior.c&rdquo; in function &ldquo;macosx_kill_inferior_safe&rdquo;: (os/kern) failure (0x5x)</p>
+
+<p>I figured out that it had to do with definition of a selector&hellip;  Naughty code below.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">MenuItem</span> <span class="o">*</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="n">MenuItemFont</span> <span class="nl">itemFromString</span><span class="p">:</span><span class="s">@&quot;Start Game&quot;</span>
+</span><span class='line'>                                        <span class="nl">target</span><span class="p">:</span><span class="nb">self</span>
+</span><span class='line'>                                      <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">startGame</span><span class="p">)];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The problem is that the method name inside @selector() MUST have a colon on the back of it.</p>
+
+<p>Good code</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="n">MenuItem</span> <span class="o">*</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="n">MenuItemFont</span> <span class="nl">itemFromString</span><span class="p">:</span><span class="s">@&quot;Start Game&quot;</span>
+</span><span class='line'>                                        <span class="nl">target</span><span class="p">:</span><span class="nb">self</span>
+</span><span class='line'>                                      <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">startGame</span><span class="p">:)];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hope that&rsquo;s useful to someone.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -545,42 +605,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/10/17/great-job-title/">Great Job Title</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-10-17T08:43:57+11:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>8:43 am</span></time>
-        
-           | <a href="/2008/10/17/great-job-title/#disqus_thread"
-             data-disqus-identifier="http://rickerbh.github.io/2008/10/17/great-job-title/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Group Manager of Enforcement</p>
-
-<p>and it&rsquo;s not what you&rsquo;re thinking&hellip;</p>
-
-<p>Via: <a href="http://www.pharmatimes.com/WorldNews/article.aspx?id=14542&amp;src=EWorldNews">PharmaTimes</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/7">&larr; Older</a>
@@ -598,6 +622,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
       </li>
     
@@ -611,10 +639,6 @@
     
       <li class="post">
         <a href="/2016/05/17/brief-update/">Brief Update</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Yesterday when I came home Moving Van&rsquo;s sales were up. I was a bit surprised as I hadn&rsquo;t done any specific marketing for the app, and &hellip;">
+  <meta name="description" content="Recently I have been doing some localizations of an iOS app from English (US) to English (UK). The iPhone development guides from Apple describe how &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,91 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/07/23/iphone-ipad-localizations-regions/">iPhone & iPad (iOS) Localizations and Regions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2010-07-23T07:45:12+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2010</span></span> <span class='time'>7:45 am</span></time>
+        
+           | <a href="/2010/07/23/iphone-ipad-localizations-regions/#disqus_thread"
+             data-disqus-identifier="http://rickerbh.github.io/2010/07/23/iphone-ipad-localizations-regions/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently I have been doing some localizations of an iOS app from English (US) to English (UK). The iPhone development guides from Apple describe how to support multiple languages (such as English, German, Japanese), but fail to describe how to support multiple variants of a single language. By this I mean support support for US English, English, NZ English, AU English. The word I needed to regionalize was Behavior (or Behaviour, depending where you come from).</p>
+
+<p>In the Apple Developer Library, it explicitly states that for MacOS applications take both the Language and Regional preferences of the user into account, but only look at the preferred <em>language</em> on iOS - <a href="http://developer.apple.com/iphone/library/documentation/MacOSX/Conceptual/BPInternational/Articles/InternatSupport.html">Support for Internationalization</a>.  This means that a single variant <em>per language</em> is supported.</p>
+
+<p>However, these is a way around this. I&rsquo;m not sure if this is a <em>good</em> thing to do, but it works for me and I haven&rsquo;t noticed any ill side effects yet.</p>
+
+<p>To support both US English and British English in your iOS application, create 2x Localization.strings files just as you would for multiple language. Put the US English translation file Localization.strings in a directory in your iPhone app called English.lproj (Apple defaults) and the British English translation in a directory named en_GB.lproj (just in case they decide to support regions in the future).</p>
+
+<p>Then, you&rsquo;ll need to create some code to manually set the preferred localization. In your main.m file (yup, main.m is being edited) alter it so it performs some logic similar to below.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>  <span class="bp">NSAutoreleasePool</span> <span class="o">*</span> <span class="n">pool</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSAutoreleasePool</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>  <span class="bp">NSString</span> <span class="o">*</span><span class="n">language</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSLocale</span> <span class="n">preferredLanguages</span><span class="p">]</span> <span class="nl">objectAtIndex</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>  <span class="bp">NSString</span> <span class="o">*</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSLocale</span> <span class="n">currentLocale</span><span class="p">]</span> <span class="nl">objectForKey</span><span class="p">:</span> <span class="n">NSLocaleCountryCode</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">([</span><span class="n">language</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="s">@&quot;en&quot;</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">locale</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="s">@&quot;GB&quot;</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>      <span class="p">[[</span><span class="bp">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="nl">setObject</span><span class="p">:[</span><span class="bp">NSArray</span> <span class="nl">arrayWithObjects</span><span class="p">:</span><span class="s">@&quot;en_GB&quot;</span><span class="p">,</span> <span class="s">@&quot;en&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">]</span> <span class="nl">forKey</span><span class="p">:</span><span class="s">@&quot;AppleLanguages&quot;</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">retVal</span> <span class="o">=</span> <span class="n">UIApplicationMain</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="nb">nil</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">pool</span> <span class="k">release</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">retVal</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When the line</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="kt">int</span> <span class="n">retVal</span> <span class="o">=</span> <span class="n">UIApplicationMain</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="nb">nil</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>gets executed, it seems to set up all the Localization bundles before calling the application:didFinishLaunchingWithOptions method on your app delegate, so putting Localization code in the app delegate is too late. So, what the code above does is retrieve the users current language and region, and compares those against pre-determined values - en for the language and gb for the region. If these match, then I force a new setting in the NSUserDefaults to overwrite the users preferred language. Then, when the UIApplicationManager function gets called, it appears to retrieve the users preferred language setting, and look up the Localization for that - which in my case I&rsquo;ve forced to be en_GB.</p>
+
+<p>One thing you need to be careful about is persistence of this NSUserDefault setting.  It is saved once it&rsquo;s set, and persists through multiple application executions. To get around this (lets say the user changes their region back to US), you need to remove the setting after the bundle initialization has taken place.  In you app delegates application:didFinishLaunchingWithOptions method, just execute the following code.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="p">[[</span><span class="bp">NSUserDefaults</span> <span class="n">standardUserDefaults</span><span class="p">]</span> <span class="nl">removeObjectForKey</span><span class="p">:</span><span class="s">@&quot;AppleLanguages&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This wipes out the NSUserDefault setting that the app made in the main.m file.</p>
+
+<p>If anyone knows of issues with this approach (apart from being a dirty hack), or faults with my code please let me know in the comments below. I wish Apple supported different regions per language natively in iOS but they don&rsquo;t. This is the only way I&rsquo;ve found to do this, and continue to use localization functions such as NSLocalizedString.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -489,53 +574,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/08/04/undefined-method-rewind-and-rails-2-3-3/">Undefined Method Rewind and Rails 2.3.3</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-08-04T19:06:29+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>7:06 pm</span></time>
-        
-           | <a href="/2009/08/04/undefined-method-rewind-and-rails-2-3-3/#disqus_thread"
-             data-disqus-identifier="http://rickerbh.github.io/2009/08/04/undefined-method-rewind-and-rails-2-3-3/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Today I updated a project I&rsquo;m working on from rails 2.2.something to 2.3.3.  Then, I started getting the following wacky error.</p>
-
-<p><code>
-undefined method `rewind' for #&lt;TCPSocket:0x3631e58&gt;
-</code></p>
-
-<p>Turns out if you see this after a rails 2.3.3 update, you might just need a phusion passenger update (I was on passenger 2.1.3, apparently this error happens on passenger 2.1.2 too)</p>
-
-<p><code>
-sudo gem update passenger
-sudo passenger-install-apache2-module
-</code></p>
-
-<p>Put the lines recommended by the install script in your apache config file, restart apache and you&rsquo;re good to go.</p>
-
-<p>Hope this helps someone.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/5">&larr; Older</a>
@@ -553,6 +591,10 @@ sudo passenger-install-apache2-module
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
       </li>
     
@@ -566,10 +608,6 @@ sudo passenger-install-apache2-module
     
       <li class="post">
         <a href="/2016/05/17/brief-update/">Brief Update</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a>
       </li>
     
   </ul>
