@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://rickerbh.github.io/sitemap.xml 
+Sitemap: https://hamishrickerby.com/sitemap.xml 

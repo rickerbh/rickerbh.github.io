@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Hamish Rickerby]]></title>
-  <link href="http://rickerbh.github.io/atom.xml" rel="self"/>
-  <link href="http://rickerbh.github.io/"/>
-  <updated>2016-07-06T06:36:47+10:00</updated>
-  <id>http://rickerbh.github.io/</id>
+  <link href="https://hamishrickerby.com/atom.xml" rel="self"/>
+  <link href="https://hamishrickerby.com/"/>
+  <updated>2016-07-14T09:01:59+10:00</updated>
+  <id>https://hamishrickerby.com/</id>
   <author>
     <name><![CDATA[Hamish Rickerby]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[A Small Functional Refactoring of Javascript]]></title>
-    <link href="http://rickerbh.github.io/2016/07/05/a-small-functional-refactoring-of-some-javascript/"/>
+    <link href="https://hamishrickerby.com/2016/07/05/a-small-functional-refactoring-of-some-javascript/"/>
     <updated>2016-07-05T16:26:31+10:00</updated>
-    <id>http://rickerbh.github.io/2016/07/05/a-small-functional-refactoring-of-some-javascript</id>
+    <id>https://hamishrickerby.com/2016/07/05/a-small-functional-refactoring-of-some-javascript</id>
     <content type="html"><![CDATA[<p>I&rsquo;m working on a web based productivity application at the moment, and have been modifying some old code. This code deals with synchronisation of data with external services, and storage of metadata about the synchronisation of that data. The application had quite a bit of duplication in dealing with this metadata; specifically in extracting data from the stored structures. In the interests of having very DRY Javascript, it was time to refactor.</p>
 
 <p>The configuration/metadata structures typically look like</p>
@@ -160,9 +160,9 @@
   
   <entry>
     <title type="html"><![CDATA[Meteor, Heroku, and Bcrypt]]></title>
-    <link href="http://rickerbh.github.io/2016/06/29/meteor-heroku-and-bcrypt/"/>
+    <link href="https://hamishrickerby.com/2016/06/29/meteor-heroku-and-bcrypt/"/>
     <updated>2016-06-29T11:07:11+10:00</updated>
-    <id>http://rickerbh.github.io/2016/06/29/meteor-heroku-and-bcrypt</id>
+    <id>https://hamishrickerby.com/2016/06/29/meteor-heroku-and-bcrypt</id>
     <content type="html"><![CDATA[<p>Just had a very frustrating day. Was getting a deployment error on Heroku with a Meteor app I&rsquo;m making.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -211,9 +211,9 @@
   
   <entry>
     <title type="html"><![CDATA[Back to Basics - Editors]]></title>
-    <link href="http://rickerbh.github.io/2016/06/27/back-to-basics-editors/"/>
+    <link href="https://hamishrickerby.com/2016/06/27/back-to-basics-editors/"/>
     <updated>2016-06-27T20:54:48+10:00</updated>
-    <id>http://rickerbh.github.io/2016/06/27/back-to-basics-editors</id>
+    <id>https://hamishrickerby.com/2016/06/27/back-to-basics-editors</id>
     <content type="html"><![CDATA[<p>My boss bought me a copy of the seminal classic <a href="http://www.bookdepository.com/Pragmatic-Programmer-Andrew-Hunt/9780201616224?a_aid=rickerbh">The Pragmatic Programmer</a>. It&rsquo;s full of sensible advice for both beginners and experienced software professionals.</p>
 
 <p>I have lots of thoughts about the contents of this book but what I&rsquo;d like to cover is usage of text editors, and specifically becoming proficient with a editor that&rsquo;s typically universally available. I can think of 3 of these for UNIX systems. <code>vi</code>, <code>emacs</code>, and <code>nano</code>.</p>
@@ -236,9 +236,9 @@
   
   <entry>
     <title type="html"><![CDATA[Reading Not Reading]]></title>
-    <link href="http://rickerbh.github.io/2016/06/23/reading-not-reading/"/>
+    <link href="https://hamishrickerby.com/2016/06/23/reading-not-reading/"/>
     <updated>2016-06-23T09:14:11+10:00</updated>
-    <id>http://rickerbh.github.io/2016/06/23/reading-not-reading</id>
+    <id>https://hamishrickerby.com/2016/06/23/reading-not-reading</id>
     <content type="html"><![CDATA[<p>I recently finished a book called <a href="http://www.bookdepository.com/Apprenticeship-Patterns/9780596518387?a_aid=rickerbh">Apprenticeship Patterns</a> (more on why later) and one of the things it suggested is keeping an online list of books you read, and books you want to read. So here is mine.</p>
 
 <p><a href="http://hamishrickerby.com/books/">http://hamishrickerby.com/books/</a></p>
@@ -251,9 +251,9 @@
   
   <entry>
     <title type="html"><![CDATA[Brief Update]]></title>
-    <link href="http://rickerbh.github.io/2016/05/17/brief-update/"/>
+    <link href="https://hamishrickerby.com/2016/05/17/brief-update/"/>
     <updated>2016-05-17T21:52:33+10:00</updated>
-    <id>http://rickerbh.github.io/2016/05/17/brief-update</id>
+    <id>https://hamishrickerby.com/2016/05/17/brief-update</id>
     <content type="html"><![CDATA[<p>It&rsquo;s been ages.</p>
 
 <ul>
@@ -272,9 +272,9 @@
   
   <entry>
     <title type="html"><![CDATA[Why I've Taken a Full Time Job]]></title>
-    <link href="http://rickerbh.github.io/2014/09/27/why-ive-taken-a-full-time-job/"/>
+    <link href="https://hamishrickerby.com/2014/09/27/why-ive-taken-a-full-time-job/"/>
     <updated>2014-09-27T10:08:51+10:00</updated>
-    <id>http://rickerbh.github.io/2014/09/27/why-ive-taken-a-full-time-job</id>
+    <id>https://hamishrickerby.com/2014/09/27/why-ive-taken-a-full-time-job</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve relapsed. I swore I&rsquo;d never do it again, but I have. I&rsquo;ve accepted a full time job.</p>
 
 <h2>I&rsquo;m not in it for the money</h2>
@@ -301,35 +301,35 @@
   
   <entry>
     <title type="html"><![CDATA[1000km - February]]></title>
-    <link href="http://rickerbh.github.io/2014/03/02/1000km-february/"/>
+    <link href="https://hamishrickerby.com/2014/03/02/1000km-february/"/>
     <updated>2014-03-02T14:43:25+11:00</updated>
-    <id>http://rickerbh.github.io/2014/03/02/1000km-february</id>
+    <id>https://hamishrickerby.com/2014/03/02/1000km-february</id>
     <content type="html"><![CDATA[<p>Progress has been a bit slower this month. Short month, very hot here, and new baby all contributed to slowing progress down. Oh, in other news, we now have a baby!  Exciting.</p>
 
 <p>190km complete at end of Feb, which leaves me with a 30km buffer. The last graph was a little incorrect too - Numbers only puts dates correctly (in relative terms) on the x-axis if the graph type is a scatterplot. Dumb. The new graph below is correct.</p>
 
-<p><img src="http://rickerbh.github.io/images/1000km-Feb.png"></p>
+<p><img src="https://hamishrickerby.com/images/1000km-Feb.png"></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[1000km - January]]></title>
-    <link href="http://rickerbh.github.io/2014/01/31/1000km-january/"/>
+    <link href="https://hamishrickerby.com/2014/01/31/1000km-january/"/>
     <updated>2014-01-31T10:17:23+11:00</updated>
-    <id>http://rickerbh.github.io/2014/01/31/1000km-january</id>
+    <id>https://hamishrickerby.com/2014/01/31/1000km-january</id>
     <content type="html"><![CDATA[<p>Progress on the 1000km is good so far. 109km run in Jan, and I&rsquo;m sticking to the 10km distance per run. Weight is also starting to fall, which is great because I&rsquo;m about 9kg heavier than I should be.</p>
 
 <p>Because I&rsquo;m also a nerd (and if you&rsquo;re reading my blog, you probably are too), here&rsquo;s a graph marking progress. Grey line is what I need to run to get to 1000km this year. Any blue higher than the grey line is kms in the bank for a rainy day.</p>
 
-<p><img src="http://rickerbh.github.io/images/1000km-Jan.png"></p>
+<p><img src="https://hamishrickerby.com/images/1000km-Jan.png"></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Meteor]]></title>
-    <link href="http://rickerbh.github.io/2014/01/23/meteor/"/>
+    <link href="https://hamishrickerby.com/2014/01/23/meteor/"/>
     <updated>2014-01-23T20:25:22+11:00</updated>
-    <id>http://rickerbh.github.io/2014/01/23/meteor</id>
+    <id>https://hamishrickerby.com/2014/01/23/meteor</id>
     <content type="html"><![CDATA[<p>A couple of days ago I received an email from meetup.com about meetups that I might be interested in. Usually this is full of crap I don&rsquo;t care about, like mothers groups or salsa dancing, but this most recent mail featured an intriguing group called &ldquo;Meteor Melbourne - a better way to build apps&rdquo;. So, I looked into it.</p>
 
 <p><a href="http://meteor.com">Meteor</a> is a framework based on node.js that allows you to write responsive, reactive, real-time web applications in javascript on both the client and server side. I&rsquo;ve always considered javascript as a toy language - I think this opinion comes from my first interaction with JavaScript waaaaaay back in the late 90&rsquo;s (I think it was somewhere between &lsquo;96 and &#8216;98), when all it was really used for was alert boxes and tic-tac-toe implementations. However, I&rsquo;ve recently been doing a lot of work for clients with <a href="http://parse.com">Parse</a> and their &ldquo;cloud code&rdquo; functionality, taking some logic out of mobile apps and running it on the Parse servers - and you use JavaScript to do this. They promoted use of <a href="https://www.parse.com/docs/js_guide#promises">Promises</a>, and I&rsquo;ve been doing a lot with <a href="https://github.com/ReactiveCocoa/ReactiveCocoa">RAC</a> in iPhone apps, so this functional style is something I&rsquo;m familiar with and like. I also have a friend who is helping a mate out on a startup, who is looking at some serious &ldquo;enterprise&rdquo; functionality implemented with server-side javascript, so I thought it was maybe time to seriously look at this thing too, and I checked it out.</p>
@@ -352,9 +352,9 @@
   
   <entry>
     <title type="html"><![CDATA[2014]]></title>
-    <link href="http://rickerbh.github.io/2014/01/20/2014/"/>
+    <link href="https://hamishrickerby.com/2014/01/20/2014/"/>
     <updated>2014-01-20T11:14:43+11:00</updated>
-    <id>http://rickerbh.github.io/2014/01/20/2014</id>
+    <id>https://hamishrickerby.com/2014/01/20/2014</id>
     <content type="html"><![CDATA[<p>I&rsquo;m not one for new years resolutions, but there are a couple of things I&rsquo;d like to achieve this year.</p>
 
 <ol>
@@ -373,9 +373,9 @@
   
   <entry>
     <title type="html"><![CDATA[Medical Regulation and Apps]]></title>
-    <link href="http://rickerbh.github.io/2013/03/22/medical-regulation-and-apps/"/>
+    <link href="https://hamishrickerby.com/2013/03/22/medical-regulation-and-apps/"/>
     <updated>2013-03-22T10:23:00+11:00</updated>
-    <id>http://rickerbh.github.io/2013/03/22/medical-regulation-and-apps</id>
+    <id>https://hamishrickerby.com/2013/03/22/medical-regulation-and-apps</id>
     <content type="html"><![CDATA[<p>Yesterday I read an <a href="http://venturebeat.com/2013/03/19/health-app-makers-to-feds-dithering-on-regulation-is-stifling-innovation/">article in Venture Beat</a> covering part of a series of hearings US Congress is holding on regulation of health and medical apps on smartphone and tablet devices. My <em>significantly</em> paraphrased version of the article is that the FDA are unsure if and how health apps should be regulated, and that representatives from the &ldquo;app&rdquo; industry are pushing for no regulation for consumer facing apps.</p>
 
 <p>I have a slightly different take on this. To me, the question is simple (and what is driving health authorities globally to address this issue): can health apps be considered to be medical devices?</p>
@@ -459,9 +459,9 @@
   
   <entry>
     <title type="html"><![CDATA[DRYing Out Objective-C - Identification]]></title>
-    <link href="http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification/"/>
+    <link href="https://hamishrickerby.com/2013/02/23/drying-out-objective-c-identification/"/>
     <updated>2013-02-23T12:09:00+11:00</updated>
-    <id>http://rickerbh.github.io/2013/02/23/drying-out-objective-c-identification</id>
+    <id>https://hamishrickerby.com/2013/02/23/drying-out-objective-c-identification</id>
     <content type="html"><![CDATA[<p>I have a large objective-c codebase I&rsquo;ve been working on with a client for over a year now. The application started off as a prototype, and transitioned into a demo client, and is currently undergoing modifications for security/penetration testing and commercialization. Initially for the protoype and demo, the objective was to get a working application as quickly as possible - speed of initial development was the key. With the current change in focus to a more productized codebase, and improving maintainability as part of that, I decided I&rsquo;d actively go hunting for areas in the application that can be tidied up, and particularly, looking for duplicate segments of code and eliminating them where feasible.</p>
 
 <p><a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY - or Don&rsquo;t Repeat Yourself</a> - is (according to Wikipedia) a <em>principle is stated as &ldquo;Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.&rdquo;</em> &hellip; <em>When the DRY principle is applied successfully, a modification of any single element of a system does not require a change in other logically unrelated elements. Additionally, elements that are logically related all change predictably and uniformly, and are thus kept in sync.</em></p>
@@ -536,9 +536,9 @@
   
   <entry>
     <title type="html"><![CDATA[The Value of Contracting]]></title>
-    <link href="http://rickerbh.github.io/2012/10/25/the-value-of-contracting/"/>
+    <link href="https://hamishrickerby.com/2012/10/25/the-value-of-contracting/"/>
     <updated>2012-10-25T16:20:00+11:00</updated>
-    <id>http://rickerbh.github.io/2012/10/25/the-value-of-contracting</id>
+    <id>https://hamishrickerby.com/2012/10/25/the-value-of-contracting</id>
     <content type="html"><![CDATA[<p>Very unexpectedly, for the past few weeks I&rsquo;ve been working with a Digital Agency here in Melbourne on a sports-themed iPhone app for a very large client of theirs (a worldwide media brand). I was called in at the 11th hour to work with two  other developers (both experienced iOS and ruby contractors), and I knew within the first hour there that the project was going to be a significant challenge. The project had unrealistically tight timelines and a lack of testing and testing platforms/data sets available.</p>
 
 <p>Needless to say, it was an interesting experience. In my previous full time jobs I&rsquo;ve never worked as a developer, and with my current company all projects to date have been single developer projects.  But I definitely found the whole experience really rewarding. It reminded me of the time I was a manager in a large digital agency myself, only there it was me cracking the whip to get development in on time, rather than having the whip cracked on me. :-)
@@ -552,12 +552,12 @@
   
   <entry>
     <title type="html"><![CDATA[99 Problems (but Haskell Ain't One)]]></title>
-    <link href="http://rickerbh.github.io/2012/07/14/99-problems-but-haskell-aint-one/"/>
+    <link href="https://hamishrickerby.com/2012/07/14/99-problems-but-haskell-aint-one/"/>
     <updated>2012-07-14T16:47:00+10:00</updated>
-    <id>http://rickerbh.github.io/2012/07/14/99-problems-but-haskell-aint-one</id>
+    <id>https://hamishrickerby.com/2012/07/14/99-problems-but-haskell-aint-one</id>
     <content type="html"><![CDATA[<p>Back in the late 90&rsquo;s I took COSC 122 at the University of Canterbury. We had to learn functional programming as part of that course - HUGS (it&rsquo;s based on Haskell 98). It never really clicked with me - for some reason my brain would just not understand functional programming.</p>
 
-<p><img src="http://rickerbh.github.io/images/tumblr_leretcb0Sa1qfawn6o1_500.jpg"></p>
+<p><img src="https://hamishrickerby.com/images/tumblr_leretcb0Sa1qfawn6o1_500.jpg"></p>
 
 <p>I&rsquo;ve always regretted that I never &ldquo;got it&rdquo;. It&rsquo;s time to fix that regret.</p>
 
@@ -569,9 +569,9 @@
   
   <entry>
     <title type="html"><![CDATA[Updating a UITableView Without Calling reloadData]]></title>
-    <link href="http://rickerbh.github.io/2012/07/06/updating-a-uitableview-without-calling-reloaddata/"/>
+    <link href="https://hamishrickerby.com/2012/07/06/updating-a-uitableview-without-calling-reloaddata/"/>
     <updated>2012-07-06T11:21:00+10:00</updated>
-    <id>http://rickerbh.github.io/2012/07/06/updating-a-uitableview-without-calling-reloaddata</id>
+    <id>https://hamishrickerby.com/2012/07/06/updating-a-uitableview-without-calling-reloaddata</id>
     <content type="html"><![CDATA[<p>For a new app I&rsquo;ve been working on for the past few days I wanted to a nice &ldquo;inline&rdquo; way of gathering data from the user. Typically, if I&rsquo;ve needed to have a user put in more than a single line of text, I would have popped the user to a different screen that has a UITextView as the sole point of focus, get them to type in the data, and then have them navigate back and have the data appear within a tableview.</p>
 
 <p>For this new app, I wanted them to be able to enter large amounts of text inline within a cell of a tableview. This also means that the cell would have to dynamically grow and shrink, as the user is entering the data. The UITextView (where the user is entering the data) would need to resize itself based on the users input, as well as the UITableViewCell that contains the text view, and have the UITableView adjust on the fly to the users input.</p>
@@ -592,9 +592,9 @@
   
   <entry>
     <title type="html"><![CDATA[Core Data Migrations and Large Data Sets]]></title>
-    <link href="http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets/"/>
+    <link href="https://hamishrickerby.com/2012/06/04/core-data-migrations-and-large-data-sets/"/>
     <updated>2012-06-04T12:14:00+10:00</updated>
-    <id>http://rickerbh.github.io/2012/06/04/core-data-migrations-and-large-data-sets</id>
+    <id>https://hamishrickerby.com/2012/06/04/core-data-migrations-and-large-data-sets</id>
     <content type="html"><![CDATA[<p>I recently updated <a href="http://click.linksynergy.com/fs-bin/stat?id=*W1h7qYtoaI&amp;offerid=146261&amp;type=3&amp;subid=0&amp;tmpid=1826&amp;RD_PARM1=http%253A%252F%252Fitunes.apple.com%252Fus%252Fapp%252Fmoving-van%252Fid357418069%253Fmt%253D8%2526uo%253D4%2526partnerId%253D30">Moving Van</a> (<em>you should buy it now!</em>) and published the new version in the app store late last week. It was a substantial update to the application - it had a completely new UI with custom interface controls, as well as a whole stack of features that customers had been asking for - things like room autocompletion, saving images to camera roll, more export options, moving items between boxes etc.</p>
 
 <p>As part of this update, I also remodelled the Core Data entities that power the application. The initial model that was used was, let&rsquo;s say, a little naïve in terms of the way that the stored data would impact performance of the application. It stored an image on an item as binary data within the Item entity itself, which in retrospect was a terrible idea because of table view performance. The new version split out the image to a separate entity, which means that when the Item entity loads, the image doesn&rsquo;t get loaded unless explicitly needed because of the faulting behaviour of Core Data and entity relationships.</p>
@@ -733,9 +733,9 @@ for (NSManagedObject *oldEntity in entities) {
   
   <entry>
     <title type="html"><![CDATA[UISearchBar's UITextField]]></title>
-    <link href="http://rickerbh.github.io/2012/05/19/uisearchbars-uitextfield/"/>
+    <link href="https://hamishrickerby.com/2012/05/19/uisearchbars-uitextfield/"/>
     <updated>2012-05-19T10:12:00+10:00</updated>
-    <id>http://rickerbh.github.io/2012/05/19/uisearchbars-uitextfield</id>
+    <id>https://hamishrickerby.com/2012/05/19/uisearchbars-uitextfield</id>
     <content type="html"><![CDATA[<p>For an update that I&rsquo;m making to <a href="http://click.linksynergy.com/fs-bin/stat?id=*W1h7qYtoaI&amp;offerid=146261&amp;type=3&amp;subid=0&amp;tmpid=1826&amp;RD_PARM1=http%253A%252F%252Fitunes.apple.com%252Fus%252Fapp%252Fmoving-van%252Fid357418069%253Fmt%253D8%2526uo%253D4%2526partnerId%253D30">Moving Van</a> (<em>you should buy it now!</em>) I need to customise the font that is displayed in a UISearchBar&rsquo;s text field. The search bar does not actually expose it&rsquo;s UITextField property, but because the search bar is a UIView, it&rsquo;s trivial to access the field to allow customisation.</p>
 
 <pre><code>for (UIView *searchSubview in mySearchBar.subviews) {
@@ -752,9 +752,9 @@ for (NSManagedObject *oldEntity in entities) {
   
   <entry>
     <title type="html"><![CDATA[iBooks Crashing?]]></title>
-    <link href="http://rickerbh.github.io/2012/04/30/ibooks-crashing/"/>
+    <link href="https://hamishrickerby.com/2012/04/30/ibooks-crashing/"/>
     <updated>2012-04-30T17:15:00+10:00</updated>
-    <id>http://rickerbh.github.io/2012/04/30/ibooks-crashing</id>
+    <id>https://hamishrickerby.com/2012/04/30/ibooks-crashing</id>
     <content type="html"><![CDATA[<p>I&rsquo;m having a bit of a play with iBooks today, and some 3D model stuff. iBooks has, for me, always crashed when displaying 3D models. I don&rsquo;t have a jailbroken iPad, so it&rsquo;s not a DRM issue (at least not one caused by that). To tell you the truth, I&rsquo;m not sure what the cause is. But, I do have a fix!</p>
 
 <ul>
@@ -769,9 +769,9 @@ for (NSManagedObject *oldEntity in entities) {
   
   <entry>
     <title type="html"><![CDATA[Housekeeping]]></title>
-    <link href="http://rickerbh.github.io/2012/04/10/housekeeping/"/>
+    <link href="https://hamishrickerby.com/2012/04/10/housekeeping/"/>
     <updated>2012-04-10T15:09:00+10:00</updated>
-    <id>http://rickerbh.github.io/2012/04/10/housekeeping</id>
+    <id>https://hamishrickerby.com/2012/04/10/housekeeping</id>
     <content type="html"><![CDATA[<p>I currently have around thirteen or so applications developed for iOS that are live in the App Store (and one in development). I have one Mac application (and one in development). I also run an online accounting system, two T-Shirt stores, a postcard printing and shipping business, and a web hosting and technical website build business.</p>
 
 <p>That&rsquo;s a <em>lot</em> of stuff for one guy to maintain. Because of the amount of time I have available to dedicate to each, it can be a long time before I get to maintain or market any particular application or service that I&rsquo;ve developed. Because of this, the services don&rsquo;t change often, they underperform in the marketplace, and over time the revenues have been decreasing.</p>
@@ -813,9 +813,9 @@ for (NSManagedObject *oldEntity in entities) {
   
   <entry>
     <title type="html"><![CDATA[Unit Test Code Coverage With Xcode 4.3.2]]></title>
-    <link href="http://rickerbh.github.io/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2/"/>
+    <link href="https://hamishrickerby.com/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2/"/>
     <updated>2012-04-05T13:11:00+10:00</updated>
-    <id>http://rickerbh.github.io/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2</id>
+    <id>https://hamishrickerby.com/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2</id>
     <content type="html"><![CDATA[<p>I upgraded to Xcode 4.3.2 and this seemed to break unit tests on iOS for me.</p>
 
 <p>The error that was being reported was:
