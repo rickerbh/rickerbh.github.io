@@ -9,8 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Group Manager of Enforcement and it&rsquo;s not what you&rsquo;re thinking&hellip; Via: PharmaTimes
-">
+  <meta name="description" content="I had a very confusing situation today with a multipart form that was for uploading a picture to a new web service I&rsquo;m working on. In Safari &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +87,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/10/26/firefox-303-and-500-internal-errors-with-javascript/">Firefox 3.0.3 and 500 Internal Errors With Javascript</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-10-26T11:20:27+11:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>11:20 am</span></time>
+        
+           | <a href="/2008/10/26/firefox-303-and-500-internal-errors-with-javascript/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2008/10/26/firefox-303-and-500-internal-errors-with-javascript/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I had a very confusing situation today with a multipart form that was for uploading a picture to a new web service I&rsquo;m working on.</p>
+
+<p>In Safari the form upload worked. Even in Internet Explorer 6 the form upload worked (after I fixed the dodgy MIME-type that IE passes through for JPG images - image/pjpeg for those interested).</p>
+
+<p>The form I was trying to submit had the multipart attribute set correctly, and also had some javascript to disable the file selection, form submission button, and show a spinner to indicate that something is happening, and they don&rsquo;t try and submit the file twice if they&rsquo;re sending in a large image.</p>
+
+<p>My submit tag orginally looked like this (Ruby on Rails)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="sx">%= submit_tag &#39;Upload Photo&#39;, :class =</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="s2">&quot;formbutton&quot;</span><span class="p">,</span> <span class="ss">:id</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="s2">&quot;submit-button&quot;</span><span class="p">,</span> <span class="ss">:onClick</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="s2">&quot;$(&#39;upload-form&#39;).submit();Form.disable(&#39;upload-form&#39;);Effect.toggle(&#39;footnote&#39;, &#39;appear&#39;, {duration: 0});Effect.toggle(&#39;spinner&#39;, &#39;appear&#39;, {duration: 0});&quot;</span> <span class="o">%&amp;</span><span class="n">gt</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I was very confused as it did work in those other browsers, but not in Firefox.</p>
+
+<p>The key to fixing this was to add return false; to the end of the javascript statement&hellip;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="sx">%= submit_tag &#39;Upload Photo&#39;, :class =</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="s2">&quot;formbutton&quot;</span><span class="p">,</span> <span class="ss">:id</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="s2">&quot;submit-button&quot;</span><span class="p">,</span> <span class="ss">:onClick</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="s2">&quot;$(&#39;upload-form&#39;).submit();Form.disable(&#39;upload-form&#39;);Effect.toggle(&#39;footnote&#39;, &#39;appear&#39;, {duration: 0});Effect.toggle(&#39;spinner&#39;, &#39;appear&#39;, {duration: 0});return false;&quot;</span> <span class="o">%&amp;</span><span class="n">gt</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What I find particularly confusing about this is that everything I read on the &ldquo;return false;&rdquo; statement leads me to believe that this form should not be submitted - however - return true does not work (500 Internal Server Error returned). But what the hey - it works.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -441,79 +494,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/08/15/radiant-cms-tutorial-custom-javascript-in-admin-pages/">Radiant CMS Tutorial - Custom Javascript in Admin Pages</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-08-15T19:00:45+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>7:00 pm</span></time>
-        
-           | <a href="/2008/08/15/radiant-cms-tutorial-custom-javascript-in-admin-pages/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2008/08/15/radiant-cms-tutorial-custom-javascript-in-admin-pages/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>At the moment I&rsquo;m working on a fairly complex extension for <a href="http://radiantcms.org/" target="_blank">Radiant CMS</a>. In creating the administrative pages I want to use a javascript library that is not distributed with the core radiant code. This post will describe how to implement your own extension that can use an external javascript library, without playing around with any of the core radiant files to inject the javascript into the administrative layout.</p>
-
-<p>It&rsquo;s actually really easy to do.  If you haven&rsquo;t created a Radiant extension before I&rsquo;d recommend following <a href="http://wiki.radiantcms.org/Creating_Radiant_Extensions" target="_blank">this tutorial</a> on the <a href="http://wiki.radiantcms.org" target="_blank">Radiant wiki</a>.</p>
-
-<p>Inside the Radiant GEM, the standard page layout resides at app/views/layouts/application.html.haml</p>
-
-<p>The lines of code that insert the javascript tags are:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">-</span> <span class="vi">@javascripts</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">javascript</span><span class="o">|</span>
-</span><span class='line'>  <span class="o">=</span> <span class="n">javascript_include_tag</span> <span class="n">javascript</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The @javascripts variable is populated from inside the app/controllers/application_controller.rb file. The culprit is below.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">include_javascript</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-</span><span class='line'>  <span class="vi">@javascripts</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="n">script</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Pretty simple huh? So, all you need to do, is call this method from within your new controller, because all controllers inherit from the application_controller.rb file, so they have access to this method, and you can have different javascript included for each method if you so wish. In (assuming the example LinkRoll extension was built as linked above) vendor/extensions/link_roll/app/controllers/admin/links_controller.rb</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">index</span>
-</span><span class='line'>  <span class="n">include_javascript</span><span class="p">(</span><span class="s2">&quot;admin/mootools-1.2-core-yc.js&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="vi">@links</span> <span class="o">=</span> <span class="no">Link</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That will insert a link to admin/mootools-1.2-core-yc.js inside the admin/links/index page. Righto, so now the only thing left to do is get the mootools-1.2-core-yc.js file into the actual public/javascripts/admin directory within the project. What you want to do is alter the vendor/extensions/link_roll/link_roll_extension.rb file so that within the activate method the file is copied over. I&rsquo;d recommend making a public/javascripts/admin directory within your extension folder, and putting the file in there. Then, when activate is called on the link_roll_extension.rb file, the activate method will copy the file over to the projects public/javascripts/admin directory. You should also delete the file when the deactivate method is called in the link_roll_extension.rb file.</p>
-
-<p>Questions and comments please!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/8">&larr; Older</a>
@@ -531,6 +511,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
       </li>
     
@@ -544,10 +528,6 @@
     
       <li class="post">
         <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/05/17/brief-update/">Brief Update</a>
       </li>
     
   </ul>
@@ -610,11 +590,7 @@
 </section>
 
 
-<section>
-  <h1>For Hire?</h1>
-  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
-  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
-</section>
+
   
 </aside>
 

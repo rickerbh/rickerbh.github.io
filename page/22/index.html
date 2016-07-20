@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Hey. Been out at pub quiz this evening. Tomas and me. We got last. We suck so much. Lost by 5 points. Couldn&rsquo;t answer any of the first 7 &hellip;">
+  <meta name="description" content="I had a bit of a play with the Money and Paypal GEMs available at http://dist.leetsoft.com . The Money API only supports Euro, US and Canadian &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2005/12/17/money-ruby-on-rails-and-aud/">Money, Ruby on Rails and AUD</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2005-12-17T04:13:00+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2005</span></span> <span class='time'>4:13 am</span></time>
+        
+           | <a href="/2005/12/17/money-ruby-on-rails-and-aud/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2005/12/17/money-ruby-on-rails-and-aud/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I had a bit of a play with the Money and Paypal GEMs available at <a href="http://dist.leetsoft.com"><a href="http://dist.leetsoft.com">http://dist.leetsoft.com</a></a> .  The Money API only supports Euro, US and Canadian dollars.  For my paypal integration, I need to support Australian dollar (as dirty old paypal don&rsquo;t support NZD).  So, I&rsquo;ve extended the Money class to create an AUD implementation.  There&rsquo;s nothing special about it, but if you&rsquo;re too lazy to write the couple of lines of code yourself, <a href="http://homepages.ihug.co.nz/~amorph/custom78_money.rb">here it is</a>.</p>
+
+<p>Also, I&rsquo;ve been having a bit of trouble getting the Money and Paypal GEMs to work.  The issue is that from within a rails controller it doesn&rsquo;t recognise the Money or Paypal classes.  It can&rsquo;t find them.  This is the only GEM that I&rsquo;m having troubles with.  My solution was to import the .rb files into the /vendor directory.  If anyone has this problem, or has a solution for this problem - or even tips, please let me know.  It&rsquo;s annoying me now.</p>
+
+<p>If I can get this working, I won&rsquo;t bother with my own IPN implementation.  Why reinvent the wheel?</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -303,6 +339,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
       </li>
     
@@ -316,10 +356,6 @@
     
       <li class="post">
         <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/05/17/brief-update/">Brief Update</a>
       </li>
     
   </ul>
@@ -382,11 +418,7 @@
 </section>
 
 
-<section>
-  <h1>For Hire?</h1>
-  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
-  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
-</section>
+
   
 </aside>
 

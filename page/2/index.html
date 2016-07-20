@@ -9,7 +9,8 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Yesterday I read an article in Venture Beat covering part of a series of hearings US Congress is holding on regulation of health and medical apps on &hellip;">
+  <meta name="description" content="I&rsquo;m not one for new years resolutions, but there are a couple of things I&rsquo;d like to achieve this year. Run 1000km
+Design, Develop, and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +88,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/01/20/2014/">2014</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-01-20T11:14:43+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:14 am</span></time>
+        
+           | <a href="/2014/01/20/2014/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2014/01/20/2014/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m not one for new years resolutions, but there are a couple of things I&rsquo;d like to achieve this year.</p>
+
+<ol>
+<li>Run 1000km</li>
+<li>Design, Develop, and Release a productivity tool for small and medium businesses</li>
+</ol>
+
+
+<p>1000km is something I attempted to achieve last year, but by the time February rolled around, it was obvious that that just was not going to happen. This year is going much better. I&rsquo;ve established a running routine already, and have (as of today) extended my run distance to about 10km. I&rsquo;m sure this will be much tougher when winter rolls around, but I&rsquo;m up for the challenge.</p>
+
+<p>The SME productivity tool is something I&rsquo;ve been toying with the idea of for a while. The idea actually came from my sister and her husband (they run a construction company), and it solves a problem that they spend a few hours a week on. I&rsquo;ve already got my minimum functionality defined, and business model. It works well as a SaaS/subscription style product so fits with the revenue stream style I like. I&rsquo;ll hopefully have a splash/info/signup page soon. I&rsquo;m also looking at a new (new for me) technology stack to power this thing, so I&rsquo;ve also got a lot of learning to be able to create it. Fingers crossed it gets off the ground.</p>
+
+<p>I guess there&rsquo;s a third thing, but it&rsquo;s more of an inevitability, rather than a goal as such. We&rsquo;ll be having a baby soon (hopefully in 3 weeks), so life will be getting much more time-scarce. We&rsquo;ll see how all this holds up under parenthood.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -735,72 +780,6 @@ for (NSManagedObject *oldEntity in entities) {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2/">Unit Test Code Coverage With Xcode 4.3.2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-04-05T13:11:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>1:11 pm</span></time>
-        
-           | <a href="/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2012/04/05/unit-test-code-coverage-with-xcode-4-dot-3-2/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I upgraded to Xcode 4.3.2 and this seemed to break unit tests on iOS for me.</p>
-
-<p>The error that was being reported was:
-    Test rig &lsquo;/Applications/Xcode.app/&hellip;/iPhoneSimulator.platform/&hellip;/otest&rsquo; exited abnormally with code 134 (it may have crashed).</p>
-
-<p>(&hellip; used to save space)</p>
-
-<p>The actual cause of this error was explained in the unit test build/run log files in Xcode:
-    Detected an attempt to call a symbol in system libraries that is not present on the iPhone:
-    fopen$UNIX2003 called from function llvm_gcda_start_file in image UnitTests.</p>
-
-<p>I covered this issue in a prior post, but the short version of how to get around it is to include the below code in one of your test .m files, outside of the @implementation&hellip;@end block. I recommend right down the bottom of one of the files.</p>
-
-<pre><code>#include &lt;stdio.h&gt;
-// Prototype declarations
-FILE *fopen$UNIX2003( const char *filename, const char *mode );
-size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d );
-
-FILE *fopen$UNIX2003( const char *filename, const char *mode ) {
-  return fopen(filename, mode);
-}
-size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
-  return fwrite(a, b, c, d);
-}
-</code></pre>
-
-<p>Other settings for successful execution of the unit tests with code coverage are (in your Project&rsquo;s Unit Test target):</p>
-
-<ul>
-<li>Generate Test Coverage Files = YES</li>
-<li>Instrument Program Flows = YES</li>
-</ul>
-
-
-<p>There is no need for linking libprofile_rt to get coverage to work.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/3">&larr; Older</a>
@@ -818,6 +797,10 @@ size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
       </li>
     
@@ -831,10 +814,6 @@ size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
     
       <li class="post">
         <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/05/17/brief-update/">Brief Update</a>
       </li>
     
   </ul>
@@ -897,11 +876,7 @@ size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
 </section>
 
 
-<section>
-  <h1>For Hire?</h1>
-  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
-  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
-</section>
+
   
 </aside>
 

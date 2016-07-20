@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="This might be old news (released end of May, I&rsquo;m soooo behind the times), but Google are supporting hosting for popular javascript libraries, &hellip;">
+  <meta name="description" content="At the moment I&rsquo;m working on a fairly complex extension for Radiant CMS. In creating the administrative pages I want to use a javascript &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,79 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/08/15/radiant-cms-tutorial-custom-javascript-in-admin-pages/">Radiant CMS Tutorial - Custom Javascript in Admin Pages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-08-15T19:00:45+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>7:00 pm</span></time>
+        
+           | <a href="/2008/08/15/radiant-cms-tutorial-custom-javascript-in-admin-pages/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2008/08/15/radiant-cms-tutorial-custom-javascript-in-admin-pages/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>At the moment I&rsquo;m working on a fairly complex extension for <a href="http://radiantcms.org/" target="_blank">Radiant CMS</a>. In creating the administrative pages I want to use a javascript library that is not distributed with the core radiant code. This post will describe how to implement your own extension that can use an external javascript library, without playing around with any of the core radiant files to inject the javascript into the administrative layout.</p>
+
+<p>It&rsquo;s actually really easy to do.  If you haven&rsquo;t created a Radiant extension before I&rsquo;d recommend following <a href="http://wiki.radiantcms.org/Creating_Radiant_Extensions" target="_blank">this tutorial</a> on the <a href="http://wiki.radiantcms.org" target="_blank">Radiant wiki</a>.</p>
+
+<p>Inside the Radiant GEM, the standard page layout resides at app/views/layouts/application.html.haml</p>
+
+<p>The lines of code that insert the javascript tags are:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">-</span> <span class="vi">@javascripts</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">javascript</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">=</span> <span class="n">javascript_include_tag</span> <span class="n">javascript</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The @javascripts variable is populated from inside the app/controllers/application_controller.rb file. The culprit is below.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">include_javascript</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@javascripts</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="n">script</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pretty simple huh? So, all you need to do, is call this method from within your new controller, because all controllers inherit from the application_controller.rb file, so they have access to this method, and you can have different javascript included for each method if you so wish. In (assuming the example LinkRoll extension was built as linked above) vendor/extensions/link_roll/app/controllers/admin/links_controller.rb</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>  <span class="n">include_javascript</span><span class="p">(</span><span class="s2">&quot;admin/mootools-1.2-core-yc.js&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="vi">@links</span> <span class="o">=</span> <span class="no">Link</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That will insert a link to admin/mootools-1.2-core-yc.js inside the admin/links/index page. Righto, so now the only thing left to do is get the mootools-1.2-core-yc.js file into the actual public/javascripts/admin directory within the project. What you want to do is alter the vendor/extensions/link_roll/link_roll_extension.rb file so that within the activate method the file is copied over. I&rsquo;d recommend making a public/javascripts/admin directory within your extension folder, and putting the file in there. Then, when activate is called on the link_roll_extension.rb file, the activate method will copy the file over to the projects public/javascripts/admin directory. You should also delete the file when the deactivate method is called in the link_roll_extension.rb file.</p>
+
+<p>Questions and comments please!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -514,57 +587,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/03/18/podcasts/">Podcasts</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-03-18T20:15:41+11:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>8:15 pm</span></time>
-        
-           | <a href="/2008/03/18/podcasts/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2008/03/18/podcasts/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve been struggling to find podcasts that I really dig.  Redmonk radio lost me as a listener.  I thought their early episodes (up to around 40 or so) were great.  A good mix of strategy, business, and IT - in a general sense.  I&rsquo;m quite an enterprise focussed generalist, so that really appealed to me.  However, recently they have released the RIA and IT Management podcasts, and they are not for me at all - so I unsubscribed.</p>
-
-<p>I went looking last night for some new podcasts in iTunes that might appeal to me.  I found a couple, but am still left unimpressed.</p>
-
-<p>What I found was&hellip;</p>
-
-<ul>
-    <li><a href="http://feeds.feedburner.com/DeliotteUKInsights">Deloitte UK Insights</a> - Interesting analysis from Deloitte UK - based around their recent releases of sector based 2008 predictions.  I liked this, but I&#8217;d like it to be more frequent than yearly :-)</li>
-    <li><a href="http://feeds.feedburner.com/boagworldpodcast?v=2">boagworld.com</a> - not listened yet</li>
-    <li><a href="http://www.newworldpodcasting.com/files/tracking/feed/telelogic/57_feed_itunes.xml">Enterprise Architecture with Jan Popkin</a> and <a href="http://www.newworldpodcasting.com/files/tracking/feed/telelogic/53_feed_itunes.xml">Enterprise Architecture: Lessons Learned</a> - thinly veiled sales podcasts from Telelogic - authors of the Popkin System Architect tool (which I personally like as a tool, but not as much as Metis Architect)</li>
-    <li><a href="http://www.manager-tools.com/podcasts/feed/rss2">Manager Tools</a> - not listened yet</li>
-    <li><a href="http://pragprog.com/podcasts/feed.rss">Pragmatic Programmers</a> - not listened yet</li>
-    <li><a href="http://feeds.jabalog.com/telcotalk">TelcoTalk</a> - product reviews, US based, but features some international news.  I think this has promise, but needs to leave just reporting about device press releases and features, and start to comment more on how the devices are unique in the market, their competitors, business value they create etc&#8230;</li>
-    <li><a href="http://feeds.feedburner.com/web20Show">The Web 2.0 Show</a> - not listened yet</li>
-</ul>
-
-
-<p>What I&rsquo;m actually looking for is IT / Telecommunications / Enterprise / business / strategy / analysis style talking.  I&rsquo;m not after development podcasts (although the Ruby On Rails podcast is good, and I&rsquo;m expecting PragProg, boagworld and web2.0 show to be similar), but I do enjoy the style of them - talking about new ways of working, the business value of agile methods, interviews with startups and businesses on introduction of new technology into the enterprise etc.</p>
-
-<p>Does anyone know of anything that will fit the bill?</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/9">&larr; Older</a>
@@ -582,6 +604,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
       </li>
     
@@ -595,10 +621,6 @@
     
       <li class="post">
         <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/05/17/brief-update/">Brief Update</a>
       </li>
     
   </ul>
@@ -661,11 +683,7 @@
 </section>
 
 
-<section>
-  <h1>For Hire?</h1>
-  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
-  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
-</section>
+
   
 </aside>
 

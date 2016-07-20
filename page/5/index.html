@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Today I updated a project I&rsquo;m working on from rails 2.2.something to 2.3.3. Then, I started getting the following wacky error. undefined method &hellip;">
+  <meta name="description" content="Today in the UK the time hit 12:34:56 7/8/9. Not exciting for everyone I guess, but it won&rsquo;t happen again for another 100 years. ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,40 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/08/07/123456789/">123456789</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-08-07T11:40:26+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>11:40 am</span></time>
+        
+           | <a href="/2009/08/07/123456789/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2009/08/07/123456789/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today in the UK the time hit 12:34:56 7/8/9.  Not exciting for everyone I guess, but it won&rsquo;t happen again for another 100 years.</p>
+
+<p><a href="http://hamishrickerby.com/wp-content/uploads/2009/08/123456789.PNG"><img src="http://hamishrickerby.com/wp-content/uploads/2009/08/123456789-300x252.PNG" alt="123456789" title="123456789" width="300" height="252" class="aligncenter size-medium wp-image-385" /></a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -940,53 +974,6 @@ sudo passenger-install-apache2-module
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/02/01/cocos2d-iphone-blocking-touch-events/">Cocos2d-iphone Blocking Touch Events</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-02-01T08:59:05+11:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2009</span></span> <span class='time'>8:59 am</span></time>
-        
-           | <a href="/2009/02/01/cocos2d-iphone-blocking-touch-events/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2009/02/01/cocos2d-iphone-blocking-touch-events/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The game development is going well so far.  From yesterday when I knew NOTHING about game development I&rsquo;ve managed to figure out how to use sprites, labels, timed actions, sequenced actions, scenes and layers with cocos2d-iphone.</p>
-
-<p>I did hit a strange error though.  On the simulator the touch events were working correctly - screens transitioning, sprite/label touches generating events and triggering animation and so on.  On the actual device the story was quite different.  My menu items were triggering correctly, but no subsequent touch events were doing anything on the phone.  When the application exited (home button) all the touch events were then passed through as I could see them all fly up the screen in the console.</p>
-
-<p>A long search in google yielded the following page:  <a href="http://groups.google.com/group/cocos2d-iphone-discuss/browse_thread/thread/8aae440d81721ff4" target="_blank"><a href="http://groups.google.com/group/cocos2d-iphone-discuss/browse_thread/thread/8aae440d81721ff4">http://groups.google.com/group/cocos2d-iphone-discuss/browse_thread/thread/8aae440d81721ff4</a></a></p>
-
-<p>I don&rsquo;t know what causes the actual issue, but the fix is to alter the Director.m&rsquo;s main method - adding the following code fixed the issue right up.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="k">while</span> <span class="p">(</span><span class="n">CFRunLoopRunInMode</span><span class="p">(</span><span class="n">kCFRunLoopDefaultMode</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">YES</span><span class="p">)</span> <span class="o">==</span> <span class="err"> </span><span class="n">kCFRunLoopRunHandledSource</span><span class="p">)</span> <span class="p">{};</span><span class="err"> </span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The odd thing is (and let me know if I&rsquo;m wrong here) that that code doesn&rsquo;t actually do anything.  It performs a test, but changes nothing.  I don&rsquo;t get why this fix works.</p>
-
-<p>?</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/6">&larr; Older</a>
@@ -1004,6 +991,10 @@ sudo passenger-install-apache2-module
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
       </li>
     
@@ -1017,10 +1008,6 @@ sudo passenger-install-apache2-module
     
       <li class="post">
         <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/05/17/brief-update/">Brief Update</a>
       </li>
     
   </ul>
@@ -1083,11 +1070,7 @@ sudo passenger-install-apache2-module
 </section>
 
 
-<section>
-  <h1>For Hire?</h1>
-  <p>You can hire my company <a href="http://happtic.com">happtic</a> to create your next iPhone, iPad or Mac application. We&#8217;re based in Melbourne, Australia and work with businesses and enterprises of all sizes, as well as private individuals.</p>
-  <p>Get in touch today by emailing <a href="mailto:contact@happtic.com">contact@happtic.com</a></p>
-</section>
+
   
 </aside>
 
