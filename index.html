@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="In Clean Code it&rsquo;s advocated that the ideal number of arguments for a function is 0. Then, 1, 2, and in very rare cases 3. No functions should &hellip;">
+  <meta name="description" content="I&rsquo;ve been integrating a system I&rsquo;ve been developing with a third party service for data synchronisation. We&rsquo;re looking to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,256 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-07-25T13:05:35+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>1:05 pm</span></time>
+        
+           | <a href="/2016/07/25/wrapping-3rd-party-code/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2016/07/25/wrapping-3rd-party-code/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;ve been integrating a system I&rsquo;ve been developing with a third party service for data synchronisation. We&rsquo;re looking to synchronise tasks out with systems like Pivotal Tracker, Jira, Trello etc, but were unsure which of those systems we would actually use. I&rsquo;m currently <a href="https://hamishrickerby.com/books/">reading</a> <a href="https://www.bookdepository.com/Clean-Code-Robert-C-Martin/9780132350884?a_aid=rickerbh">Clean Code</a>, and there&rsquo;s a really interesting and relevant chapter on &ldquo;Boundaries&rdquo;. It covers a similar scenario to what we were facing: <em>Using Third-Party Code</em>.</p>
+
+<h2>Isolation</h2>
+
+<p>Generally, you should wrap any third party code that you&rsquo;re dependent on with your own interfaces for that code. That way you get to define <em>how</em> your main application logic interfaces with the third party code, rather than having to have to bend your application to conform to a third party library, API, or applications structure. Isolating the complexities of dealing with third parties within an application to a particular class or module behind an interface that you control also allows you to:</p>
+
+<ol>
+<li>deal with changes to that third party (e.g., API upgrade)</li>
+<li>swap out that integration with another one</li>
+</ol>
+
+
+<p>If we were building direct integration (with a project management tool like Jira, Pivotal Tracker, Trello) into our application, the models and interfaces of the third party system would leak into our core system.</p>
+
+<p><em>Our application has support for Projects, Stories and Epics. Pivotal Tracker models these entities as well, but the relationship between Stories and Epics is based on a labelId assigned to the Epic at Pivotal. To attach a story to an epic we actually attach it to the label of the epic. Pivotal Tracker also handles story creation with labels/epics differently from story updates with labels/epics. Epics were introduced with v5 of the Tracker API. Previously, they didn&rsquo;t exist as a concept.</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">const</span> <span class="nx">saveStoryCallback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">response</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">error</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">handleError</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">story</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span>
+</span><span class='line'>  <span class="c1">// Perform other post-save actions (eg, update aggregated or count fields)</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Sync with Pivotal</span>
+</span><span class='line'>  <span class="kd">let</span> <span class="nx">labelId</span> <span class="o">=</span> <span class="kc">null</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">story</span><span class="p">.</span><span class="nx">epic</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kr">const</span> <span class="nx">epicModel</span> <span class="o">=</span> <span class="nx">story</span><span class="p">.</span><span class="nx">epic</span><span class="p">.</span><span class="nx">syncData</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nx">epicModel</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">labelId</span> <span class="o">=</span> <span class="nx">pivotal</span><span class="p">.</span><span class="nx">getEpic</span><span class="p">(</span><span class="nx">epicModel</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">labelId</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">data</span> <span class="o">=</span> <span class="nx">pivotal</span><span class="p">.</span><span class="nx">createEpic</span><span class="p">(</span><span class="nx">story</span><span class="p">.</span><span class="nx">epic</span><span class="p">.</span><span class="nx">pivotalModel</span><span class="p">)</span>
+</span><span class='line'>      <span class="nx">story</span><span class="p">.</span><span class="nx">epic</span><span class="p">.</span><span class="nx">syncData</span> <span class="o">=</span> <span class="nx">data</span>
+</span><span class='line'>      <span class="nx">labelId</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">labelId</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">storyModel</span> <span class="o">=</span> <span class="nx">story</span><span class="p">.</span><span class="nx">syncData</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">storyModel</span> <span class="o">&amp;&amp;</span> <span class="nx">pivotal</span><span class="p">.</span><span class="nx">getStory</span><span class="p">(</span><span class="nx">storyModel</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">pivotal</span><span class="p">.</span><span class="nx">updateStory</span><span class="p">(</span><span class="nx">story</span><span class="p">.</span><span class="nx">pivotalModel</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">story</span><span class="p">.</span><span class="nx">syncData</span> <span class="o">=</span> <span class="nx">pivotal</span><span class="p">.</span><span class="nx">createStory</span><span class="p">(</span><span class="nx">story</span><span class="p">.</span><span class="nx">pivotalModel</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">labelId</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">pivotal</span><span class="p">.</span><span class="nx">attachLabel</span><span class="p">(</span><span class="nx">story</span><span class="p">,</span> <span class="nx">labelId</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Our save story callback will need to deal with the intricacies of the external system/library. If we wanted to swap this out for another tool (e.g. Trello) we&rsquo;d need to completely rewrite the logic in our save story callback, which is intermingled with core application logic. If we wanted to model the same synchronisation process with Trello, the logic would be different because the external model is different. We&rsquo;d model epics as a Board, and stories as a Card.</p>
+
+<p>To avoid changes to our core application logic, we need to isolate the synchronisation logic behind an interface that represents entities in the language of our application, not the third party application.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">const</span> <span class="nx">getStory</span> <span class="o">=</span> <span class="p">(</span><span class="nx">story</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">syncStory</span> <span class="o">=</span> <span class="p">(</span><span class="nx">story</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">deleteStory</span> <span class="o">=</span> <span class="p">(</span><span class="nx">story</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">syncProject</span> <span class="o">=</span> <span class="p">(</span><span class="nx">project</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">deleteProject</span> <span class="o">=</span> <span class="p">(</span><span class="nx">project</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">syncEpic</span> <span class="o">=</span> <span class="p">(</span><span class="nx">epic</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">deleteEpic</span> <span class="o">=</span> <span class="p">(</span><span class="nx">epic</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, we need to implement an <a href="https://en.wikipedia.org/wiki/Adapter_pattern">adapter</a> to interface with one of the third parties. Lets say we&rsquo;re interacting with Pivotal again:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">import</span> <span class="p">{</span> <span class="nx">syncEpic</span><span class="p">,</span> <span class="nx">syncStory</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;sync-adapter&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kr">const</span> <span class="nx">saveStoryCallback</span> <span class="o">=</span> <span class="p">(</span><span class="nx">response</span><span class="p">,</span> <span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">error</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">handleError</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">story</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span>
+</span><span class='line'>  <span class="c1">// Perform other post-save actions (eg, update aggregated or count fields)</span>
+</span><span class='line'>  <span class="p">...</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">syncEpic</span><span class="p">(</span><span class="nx">story</span><span class="p">.</span><span class="nx">epic</span><span class="p">)</span>
+</span><span class='line'>  <span class="nx">syncStory</span><span class="p">(</span><span class="nx">story</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then in our sync-module:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">const</span> <span class="nx">syncEpic</span> <span class="o">=</span> <span class="p">(</span><span class="nx">epic</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">epic</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kr">const</span> <span class="nx">epicModel</span> <span class="o">=</span> <span class="nx">epic</span><span class="p">.</span><span class="nx">syncData</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nx">epicModel</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">labelId</span> <span class="o">=</span> <span class="nx">pivotal</span><span class="p">.</span><span class="nx">getEpic</span><span class="p">(</span><span class="nx">epicModel</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">labelId</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">data</span> <span class="o">=</span> <span class="nx">pivotal</span><span class="p">.</span><span class="nx">createEpic</span><span class="p">(</span><span class="nx">epic</span><span class="p">.</span><span class="nx">pivotalModel</span><span class="p">)</span>
+</span><span class='line'>      <span class="nx">epic</span><span class="p">.</span><span class="nx">syncData</span> <span class="o">=</span> <span class="nx">data</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If we need to swap out Pivotal for Trello, we can simply replace the contents of the <code>sync-adapter</code> with the implementation for the different provider. The core application callback won&rsquo;t have to change if the interface is isolated in this way.</p>
+
+<h2>Multiple Third Parties</h2>
+
+<p>Let&rsquo;s say in the future we have a requirement to support more than one external system. The existing isolation model between the callback and the sync-module still applies. We&rsquo;d just need to inject another adapter in the middle of this flow.</p>
+
+<ol>
+<li>Rename <code>sync-adapter</code> to represent the specific external system it relates to: <code>pivotal-adapter</code>.</li>
+<li>Implement the appropriate adapter for the new external system: <code>trello-adapter</code></li>
+<li>Implement a new <code>sync-adapter</code> that will interface with both of these modules.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">import</span> <span class="p">{</span> <span class="nx">syncEpic</span> <span class="nx">as</span> <span class="nx">syncPivotalEpic</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;pivotal-adapter&#39;</span>
+</span><span class='line'><span class="kr">import</span> <span class="p">{</span> <span class="nx">syncEpic</span> <span class="nx">as</span> <span class="nx">syncTrelloEpic</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;trello-adapter&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kr">const</span> <span class="nx">syncEpic</span> <span class="o">=</span> <span class="p">(</span><span class="nx">epic</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kr">const</span> <span class="nx">syncData</span> <span class="o">=</span> <span class="nx">epic</span><span class="p">.</span><span class="nx">syncData</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nx">syncData</span><span class="p">.</span><span class="nx">service</span> <span class="o">==</span> <span class="s1">&#39;pivotal&#39;</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">syncPivotalEpic</span><span class="p">(</span><span class="nx">epic</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">syncData</span><span class="p">.</span><span class="nx">service</span> <span class="o">==</span> <span class="s1">&#39;trello&#39;</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">syncTrelloEpic</span><span class="p">(</span><span class="nx">epic</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Addition of more third parties can take place in the future without further changes to the core application logic. All the changes are pushed out to the boundaries of the sytems.</p>
+
+<h2>Upgrades and Changes</h2>
+
+<p>If a third party changes their interface, or even their domain model, all changes will be isolated to the integration module alone. Your core application flow should be unaffected by the change, as the interface it interacts with should remain stable.</p>
+
+<p><em>When Pivotal changed their API from v3 to v5, they introduced the concept of the Epic. Previously our application would have had epics internally, but the adapter would have converted epics to labels to support Pivotals model. With changes for their v5 API, Epics become a first class citizen as far as they are concerned and we&rsquo;d update the adapter, but our application core application would not need to change.</em></p>
+
+<h2>Wrap Up</h2>
+
+<p>Isolating third party code via adapters provides benefits in terms of abstracting logic and complexity out of your main application flow. Your application will communicate with the third parties in a consistent manner via the interface, and not be forced to change if a change appears. It ensures that any future conceptual, model, flow/logic and interface changes in the third party only impact the code that deals with that third party. It gives you the ability to swap out your external dependencies with little to no impact on your core applications, as well inject new functionality.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -690,54 +940,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/01/23/meteor/">Meteor</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-01-23T20:25:22+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>8:25 pm</span></time>
-        
-           | <a href="/2014/01/23/meteor/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2014/01/23/meteor/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A couple of days ago I received an email from meetup.com about meetups that I might be interested in. Usually this is full of crap I don&rsquo;t care about, like mothers groups or salsa dancing, but this most recent mail featured an intriguing group called &ldquo;Meteor Melbourne - a better way to build apps&rdquo;. So, I looked into it.</p>
-
-<p><a href="http://meteor.com">Meteor</a> is a framework based on node.js that allows you to write responsive, reactive, real-time web applications in javascript on both the client and server side. I&rsquo;ve always considered javascript as a toy language - I think this opinion comes from my first interaction with JavaScript waaaaaay back in the late 90&rsquo;s (I think it was somewhere between &lsquo;96 and &#8216;98), when all it was really used for was alert boxes and tic-tac-toe implementations. However, I&rsquo;ve recently been doing a lot of work for clients with <a href="http://parse.com">Parse</a> and their &ldquo;cloud code&rdquo; functionality, taking some logic out of mobile apps and running it on the Parse servers - and you use JavaScript to do this. They promoted use of <a href="https://www.parse.com/docs/js_guide#promises">Promises</a>, and I&rsquo;ve been doing a lot with <a href="https://github.com/ReactiveCocoa/ReactiveCocoa">RAC</a> in iPhone apps, so this functional style is something I&rsquo;m familiar with and like. I also have a friend who is helping a mate out on a startup, who is looking at some serious &ldquo;enterprise&rdquo; functionality implemented with server-side javascript, so I thought it was maybe time to seriously look at this thing too, and I checked it out.</p>
-
-<p>Amazeballs. Meteor is <em>MAGIC</em>. Don&rsquo;t believe me? Watch this <a href="https://www.meteor.com/screencast">screencast</a>.</p>
-
-<p>I think the magic for me comes from the real-time (well, super fast at least -> sub second synchronization) nature of the system, and the automate shuffling of data between the server and client to synchronize/update pages with no specific actions on the developers part. The built in support for packages is also really tidy, although having to use a 3rd party packages system (<a href="http://oortcloud.github.io/meteorite/">Meteorite</a> and <a href="https://atmosphere.meteor.com">Atmosphere</a>) for more modern versions of some of the core packages (eg, bootstrap-3 vs bootstrap-2) seems a little undesirable.</p>
-
-<p>It&rsquo;s super fast to get set up (1 line install, 1 line to start), and this includes server, database, sync between client and server. Want user authentication? Two more command line hits (1 for a UI, 1 for a login provider package), and 1 line to get the UI template built in. Amazingly productive.</p>
-
-<p>Where I see huge potential for Meteor is in the mobile space. Having a web app, which automatically pushes changes to a mobile device is super powerful. With the current state of mobile apps you typically need to poll for changes to data, unless you build your own data sync solution or rely on something like iCloud to push changes around for you (haha, yeah right). When I&rsquo;ve done this sort of thing in the past with Parse, I&rsquo;ve actually gone as far as abusing the Apple Push Notification Service to actually trigger a mobile device to re-query a web service to retrieve new data as APNS is the only push mechanism available. Having a service that reliably notifies a client when data changes server side, with sub-second speed, solves a whole bunch of problems for app developers.</p>
-
-<p>This is the tech stack that I&rsquo;m now looking at using for my small business productivity tool, and I&rsquo;m hoping that mobile sync works just as well (and fast) as the client-server sync does. Next up is a small proof of concept to test this out.</p>
-
-<p>I haven&rsquo;t been this excited about web development since I saw DHH&rsquo;s web app in 15 mins rails screencast in 2006.</p>
-
-<p><em>Oh yeah, I went to the meetup too. Nice job meetup.com</em></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/2">&larr; Older</a>
@@ -753,6 +955,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/07/20/function-arguments/">Function Arguments</a>
       </li>
     
@@ -766,10 +972,6 @@
     
       <li class="post">
         <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
       </li>
     
   </ul>

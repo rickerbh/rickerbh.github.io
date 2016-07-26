@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="Big changes are taking place. My wife @mrsrickerby and I have decided that we are going to move to Australia. Well, not so much that we are going to &hellip;">
+  <meta name="description" content="As part of moving to Melbourne, I need to decide what I&rsquo;m going to do to generate income. Traditionally I would either take a Senior Solutions &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/10/24/work-plans/">Work Plans</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-10-24T17:48:00+11:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>5:48 pm</span></time>
+        
+           | <a href="/2011/10/24/work-plans/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2011/10/24/work-plans/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As part of moving to Melbourne, I need to decide what I&rsquo;m going to do to generate income. Traditionally I would either take a Senior Solutions Architect or Enterprise Architect job in a telco, or look for an equivalent role contracting. I think that&rsquo;s not going to be the case quite yet.</p>
+
+<p>After talking to <a href="http://twitter.com/mrsrickerby">@mrsrickerby</a> at the pub about this (all our big decisions are made at the pub), we collectively decided that I am going to continue to work for myself. Not as a contractor though, but trying to create a sustainable software company, that is more than a 1 man band.</p>
+
+<p>Ever since I attended university, I have wanted to make software products for small businesses. I really believe the small business segment is underserved by existing products in the marketplace, and given the size of these organisations (1-10 people is the company/customer size I&rsquo;d want to target), software and computers need to get out of the way and let the people run their businesses, rather than manage and maintain software. This is also probably the last opportunity I&rsquo;ll ever have to give a project of this magnitude a go. I expect we&rsquo;ll be looking to settle down soon, get a family home, big mortgage etc and I can&rsquo;t take risks like this when I&rsquo;d have all that to lose. It&rsquo;d be unfair on everyone involved.</p>
+
+<p>So, I&rsquo;ll be working for 6 months when we arrive in Australia, at home, by myself, trying to create a product to help small business people run their businesses, as unobtrusively as possible.</p>
+
+<p>I&rsquo;ll also be enlisting the help of some friends. I can design software and systems very well, but user experience, graphic design, copywriting and the like are not my forte. Luckily I know some people in these areas, and I&rsquo;ll be drawing on their knowledge and skills too.</p>
+
+<p>So, the 6 months starts in the New Year (2012) and if by June 2012 and it looks like I could have something to replace the contracting work I&rsquo;d alternatively be doing, I&rsquo;ll be continuing on with the product. The alternative isn&rsquo;t bad - it&rsquo;s just not my dream.</p>
+
+<p>Luckily I&rsquo;ve managed to save up a runway of cash from working in the UK, and my wife is getting a good salary too, so we won&rsquo;t be eating pot noodles to make the $$$&rsquo;s stretch. My wife is very supportive.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -500,90 +544,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/08/15/passenger-ruby-on-rails-php-on-osx/">Passenger (Ruby on Rails) + PHP on OSX</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-08-15T10:06:53+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>10:06 am</span></time>
-        
-           | <a href="/2009/08/15/passenger-ruby-on-rails-php-on-osx/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2009/08/15/passenger-ruby-on-rails-php-on-osx/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve spent the last hour or so trying various things out to get passenger and PHP to play nicely together on my mac under OS X (Leopard) and apache2.</p>
-
-<p>The situation I was finding was that PHP apps would run, but only if you explicitly call the script (ie <tt>index.php</tt>) rather than just the directory.  If you called the directory, passenger would take over and give me a rails routing error.</p>
-
-<p>The issue was to do with the passenger vhosts configuration.  On my machine I have an number of ruby on rails apps configured with the passenger preferences pane (creating vhost entries within <tt>/private/etc/apache2/passenger_pane_vhosts/</tt>.  I have enabled user_dirs, so that the users of my machine&rsquo;s pages (and other apps) are served from their <tt>~username/Sites</tt> directory.</p>
-
-<p>My users configuration info for apache is installed in <tt>/private/etc/apache2/users/</tt>, and the instructions to load the configuration from that directory is stored within <tt>/private/etc/apache2/extra/httpd-userdir.conf</tt> (content below).</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># Settings for user home directories
-</span><span class='line'>#
-</span><span class='line'># Required module: mod_userdir
-</span><span class='line'>#
-</span><span class='line'># UserDir: The name of the directory that is appended onto a user's home
-</span><span class='line'># directory if a ~user request is received.  Note that you must also set
-</span><span class='line'># the default access control for these directories, as in the example below.
-</span><span class='line'>#
-</span><span class='line'>UserDir Sites
-</span><span class='line'>#
-</span><span class='line'># Users might not be in /Users/*/Sites, so use user-specific config files.
-</span><span class='line'>#
-</span><span class='line'>Include /private/etc/apache2/users/*.conf</span></code></pre></td></tr></table></div></figure>
-
-
-<p>To get everything working together nicely, I merely wrapped this inside a vhosts configuration directive, and gave it a ServerName of localhost - so that this vhost would be the one that responds to requests for localhost, rather than some random passenger vhost assuming it was the boss of everything.  New <tt>/private/etc/apache2/extra/httpd-userdir.conf</tt> below.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;VirtualHost *:80&gt;
-</span><span class='line'>  ServerName localhost
-</span><span class='line'>  UserDir Sites
-</span><span class='line'>  Include /private/etc/apache2/users/*.conf
-</span><span class='line'>&lt;/VirtualHost&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Thanks to this, all of my rails apps are served under passenger, and I can have static HTML, PHP and camping apps (previously configured - nothing to do with the above) all served from within my <tt>~username/Sites</tt> directory.</p>
-
-<p>Hope this helps someone.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/5">&larr; Older</a>
@@ -601,6 +561,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/07/20/function-arguments/">Function Arguments</a>
       </li>
     
@@ -614,10 +578,6 @@
     
       <li class="post">
         <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/06/23/reading-not-reading/">Reading Not Reading</a>
       </li>
     
   </ul>
