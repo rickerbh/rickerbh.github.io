@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="I&rsquo;ve spent the last hour or so trying various things out to get passenger and PHP to play nicely together on my mac under OS X (Leopard) and &hellip;">
+  <meta name="description" content="&lt;shameless self promotion&gt; My 4th iPhone application was approved yesterday by Apple, and it launches in the iTunes store today. It&rsquo;s &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/09/11/kit-quiz-uk/">Kit Quiz: UK</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-09-11T08:00:50+10:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>8:00 am</span></time>
+        
+           | <a href="/2009/09/11/kit-quiz-uk/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2009/09/11/kit-quiz-uk/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&lt;shameless self promotion&gt;</p>
+
+<p>My 4th iPhone application was approved yesterday by Apple, and it launches in the <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=329199029" target="_blank">iTunes store</a> today.  It&rsquo;s called <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=329199029" target="_blank">Kit Quiz: UK</a> and is a UK team based football (soccer) shirt quiz game.  It features over 130 shirts from UK football teams, and will have more added shortly.  There are 3 modes of gameplay, from the practise model &ldquo;Friendly&rdquo; to a time challenge &ldquo;Blitz&rdquo;.</p>
+
+<p>It&rsquo;s integrated with Twitter and Facebook so you can check out your friends scores and find out once and for all who can recognise the most football shirts.</p>
+
+<p>Couple of screenshots below for anyone interested.  <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=329199029" target="_blank">Download it now!</a></p>
+
+<p><a href="http://hamishrickerby.com/wp-content/uploads/2009/09/kit-quiz-start.png"><img class="size-medium wp-image-404" title="Kit Quiz: UK Menu" src="http://hamishrickerby.com/wp-content/uploads/2009/09/kit-quiz-start-300x200.png" alt="Kit Quiz: UK menu screen" width="300" height="200" /></a></p>
+
+<p><a href="http://hamishrickerby.com/wp-content/uploads/2009/09/kit-quiz-game.png"><img class="size-medium wp-image-403" title="Kit Quiz: UK - Blitz" src="http://hamishrickerby.com/wp-content/uploads/2009/09/kit-quiz-game-300x200.png" alt="Kit Quiz: UK - Blitz screen" width="300" height="200" /></a></p>
+
+<p>&lt;/shameless self promotion&gt;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -508,188 +552,6 @@ sudo passenger-install-apache2-module
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/02/26/dealing-with-semantichacker-in-ruby/">Dealing With SemanticHacker in Ruby</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-02-26T19:42:04+11:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>7:42 pm</span></time>
-        
-           | <a href="/2009/02/26/dealing-with-semantichacker-in-ruby/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2009/02/26/dealing-with-semantichacker-in-ruby/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m having a bit of a play with <a href="http://www.semantichacker.com/">SemanticHacker</a> at the moment, seeing what their service thinks of some text I&rsquo;m poking at it.  To make this a bit simpler I created a small ruby lib that wraps their API to make my life a little easier.  And hopefully it&rsquo;ll make someone elses life easier - enjoy.</p>
-
-<p>(It requires <a href="http://github.com/why/hpricot/tree/master">hpricot</a> for XML parsing - make sure it&rsquo;s installed)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;hpricot&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;cgi&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;open-uri&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">SemanticHacker</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="no">URL</span> <span class="o">=</span> <span class="s2">&quot;http://api.semantichacker.com&quot;</span>
-</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:token</span><span class="p">,</span> <span class="ss">:doc</span><span class="p">,</span> <span class="ss">:content</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@token</span> <span class="o">=</span> <span class="n">token</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">get_signature</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@content</span> <span class="o">=</span> <span class="o">::</span><span class="no">CGI</span><span class="o">::</span><span class="n">escape</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">URL</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="vi">@token</span><span class="si">}</span><span class="s2">/signature?content=</span><span class="si">#{</span><span class="vi">@content</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="vi">@doc</span> <span class="o">=</span> <span class="no">Hpricot</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">get_concepts</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@content</span> <span class="o">=</span> <span class="o">::</span><span class="no">CGI</span><span class="o">::</span><span class="n">escape</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">URL</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="vi">@token</span><span class="si">}</span><span class="s2">/concept?content=</span><span class="si">#{</span><span class="vi">@content</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="vi">@doc</span> <span class="o">=</span> <span class="no">Hpricot</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">get_categories</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</span><span class='line'>    <span class="vi">@content</span> <span class="o">=</span> <span class="o">::</span><span class="no">CGI</span><span class="o">::</span><span class="n">escape</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">URL</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="vi">@token</span><span class="si">}</span><span class="s2">/category?content=</span><span class="si">#{</span><span class="vi">@content</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="vi">@doc</span> <span class="o">=</span> <span class="no">Hpricot</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">type</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:about</span><span class="o">/</span><span class="ss">:systemType</span><span class="p">)</span><span class="o">.</span><span class="n">inner_html</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">config_id</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:about</span><span class="o">/</span><span class="ss">:configId</span><span class="p">)</span><span class="o">.</span><span class="n">inner_html</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">categories</span>
-</span><span class='line'>    <span class="n">response</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:categorizer</span><span class="o">/</span><span class="ss">:categorizerResponse</span><span class="o">/</span><span class="ss">:categories</span><span class="o">/</span><span class="ss">:category</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">response</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:id</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;id&#39;</span><span class="o">]</span><span class="p">,</span> <span class="ss">:weight</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;weight&#39;</span><span class="o">]</span><span class="p">}</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">response</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">concepts</span>
-</span><span class='line'>    <span class="n">response</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:conceptExtractor</span><span class="o">/</span><span class="ss">:conceptExtractorResponse</span><span class="o">/</span><span class="ss">:concepts</span><span class="o">/</span><span class="ss">:concept</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">response</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:label</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;label&#39;</span><span class="o">]</span><span class="p">,</span> <span class="ss">:weight</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;weight&#39;</span><span class="o">]</span><span class="p">}</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">response</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">signatures</span>
-</span><span class='line'>    <span class="n">response</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>    <span class="p">(</span><span class="n">doc</span><span class="o">/</span><span class="ss">:response</span><span class="o">/</span><span class="ss">:siggen</span><span class="o">/</span><span class="ss">:siggenResponse</span><span class="o">/</span><span class="ss">:signature</span><span class="o">/</span><span class="ss">:dimension</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">response</span> <span class="o">&lt;&lt;</span> <span class="p">{</span><span class="ss">:index</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;index&#39;</span><span class="o">]</span><span class="p">,</span> <span class="ss">:weight</span> <span class="o">=&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">attributes</span><span class="o">[</span><span class="s1">&#39;weight&#39;</span><span class="o">]</span><span class="p">}</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">response</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And to make things happen</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sh</span> <span class="o">=</span> <span class="no">SemanticHacker</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;mysecrettoken&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="n">sh</span><span class="o">.</span><span class="n">get_signature</span><span class="p">(</span><span class="s2">&quot;Wow!  Some semantic analysis on my text&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="nb">puts</span> <span class="n">sh</span><span class="o">.</span><span class="n">signatures</span><span class="o">.</span><span class="n">inspect</span>
-</span><span class='line'><span class="c1">#returns an array of hashes with the weights and indexes of the categories</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/6">&larr; Older</a>
@@ -707,6 +569,10 @@ sudo passenger-install-apache2-module
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/08/04/interface-segregation/">Interface Segregation</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a>
       </li>
     
@@ -720,10 +586,6 @@ sudo passenger-install-apache2-module
     
       <li class="post">
         <a href="/2016/06/29/meteor-heroku-and-bcrypt/">Meteor, Heroku, and Bcrypt</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/06/27/back-to-basics-editors/">Back to Basics - Editors</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Hamish Rickerby]]></title>
   <link href="https://hamishrickerby.com/atom.xml" rel="self"/>
   <link href="https://hamishrickerby.com/"/>
-  <updated>2016-07-27T09:03:32+10:00</updated>
+  <updated>2016-08-04T12:15:42+10:00</updated>
   <id>https://hamishrickerby.com/</id>
   <author>
     <name><![CDATA[Hamish Rickerby]]></name>
@@ -12,6 +12,284 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Interface Segregation]]></title>
+    <link href="https://hamishrickerby.com/2016/08/04/interface-segregation/"/>
+    <updated>2016-08-04T09:28:17+10:00</updated>
+    <id>https://hamishrickerby.com/2016/08/04/interface-segregation</id>
+    <content type="html"><![CDATA[<p>The Interface Segregation principle (part of <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)">S.O.L.I.D.</a>) is about, very simply, not making subclasses or clients implement interfaces they&rsquo;re not concerned with. <a href="https://drive.google.com/a/simplemachines.com.au/file/d/0BwhCYaYDn8EgOTViYjJhYzMtMzYxMC00MzFjLWJjMzYtOGJiMDc5N2JkYmJi/view">Robert Martin</a> calls these &lsquo;fat&rsquo; interfaces. They contain functions or methods that are unrelated to each other, and could be split out into more cohesive interfaces.</p>
+
+<p>Forcing clients to implement interfaces they&rsquo;re not concerned with causes unnecessary tight coupling of the client to the interface. If the interface changes, the client needs to reimplement/update itself even if it doesn&rsquo;t use that specific interface function. The result is wasted development effort in maintaining unnecessary code for testing and implementation. This should be avoided.</p>
+
+<p>Issues with interface definition can arise in langages that support <a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)">inheritance</a>, <a href="https://en.wikipedia.org/wiki/Subtyping">subtype</a> conformance, or concepts like <a href="https://en.wikipedia.org/wiki/Interface_%28Java%29">Interface</a> or <a href="https://en.wikipedia.org/wiki/Protocol_(object-oriented_programming)">Protocol</a>. Specifically, issues are more likely to occur when an object or type can only inherit/implement one super-class or protocol/interface, such as with inheritance with (most) object-oriented languages. C++ is a notable exception here with support for multiple-inheritance, and implementation of protocols/interfaces via abstract base classes with pure virtual functions. The majority of languages I&rsquo;ve seen that support the concept of interfaces, also support multiple interface inheritance. This is supported in Swift, Java, and Objective-C. Ruby can support this via the include statement, although the duck typing removals the formal need for this definition - same with Python. Haskell supports this via TypeClass conformance.</p>
+
+<h2>Show me some code</h2>
+
+<p>Here&rsquo;s a contrived example of an interface that tries to do too much. It&rsquo;s in swift, but it should be understandable. Lets say we&rsquo;re modelling animals.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">protocol</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nl">species</span><span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nl">legs</span><span class="p">:</span> <span class="n">Int</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">func</span> <span class="n">speak</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span>
+</span><span class='line'>  <span class="k">func</span> <span class="n">birth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Animal</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And we define a couple of animals.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">class</span> <span class="nl">Dog</span><span class="p">:</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">var</span> <span class="n">species</span> <span class="o">=</span> <span class="s">&quot;Canis lupus familiaris&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">var</span> <span class="n">legs</span> <span class="o">=</span> <span class="mi">4</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">speak</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;Woof&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">birth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">Dog</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nl">Cat</span><span class="p">:</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">var</span> <span class="n">species</span> <span class="o">=</span> <span class="s">&quot;Felis catus&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">var</span> <span class="n">legs</span> <span class="o">=</span> <span class="mi">4</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">speak</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;Meow&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">birth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">Cat</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This all seems fine, but becomes unstuck when we attempt to model something <a href="https://en.wikipedia.org/wiki/Oviparity">Oviparous</a>, or a sterile hybrid.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">class</span> <span class="nl">Chicken</span><span class="p">:</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">var</span> <span class="n">species</span> <span class="o">=</span> <span class="s">&quot;Gallus gallus domesticus&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">var</span> <span class="n">legs</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">speak</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;Cluck&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">birth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Chickens have eggs, not chickens. </span>
+</span><span class='line'>    <span class="c1">// And they don&#39;t &quot;birth&quot; them. They lay them.</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nl">Mule</span><span class="p">:</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">var</span> <span class="n">species</span> <span class="o">=</span> <span class="s">&quot;Equus asinus x Equus caballus&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">var</span> <span class="n">legs</span> <span class="o">=</span> <span class="mi">4</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">speak</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;Bray&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">birth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Uh oh, Mules are typically sterile. They can&#39;t reproduce.</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The interface for Animal forces all animals to be able to birth things, and not all animals do. To solve this, I see a couple of options.</p>
+
+<ul>
+<li>We make the <code>birth()</code> function optional</li>
+<li>We extract the <code>birth()</code> function out to a separate <code>Protocol</code> and compose multiple protocols together</li>
+</ul>
+
+
+<p>Personally I prefer the extraction of the function to a separate protocol. If we made the <code>birth()</code> function optional, any object that attempts to use it on any animal will need to ensure it&rsquo;s available before it can use it, and potentially force consumers of a function that uses that function to also deal with optional returns.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">func</span> <span class="n">birthSays</span><span class="p">(</span><span class="nl">parent</span><span class="p">:</span> <span class="n">Animal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span><span class="o">?</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="k">let</span> <span class="n">child</span> <span class="o">=</span> <span class="n">parent</span><span class="p">.</span><span class="n">birth</span><span class="p">()</span><span class="o">?</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">child</span><span class="p">.</span><span class="n">speak</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">nil</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If the <code>birth()</code> function is extracted out, then:</p>
+
+<ol>
+<li>Chickens and Mules won&rsquo;t need to implement the <code>birth()</code> method, and</li>
+<li>We can typecheck methods so we don&rsquo;t need optionals, in languages that support this construct.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">protocol</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nl">species</span><span class="p">:</span> <span class="n">String</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nl">legs</span><span class="p">:</span> <span class="n">Int</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">func</span> <span class="n">speak</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">protocol</span> <span class="n">Egg</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">func</span> <span class="n">hatch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Animal</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">protocol</span> <span class="n">Viviparous</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">func</span> <span class="n">birth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Animal</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">protocol</span> <span class="n">Oviparous</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">func</span> <span class="n">lay</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Egg</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nl">ChickenEgg</span><span class="p">:</span> <span class="n">Egg</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">func</span> <span class="n">hatch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">Chicken</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nl">Chicken</span><span class="p">:</span> <span class="n">Animal</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">var</span> <span class="n">species</span> <span class="o">=</span> <span class="s">&quot;Gallus gallus domesticus&quot;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">var</span> <span class="n">legs</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">func</span> <span class="n">speak</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;Cluck&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">extension</span> <span class="nl">Chicken</span><span class="p">:</span> <span class="n">Oviparious</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">func</span> <span class="n">lay</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Egg</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ChickenEgg</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">birthSays</span><span class="p">(</span><span class="nl">parent</span><span class="p">:</span> <span class="n">Viviparous</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">parent</span><span class="p">.</span><span class="n">birth</span><span class="p">().</span><span class="n">speak</span><span class="p">()</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can see above that the Chicken is no longer required to implement birth. Through conformance to multiple, specific/detailed protocols it only needs to support functions and properties that make sense to that specific Class. This splitting of protocols alse ensures that we can typecheck inputs to functions, reducing the need for boilerplate code performing nil checks on optionals.</p>
+
+<p>Interface Segregation is one of the S.O.L.I.D. principles (I). Through ensuring that your interfaces small, targetted, and cohesive, you simplify implementation for clients. Clients won&rsquo;t be required to implement interfaces that don&rsquo;t make sense in the context of their object. Your interfaces also have greater opportunities for reuse, due to being more composable. Clients will be forced to change less, as only changes that impact their operation will need to be managed, rather than interface changes that they don&rsquo;t care about.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Wrapping 3rd Party Code]]></title>
@@ -1057,23 +1335,6 @@ for (NSManagedObject *oldEntity in entities) {
 </code></pre>
 
 <p>HTH.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iBooks Crashing?]]></title>
-    <link href="https://hamishrickerby.com/2012/04/30/ibooks-crashing/"/>
-    <updated>2012-04-30T17:15:00+10:00</updated>
-    <id>https://hamishrickerby.com/2012/04/30/ibooks-crashing</id>
-    <content type="html"><![CDATA[<p>I&rsquo;m having a bit of a play with iBooks today, and some 3D model stuff. iBooks has, for me, always crashed when displaying 3D models. I don&rsquo;t have a jailbroken iPad, so it&rsquo;s not a DRM issue (at least not one caused by that). To tell you the truth, I&rsquo;m not sure what the cause is. But, I do have a fix!</p>
-
-<ul>
-<li>Delete iBooks</li>
-<li>Reinstall iBooks</li>
-</ul>
-
-
-<p>That simple. My books and PDF&rsquo;s were still on the iPad, so there was no issue with having to resyc everything. Now, 3D models are supported :-)</p>
 ]]></content>
   </entry>
   
