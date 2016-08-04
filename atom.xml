@@ -4,7 +4,7 @@
   <title><![CDATA[Hamish Rickerby]]></title>
   <link href="https://hamishrickerby.com/atom.xml" rel="self"/>
   <link href="https://hamishrickerby.com/"/>
-  <updated>2016-08-04T12:30:10+10:00</updated>
+  <updated>2016-08-04T13:18:13+10:00</updated>
   <id>https://hamishrickerby.com/</id>
   <author>
     <name><![CDATA[Hamish Rickerby]]></name>
@@ -22,7 +22,7 @@
 
 <p>Forcing clients to implement interfaces they&rsquo;re not concerned with causes unnecessary tight coupling of the client to the interface. If the interface changes, the client needs to reimplement/update itself even if it doesn&rsquo;t use that specific interface function. The result is wasted development effort in maintaining unnecessary code for testing and implementation. This should be avoided.</p>
 
-<p>Issues with interface definition can arise in langages that support <a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)">inheritance</a>, <a href="https://en.wikipedia.org/wiki/Subtyping">subtype</a> conformance, or concepts like <a href="https://en.wikipedia.org/wiki/Interface_%28Java%29">Interface</a> or <a href="https://en.wikipedia.org/wiki/Protocol_(object-oriented_programming)">Protocol</a>. Specifically, issues are more likely to occur when an object or type can only inherit/implement one super-class or protocol/interface, such as with inheritance with (most) object-oriented languages. C++ is a notable exception here with support for multiple-inheritance, and implementation of protocols/interfaces via abstract base classes with pure virtual functions. The majority of languages I&rsquo;ve seen that support the concept of interfaces, also support multiple interface inheritance. This is supported in Swift, Java, and Objective-C. Ruby can support this via the include statement, although the duck typing removals the formal need for this definition - same with Python. Haskell supports this via TypeClass conformance.</p>
+<p>Issues with interface definition can arise in languages that support <a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)">inheritance</a>, <a href="https://en.wikipedia.org/wiki/Subtyping">subtype</a> conformance, or concepts like <a href="https://en.wikipedia.org/wiki/Interface_%28Java%29">Interface</a> or <a href="https://en.wikipedia.org/wiki/Protocol_(object-oriented_programming)">Protocol</a>. Specifically, issues are more likely to occur when an object or type can only inherit/implement one super-class or protocol/interface, such as with inheritance with (most) object-oriented languages. C++ is a notable exception here with support for multiple-inheritance, and implementation of protocols/interfaces via abstract base classes with pure virtual functions. The majority of languages I&rsquo;ve seen that support the concept of interfaces, also support multiple interface inheritance. This is supported in Swift, Java, and Objective-C. Ruby can support this via the include statement, although the duck typing removals the formal need for this definition - same with Python. Haskell supports this via type class conformance.</p>
 
 <h2>Show me some code</h2>
 
@@ -288,6 +288,25 @@
 
 
 <p>You can see above that the Chicken is no longer required to implement birth. Through conformance to multiple, specific/detailed protocols it only needs to support functions and properties that make sense to that specific Class. This splitting of protocols alse ensures that we can typecheck inputs to functions, reducing the need for boilerplate code performing nil checks on optionals.</p>
+
+<h3>Surprising Usage</h3>
+
+<p>To illustrate another benefit of small interfaces, we consider the relationship between parents and children. If the relationship between two entities is abstracted out and made generic, we can think of it as a Node in a Graph, with a parent (node), and multiple children (other nodes).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">protocol</span> <span class="n">Node</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nl">parent</span><span class="p">:</span> <span class="n">Node</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nl">children</span><span class="p">:</span> <span class="p">[</span><span class="n">Node</span><span class="p">]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With this view of a <code>Node</code>, we can model families of Viviparous animals. A Dog can return it&rsquo;s children, and they can reference their parents. This <code>Node</code> however, can also be reused for any directed graph, such as dependencies between different software libraries. If a client implements a function to produce a family tree of Dogs via the <code>Node</code> interface, the exact same code can be reused to produce a tree of library dependencies, as it&rsquo;s based on the generic <code>Node</code>, not <code>Animal</code>.</p>
+
+<p><em>hat tip to <a href="https://twitter.com/triggernz">@triggerNZ</a> for this example</em></p>
 
 <p>Interface Segregation is one of the S.O.L.I.D. principles (I). Through ensuring that your interfaces small, targetted, and cohesive, you simplify implementation for clients. Clients won&rsquo;t be required to implement interfaces that don&rsquo;t make sense in the context of their object. Your interfaces also have greater opportunities for reuse, due to being more composable. Clients will be forced to change less, as only changes that impact their operation will need to be managed, rather than interface changes that they don&rsquo;t care about.</p>
 ]]></content>
