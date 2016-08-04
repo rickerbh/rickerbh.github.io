@@ -4,7 +4,7 @@
   <title><![CDATA[Hamish Rickerby]]></title>
   <link href="https://hamishrickerby.com/atom.xml" rel="self"/>
   <link href="https://hamishrickerby.com/"/>
-  <updated>2016-08-04T13:18:13+10:00</updated>
+  <updated>2016-08-04T13:19:46+10:00</updated>
   <id>https://hamishrickerby.com/</id>
   <author>
     <name><![CDATA[Hamish Rickerby]]></name>
@@ -291,15 +291,15 @@
 
 <h3>Surprising Usage</h3>
 
-<p>To illustrate another benefit of small interfaces, we consider the relationship between parents and children. If the relationship between two entities is abstracted out and made generic, we can think of it as a Node in a Graph, with a parent (node), and multiple children (other nodes).</p>
+<p>To illustrate another benefit of small interfaces, we consider the relationship between parents and children. If the relationship between two entities is abstracted out and made generic, we can think of it as a Node in a Graph, with a parent (node), and multiple children (other nodes).[</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">protocol</span> <span class="n">Node</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">var</span> <span class="nl">parent</span><span class="p">:</span> <span class="n">Node</span>
-</span><span class='line'>  <span class="k">var</span> <span class="nl">children</span><span class="p">:</span> <span class="p">[</span><span class="n">Node</span><span class="p">]</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nl">parent</span><span class="p">:</span> <span class="n">Node</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nl">children</span><span class="p">:</span> <span class="p">[</span><span class="n">Node</span><span class="p">]</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
