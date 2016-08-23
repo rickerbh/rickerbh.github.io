@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Function Arguments - Hamish Rickerby</title>
+  <meta name="author" content="Hamish Rickerby">
+
+  
+  <meta name="description" content="In Clean Code it&rsquo;s advocated that the ideal number of arguments for a function is 0. Then, 1, 2, and in very rare cases 3. No functions should &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="https://hamishrickerby.com/2016/07/20/function-arguments">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Hamish Rickerby" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<script type="text/javascript">
+    var host = "hamishrickerby.com";
+    if ((host == window.location.host) && (window.location.protocol != "https:"))
+        window.location.protocol = "https";
+</script>
+<link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="/javascripts/footnote.js" type="text/javascript"></script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-535090-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Hamish Rickerby</a></h1>
+  
+    <h2>Technology Consultant & iOS Developer based in Sydney, Australia</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:hamishrickerby.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/books">Reading List</a></li>
+  <li><a href="http://twitter.com/rickerbh">Twitter</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Function Arguments</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-07-20T09:41:05+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:41 am</span></time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In <a href="https://www.bookdepository.com/Clean-Code-Robert-C-Martin/9780132350884?a_aid=rickerbh">Clean Code</a> it&rsquo;s advocated that the ideal number of arguments for a function is 0. Then, 1, 2, and in very rare cases 3. No functions should take more than 3 arguments.</p>
+
+<p>In general, I agree with this. Fewer function arguments = fewer separate parts to understand and should aid with readability (and understanding). There are a couple of complexities though that I&rsquo;d like to run through here. One is levels of abstraction, and the other is testing.</p>
+
+<h2>Abstraction</h2>
+
+<p>When a function has 0 arguments, it can only do 3 things:</p>
+
+<ol>
+<li>It can call other functions</li>
+<li>It can access data (object state) from itself and return it.</li>
+<li><em>Nothing</em> - if it doesn&rsquo;t call other functions, or query object state, then why bother calling it?</li>
+</ol>
+
+
+<p>A <em>useful</em> niladic function is effectively a wrapper for other code, providing a higher level of abstraction.  For example, if we wanted to get a set of data from a report, in a particular format, we could call functions as below.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">extract_report_variables_as_json</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># vs</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">extract_report_variables_from</span><span class="p">(</span><span class="n">a_report</span><span class="p">,</span> <span class="n">FORMAT_JSON</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The niladic (0 argument) version reads nicely, and seems simple to understand on the surface. It also provides a higher level of abstraction than the function where you have to provide the report to extract the data from, and the format to return the data in. This (in my mind) is a double-edged sword. The <code>extractReportVariablesAsJson()</code> function completely hides where it gets data from, and how the formatting request is passed in (and potentially what other formatting options there might be).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">extract_report_variables_as_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">extract_report_variables_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">,</span> <span class="n">FORMAT_JSON</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s also unclear if there are side effects from this. To figure this out, you need to delve down into the functions to bottom out what they&rsquo;re all doing. For example, to generate the JSON format extract, it may write the data to disk, and this may cause exceptions due to disk space, or permissions problems. You could receive a seemingly unrelated error to the task you&rsquo;re trying to perform due to side effects happening inside an abstracted function.</p>
+
+<p>In the OO world, the general takeaway is that this is a perfect situation. The object provides abstract functions, and they hide the complextity of what is happening under the covers. The main issue I have with niladic functions is the tying of the function to particular state in the object, eg, in our example above the report used will always be <code>self.report</code>. To avoid this, the developer has to repeat the abstraction to generalise the functions, all the way down. The developer also has to consider what abstract, and what more detailed (generalised) functions their object might like to expose, and set appropriate access controls on these functions. For this to happen in reality requires a diligence and dedication on the side of the developer to their craft. They must continually strive for clean code - to wrap and abstract out functions. This is a good thing, but not something that&rsquo;s always done by default.</p>
+
+<h2>Testing</h2>
+
+<p>Testing functions has (I believe) an interesting effort curve, depending on the number of arguments in the function, as well some more fundamental constructs of the language you&rsquo;re developing in.</p>
+
+<h3>Niladic Functions</h3>
+
+<p>With niladic functions, you may have to perform more test setup <em>around</em> the function to be able to test it effectively. When a function takes no arguments, you have to setup the data elsewhere for it to operate on. If your function operates on the data it&rsquo;s passed, then you only need to deal with that function to test it. I consider (in general) the test creation effort for niladic functions to be greater than for functions that take arguments.</p>
+
+<h3>Functions with 1+ arguments</h3>
+
+<p>I believe the easiest function to test is one with one argument. You can pass in the data you want the function to operate on, receive the result, and check it. This is also true for functions with more than one argument, but the problem with these is that the permutations of possible arguments explode. If you&rsquo;re looking to exhaustively test out a function, then you need to multiply the possible values for each argument together. Lets say you have a function that takes a single boolean. This has 2 possible values you can pass in to it, so it is relatively simple to test exhaustively. If you have a function that takes 3 boolean arguments, then you have 8 possible permutations of the arguments (2 x 2 x 2). Things get crazy when we start looking an other data types such as String or Int. <em>How many different values can you have for a String?</em></p>
+
+<h3>Typed Arguments</h3>
+
+<p>One other issue for consideration is if the language you&rsquo;re using supports typed arguments. If it can, a function can define (and ideally enforce) the type of data it can accept. In languages that don&rsquo;t support this, your function could receive data of a different type to what it was expecting.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">format</span> <span class="o">=</span> <span class="s">&quot;My Custom Format&quot;</span>
+</span><span class='line'><span class="n">report_data</span> <span class="o">=</span> <span class="bp">True</span>
+</span><span class='line'><span class="n">extract_report_variables_from</span><span class="p">(</span><span class="n">report_data</span><span class="p">,</span> <span class="n">format</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To generate tests to exhaustively test this is virtually impossible. You won&rsquo;t practically be able to create all the different permutations of options available.</p>
+
+<h3>How to solve?</h3>
+
+<p>I think there is a way to get a level of confidence in your functions that receive arguments via testing. Unit tests can provide expected, common scenarios that you want to test for to make sure that the function is behaving under normal scenarios. This should always be done.</p>
+
+<p>If your function can support it (and your language has appropriate libraries), <a href="http://blog.jessitron.com/2013/04/property-based-testing-what-is-it.html">Property Based Testing</a> can provide a level of confidence that your function can handle all other scenarios. I&rsquo;m not going to go into it in depth here, but in general, you construct test specifications that will randomly generate test data and pass it to your function. They will repeat this over and over again a number of times, and determine if your function operates as expected in a wider number of scenarios that is humanly possible to code manually. This should give confidence that your function works correctly, even in the face of misuse.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Hamish Rickerby</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-07-20T09:41:05+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:41 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="https://hamishrickerby.com/2016/07/20/function-arguments/" data-via="rickerbh" data-counturl="https://hamishrickerby.com/2016/07/20/function-arguments/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/" title="Previous Post: A small functional refactoring of Javascript">&laquo; A small functional refactoring of Javascript</a>
+      
+      
+        <a class="basic-alignment right" href="/2016/07/25/wrapping-3rd-party-code/" title="Next Post: Wrapping 3rd Party Code">Wrapping 3rd Party Code &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2016/08/20/software-apprenticeships/">Software Apprenticeships</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/08/04/interface-segregation/">Interface Segregation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/rickerbh">@rickerbh</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'rickerbh',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("rickerbh", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+  
+</section>
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103674783197570316138?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+Included file &#8216;custom/asides/happtic.html&#8217; not found in _includes directory
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Hamish Rickerby -
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'itickedthewrongbox';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'https://hamishrickerby.com/2016/07/20/function-arguments/';
+        var disqus_url = 'https://hamishrickerby.com/2016/07/20/function-arguments/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
