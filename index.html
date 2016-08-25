@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="We have trouble hiring developers. The number of people in Australia with Scala/FP experience is small, and the number of high-quality developers &hellip;">
+  <meta name="description" content="As part of the Apprenticeship, I need to create an HTTP server. The purpose of the activity is to create a relatively complex, real-world system with &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,531 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/08/25/hard-to-test-code/">Refactoring Hard to Test Code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-08-25T20:47:08+10:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>8:47 pm</span></time>
+        
+           | <a href="/2016/08/25/hard-to-test-code/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2016/08/25/hard-to-test-code/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As part of the <a href="https://hamishrickerby.com/2016/08/20/software-apprenticeships/">Apprenticeship</a>, I need to create an <a href="https://github.com/rickerbh/http_server_java">HTTP server</a>. The purpose of the activity is to create a relatively complex, real-world system with TDD, following SOLID/clean code principles. It&rsquo;s going well so far. There is a FitNesse spec for acceptance tests that the server needs to pass, and I have to create it in Java. I&rsquo;m getting there.</p>
+
+<p>However, I recently found that I was having to jump through some hoops to test my socket connection completion handler, and my mentor suggested this might be a code smell, and that I should look at refactoring the code to make it easier to test. <em>As an aside, I&rsquo;m using the &ldquo;new&rdquo; non-blocking IO socket classes rather than the traditional socket classes, so that multithreading should be simpler as I shouldn&rsquo;t need to manage threadpools.</em></p>
+
+<p>The design I had come up with for handling HTTP requests and responses was quite tightly tied to the Java <a href="https://docs.oracle.com/javase/7/docs/api/java/nio/channels/CompletionHandler.html"><code>CompletionHandler</code></a> generic interface, and specifically the <code>completed</code> method that receives <a href="https://docs.oracle.com/javase/7/docs/api/java/nio/channels/AsynchronousSocketChannel.html"><code>AsynchronousSocketChannel</code></a>s. Testing it, by generating fake <code>AsynchronousSocketChannels</code> felt super hacky. The code for dealing with processing requests and responses was also tied in with the channel handling code, so the responsibility of the class was not very clear.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HTTPCompletionHandler</span> <span class="kd">implements</span> <span class="n">CompletionHandler</span><span class="o">&lt;</span><span class="n">AsynchronousSocketChannel</span><span class="o">,</span> <span class="n">Void</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ResponseFactory</span> <span class="n">responseFactory</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">AsynchronousServerSocketChannel</span> <span class="n">listeningChannel</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">HTTPCompletionHandler</span><span class="o">(</span><span class="n">String</span> <span class="n">rootDirectory</span><span class="o">,</span> <span class="n">AsynchronousServerSocketChannel</span> <span class="n">listeningChannel</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">responseFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ResponseFactory</span><span class="o">(</span><span class="n">rootDirectory</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">listeningChannel</span> <span class="o">=</span> <span class="n">listeningChannel</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">completed</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">ch</span><span class="o">,</span> <span class="n">Void</span> <span class="n">attachment</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">listeningChannel</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">requestText</span> <span class="o">=</span> <span class="n">extractRequestText</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Request</span><span class="o">(</span><span class="n">requestText</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">responseFactory</span><span class="o">.</span><span class="na">makeResponse</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">sendResponse</span><span class="o">(</span><span class="n">ch</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">closeChannel</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">failed</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">exc</span><span class="o">,</span> <span class="n">Void</span> <span class="n">attachment</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="nf">extractRequestText</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">ch</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ByteBuffer</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="mi">8192</span><span class="o">);</span>
+</span><span class='line'>        <span class="kt">byte</span><span class="o">[]</span> <span class="n">requestBytes</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kt">int</span> <span class="n">bytesRead</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">requestBytes</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">bytesRead</span><span class="o">];</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">bytesRead</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">buffer</span><span class="o">.</span><span class="na">position</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">buffer</span><span class="o">.</span><span class="na">flip</span><span class="o">();</span>
+</span><span class='line'>                <span class="n">buffer</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">requestBytes</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">bytesRead</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">buffer</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span><span class="n">requestBytes</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">sendResponse</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">ch</span><span class="o">,</span> <span class="n">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ch</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getBytes</span><span class="o">()));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">closeChannel</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">ch</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">ch</span><span class="o">.</span><span class="na">isOpen</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">ch</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Time to refactor</h2>
+
+<p>Below are a series of steps that I went through to refactor this class to ensure single-responsibility, and make it significantly easier to test the functionality.</p>
+
+<p><em>Links are provided at the end to github for the steps as commits. Github also contains the tests. 100% TDD baby!</em></p>
+
+<h3>Create interfaces</h3>
+
+<p>First of all, I needed to break the dependency between the HTTP Request/Repsonse code, and the <code>AsynchronousSocketChannel</code> code. I introduced an abstraction for reading and writing data.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ByteReader</span> <span class="o">{</span>
+</span><span class='line'>     <span class="kt">byte</span><span class="o">[]</span> <span class="nf">read</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ByteWriter</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="nf">write</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I could have put these in a single interface, but splitting them gives easier support for different implementation models, such as reading from a socket, and writing out to a file.</p>
+
+<h3>Concrete implementations</h3>
+
+<p>Then, implement classes that support these interfaces that use the <code>AsynchronousSocketChannel</code> to read and write from.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AsynchronousSocketChannelReader</span> <span class="kd">implements</span> <span class="n">ByteReader</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">AsynchronousSocketChannel</span> <span class="n">channel</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">AsynchronousSocketChannelReader</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">channel</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">channel</span> <span class="o">=</span> <span class="n">channel</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">read</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ByteBuffer</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">allocate</span><span class="o">(</span><span class="mi">8192</span><span class="o">);</span>
+</span><span class='line'>        <span class="kt">byte</span><span class="o">[]</span> <span class="n">requestBytes</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kt">int</span> <span class="n">bytesRead</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">requestBytes</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">bytesRead</span><span class="o">];</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">bytesRead</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">buffer</span><span class="o">.</span><span class="na">position</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">buffer</span><span class="o">.</span><span class="na">flip</span><span class="o">();</span>
+</span><span class='line'>                <span class="n">buffer</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">requestBytes</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">bytesRead</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">buffer</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">requestBytes</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AsynchronousSocketChannelWriter</span> <span class="kd">implements</span> <span class="n">ByteWriter</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">AsynchronousSocketChannel</span> <span class="n">channel</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">AsynchronousSocketChannelWriter</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">channel</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">channel</span> <span class="o">=</span> <span class="n">channel</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">channel</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="n">bytes</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Integrate these back in</h3>
+
+<p>The next step is to start to use these within the <code>HTTPCompletionHandler</code> class. The bulk of the <code>extractRequestText</code> and <code>sendResponse</code> functions can also be dropped from the <code>HTTPCompletionHandler</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="nf">extractRequestText</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">ch</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ByteReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">AsynchronousSocketChannelReader</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span><span class="n">reader</span><span class="o">.</span><span class="na">read</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">sendResponse</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">ch</span><span class="o">,</span> <span class="n">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">ch</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getBytes</span><span class="o">()));</span>
+</span><span class='line'>        <span class="n">ByteWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">AsynchronousSocketChannelWriter</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">writer</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The code in <code>sendResponse</code> at this interim step has grown longer, but what we&rsquo;ve actually done here is enable a very clean break in the dependency between the HTTP request/response processing, and the <code>AsynchronousSocketChannel</code>, as we&rsquo;ll see in the next step.</p>
+
+<h3>Extract HTTP Request/Response handling</h3>
+
+<p>Now, we need to remove the HTTP Request and Response handling out of this completion handler. The completion handler will soon have a very specific responsibility in providing an interface adapter between <code>AsynchronousSocketChannel</code>s and processing that data. The reading, writing, or orchestration of the data flow will no longer be part of that classes responsibility.</p>
+
+<p>We&rsquo;re creating a new class called <code>HTTPHandler</code>. This class will take the configuration required (a directory) on instantiation, and for each request it needs to process it&rsquo;ll receive a <code>ByteReader</code> and <code>ByteWriter</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HTTPHandler</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ResponseFactory</span> <span class="n">responseFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">HTTPHandler</span><span class="o">(</span><span class="n">String</span> <span class="n">rootDirectory</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">responseFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ResponseFactory</span><span class="o">(</span><span class="n">rootDirectory</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="n">ByteReader</span> <span class="n">reader</span><span class="o">,</span> <span class="n">ByteWriter</span> <span class="n">writer</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">requestText</span> <span class="o">=</span> <span class="n">extractRequestText</span><span class="o">(</span><span class="n">reader</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Request</span><span class="o">(</span><span class="n">requestText</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">responseFactory</span><span class="o">.</span><span class="na">makeResponse</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">sendResponse</span><span class="o">(</span><span class="n">writer</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="nf">extractRequestText</span><span class="o">(</span><span class="n">ByteReader</span> <span class="n">reader</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">String</span><span class="o">(</span><span class="n">reader</span><span class="o">.</span><span class="na">read</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">sendResponse</span><span class="o">(</span><span class="n">ByteWriter</span> <span class="n">writer</span><span class="o">,</span> <span class="n">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">writer</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The beauty in creating a class like this where the reader and writer are abstract and provided to it, is that it&rsquo;s not dependent on any particular type of Socket, or Stream, of Buffer.</p>
+
+<h3>Fake Reader and Writer for testing</h3>
+
+<p>The interface for these two types is very simple, and very, very, very easy to create Fake versions of to test.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FakeReader</span> <span class="kd">implements</span> <span class="n">ByteReader</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">byteData</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">FakeReader</span><span class="o">(</span><span class="n">String</span> <span class="n">data</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">byteData</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="na">getBytes</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">read</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">byteData</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FakeWriter</span> <span class="kd">implements</span> <span class="n">ByteWriter</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">byteData</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">bytes</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">byteData</span> <span class="o">=</span> <span class="n">bytes</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">readWrittenBytes</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">byteData</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Remove HTTP functionality from CompletionHandler</h3>
+
+<p>We can drop the <code>extractRequestText</code> and <code>sendResponse</code> methods from the <code>HTTPCompletionHandler</code> altogether, as these are now provided by the <code>HTTPHandler</code>.</p>
+
+<p>The relevant parts of the <code>HTTPCompletionHandler</code> will change as below.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HTTPCompletionHandler</span> <span class="kd">implements</span> <span class="n">CompletionHandler</span><span class="o">&lt;</span><span class="n">AsynchronousSocketChannel</span><span class="o">,</span> <span class="n">Void</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'><span class="n">HTTPHandler</span> <span class="n">handler</span><span class="o">;</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">HTTPCompletionHandler</span><span class="o">(</span><span class="n">String</span> <span class="n">rootDirectory</span><span class="o">,</span> <span class="n">AsynchronousServerSocketChannel</span> <span class="n">listeningChannel</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">responseFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ResponseFactory</span><span class="o">(</span><span class="n">rootDirectory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HTTPHandler</span><span class="o">(</span><span class="n">rootDirectory</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">listeningChannel</span> <span class="o">=</span> <span class="n">listeningChannel</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">completed</span><span class="o">(</span><span class="n">AsynchronousSocketChannel</span> <span class="n">ch</span><span class="o">,</span> <span class="n">Void</span> <span class="n">attachment</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">listeningChannel</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">ByteReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">AsynchronousSocketChannelReader</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">ByteWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">AsynchronousSocketChannelWriter</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">handler</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">reader</span><span class="o">,</span> <span class="n">writer</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">closeChannel</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Complete</h3>
+
+<p>The <code>completed</code> method now only instatiates <code>ByteReader</code> and <code>ByteWriter</code>s that can handle <code>AsynchronousSocketChannel</code>s, and asks the instantiated handler to begin processing with the reader and writers.</p>
+
+<p>The concrete <code>ByteReader</code> and <code>ByteWriter</code>s now encapsulate the logic for reading from and writing to <code>AsynchronousSocketChannel</code>s, rather than this being tied with with dealing with HTTP requests and responses.</p>
+
+<p>The <code>HTTPHandler</code> now supports any sort of interface that can conform to <code>ByteReader</code> and <code>ByteWriter</code> for receiving and sending HTTP content.</p>
+
+<p>And, all classes are small, all methods are small, and due to the interface abstractions, super simple to test.</p>
+
+<h2>End</h2>
+
+<p>Refactoring is never really over, but I hope this has been a useful example of how you could refactor a class to</p>
+
+<ul>
+<li>extract dependencies</li>
+<li>provide a simpler API</li>
+<li>ensure single-responsibility, and</li>
+<li>make functionality easier to test</li>
+</ul>
+
+
+<p>If you want to see the whole refactor as a single diff, check out <a href="https://github.com/rickerbh/http_server_java/commit/d524a31562969bb39351f7cbd0567b9db503d815">this commit</a>, or if you&rsquo;re interested in seeing each individual step, check the <a href="https://github.com/rickerbh/http_server_java/commits/feature/refactor-completion-handler">last 8 commits on this branch</a>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1182,58 +1707,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/09/27/why-ive-taken-a-full-time-job/">Why I&#8217;ve Taken a Full Time Job</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-09-27T10:08:51+10:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:08 am</span></time>
-        
-           | <a href="/2014/09/27/why-ive-taken-a-full-time-job/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2014/09/27/why-ive-taken-a-full-time-job/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve relapsed. I swore I&rsquo;d never do it again, but I have. I&rsquo;ve accepted a full time job.</p>
-
-<h2>I&rsquo;m not in it for the money</h2>
-
-<p>I&rsquo;ve been running happtic for just over 2 years now, and it&rsquo;s been quite lucrative. I&rsquo;ve managed to get a small, but reliable base of repeat/ongoing direct clients, and developed some applications that have done very well. I&rsquo;ve only taken on 2 non-direct contracts in that period, so am happy with how that&rsquo;s worked out. Overall, I&rsquo;d say the business has been successful in terms of providing my family with a relatively good income. Sure, having a stable income, holidays, superannuation etc will be great, but that&rsquo;s not why I&rsquo;ve taken the job.</p>
-
-<h2>It&rsquo;s a growth and opportunity thing</h2>
-
-<p>The main issue I&rsquo;ve been struggling with in running happtic is growth. I wanted to turn happtic into a larger business, providing technical consulting and development service with a team of 10 or so. I haven&rsquo;t been able to get enough volume of projects/clients to warrant taking on any extra staff (apart from that time I hired a graduate/entry level developer, and he called in sick on his first day and never got in touch with me again).</p>
-
-<p>I&rsquo;ve learnt that there are things I&rsquo;m good at, and things I&rsquo;m not good at. I&rsquo;m great at systems architecture, technical strategy, software design, and development. What I&rsquo;m not good at is cold business development. Once someone is at the door, the conversion rate is high, but getting them to the door is hard for me to orchestrate.</p>
-
-<p>Joining a larger organisation, with a pre-existing client base and sales team helps me meet my goals of leading a technology team, in a position of influence in an organisation. One key thing that I remember from a corporate management training course many years ago is that in companies (<em>and in real life</em>), the path to achieving a desired outcome may not be the path you expect. If you can recognize that the outcome is what you are after, there are many paths that can take you there, so you shouldn&rsquo;t be precious about how you get the outcome, as long as you get that outcome. The outcome I&rsquo;m after is to lead a technology focussed team of people, providing development, consulting, and technical strategy services, and that&rsquo;s what this job is.</p>
-
-<h2>What&rsquo;s the new job?</h2>
-
-<p>I&rsquo;ll be working as &ldquo;Director of Mobile&rdquo; for <a href="http://simplemachines.com.au">Simple Machines</a>. The job will involve setting up and leading a mobile development team, as well as an office, here in Melbourne.</p>
-
-<p>One particularly exciting thing about the job is the split between client and product work. Simple Machines have clients, as well as their (our!) own products and investments in startups, so there will be varied work which is great. I find working on a single product can feel a bit stale after a while, so having a mix of client and product work will definitely help with that, but also provide the satisifaction you get from growing and evolving a system over time.</p>
-
-<p>If you&rsquo;re looking for any mobile app development (iOS, Android, WP, any platform) or development of complex, high performance, scalable applications, get in touch <a href="mailto:hamish@simplemachines.com.au">hamish@simplemachines.com.au</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/2">&larr; Older</a>
@@ -1249,6 +1722,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/08/25/hard-to-test-code/">Refactoring Hard to Test Code</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/08/20/software-apprenticeships/">Software Apprenticeships</a>
       </li>
     
@@ -1262,10 +1739,6 @@
     
       <li class="post">
         <a href="/2016/07/20/function-arguments/">Function Arguments</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/07/05/a-small-functional-refactoring-of-some-javascript/">A Small Functional Refactoring of Javascript</a>
       </li>
     
   </ul>
