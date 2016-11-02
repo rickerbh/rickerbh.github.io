@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="I recently updated Moving Van (you should buy it now!) and published the new version in the app store late last week. It was a substantial update to &hellip;">
+  <meta name="description" content="For a new app I&rsquo;ve been working on for the past few days I wanted to a nice &ldquo;inline&rdquo; way of gathering data from the user. Typically &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2012/07/06/updating-a-uitableview-without-calling-reloaddata/">Updating a UITableView Without Calling reloadData</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-06T11:21:00+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>11:21 am</span></time>
+        
+           | <a href="/2012/07/06/updating-a-uitableview-without-calling-reloaddata/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2012/07/06/updating-a-uitableview-without-calling-reloaddata/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For a new app I&rsquo;ve been working on for the past few days I wanted to a nice &ldquo;inline&rdquo; way of gathering data from the user. Typically, if I&rsquo;ve needed to have a user put in more than a single line of text, I would have popped the user to a different screen that has a UITextView as the sole point of focus, get them to type in the data, and then have them navigate back and have the data appear within a tableview.</p>
+
+<p>For this new app, I wanted them to be able to enter large amounts of text inline within a cell of a tableview. This also means that the cell would have to dynamically grow and shrink, as the user is entering the data. The UITextView (where the user is entering the data) would need to resize itself based on the users input, as well as the UITableViewCell that contains the text view, and have the UITableView adjust on the fly to the users input.</p>
+
+<p>What I needed to happen was for the UITableView to go through the process of querying the height of each of the cells via the UITableViewDelegate&rsquo;s tableView:heightForRowAtIndexPath: method, and executing the necessary layout code to push/pull the cells around as an individual cell expands or shrinks. The other complication is that the UITextView that the user is typing in cannot lose focus (i.e., it cannot resignFirstResponder). The obvious way to get the UITableView to perform layout is to call [tableview reloadData], however, this causes the UITextView to lose focus, and the keyboard disappears. This seems to happen when creating the cells via the tableview:cellForRow:atIndexPath: method.</p>
+
+<p>Then I found a sneaky trick.</p>
+
+<p>If you execute the following code the table view will query the height for the individual cells, and lay them out, but not reload the cells, and not cause the UITextView to resignFirstResponder.</p>
+
+<pre><code>[tableview beginUpdates];
+[tableview endUpdates];
+</code></pre>
+
+<p>So, now I have cells that can grow and shrink dynamically, and not lose focus for the user as they are inputting data.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1141,61 +1187,6 @@ size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/11/27/im-on-a-list/">I&#8217;m on a List</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-11-27T13:33:00+11:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>1:33 pm</span></time>
-        
-           | <a href="/2011/11/27/im-on-a-list/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2011/11/27/im-on-a-list/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Yesterday I attended <a href="http://www.onedotzero.com/">onedotzero</a> at the British Film Institute. I was invited by <a href="http://alphalabs.cc">alphalabs.cc</a> to their launch event, in conjunction with Microsoft and Nokia.</p>
-
-<p>It was pitched as &ldquo;an experiment that merges technology and the arts&rdquo; - and this blend (to me at least) is intriguing. Since I discovered &ldquo;creative coding&rdquo; I have been fascinated by the experimental applications that fit in this space, so didn&rsquo;t want to miss out on this event. <em>I have no idea how I got an invite&hellip; I wonder if it was because I&rsquo;m a Nokia dev member, or because I have previously been active on the oF forums, or maybe I was just very lucky.</em></p>
-
-<p>Some marketing and community/dev evangelist type people talked for a bit, and they weren&rsquo;t over the top with pushing WP7.5 - which was good. There was a lot of talk about the lineage of the Metro design (that I found very interesting) - Metro is a relatively unique looking interface, and has some new ideas and interactions in it - so it was nice to hear how it was conceived.</p>
-
-<p>Then, they pulled up 3 teams of developers and designers to talk about the applications they had made over the last two weeks - essentially showcasing the WP7.5 development environment (ease of use, speed, different technologies etc). This was the most interesting part for me. The applications were</p>
-
-<ol>
-<li>a music app that collaboratively generated music across 4 synchronised phones - <a href="http://www.alphalabs.cc/project/69-vequencer">Vequencer</a></li>
-<li>a music video/game in which you take the form of a 3D shape and can shift gravity and change shapes to navigate through the levels - <a href="http://www.alphalabs.cc/project/70-redshift">Redshift</a></li>
-<li>a kaleidoscope app merging video and generative art that changes based on environmental factors such as motion and sound - <a href="http://www.alphalabs.cc/project/68-kaleidobooth">Kaleidobooth</a></li>
-</ol>
-
-
-<p>The applications themselves were quite impressive, but what impressed me more is that the team that did the second app (<a href="http://www.field.io/">Field</a>, <a href="http://teamtreehouse.com/">Treehouse</a>, and <a href="http://xna-uk.net/blogs/braindump/default.aspx">Ed</a> from the XNA Users Group) had no experience with the WP7 <del>or XNA</del> development environments previously, and managed to create a 3D game in 2 weeks, with excellent graphics and sound. Very impressed.</p>
-
-<p>And to top it all off, I got a free phone :-) Nokia Lumia 800 - it&rsquo;s actually really nice. Screen is brilliant.</p>
-
-<p>AND alphalabs are running a little competition too - app development - cash prizes. Doesn&rsquo;t appear to be on their website yet, but I recall it closes in early Jan-2012.</p>
-
-<hr />
-
-<p>(Update 20111128 - Ed from XNA User Group was also part of team two - thanks for the update Tristan!)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/4">&larr; Older</a>
@@ -1213,6 +1204,10 @@ size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/11/02/refactoring-legacy-code-gilded-rose-kata/">Refactoring Legacy Code - Gilded Rose Kata</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/08/25/hard-to-test-code/">Refactoring Hard to Test Code</a>
       </li>
     
@@ -1226,10 +1221,6 @@ size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
     
       <li class="post">
         <a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
       </li>
     
   </ul>

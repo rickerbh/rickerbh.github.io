@@ -9,7 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="I&rsquo;ve recently discovered augmented reality. After I saw my first &ldquo;virtual business card&rdquo; application I was hooked.  I&rsquo;ve been &hellip;">
+  <meta name="description" content="Today I have been hacking away on the iphonearkit source available at github and have incorporated the ARGeoViewController as an overlay over a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +87,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/09/20/iphone-camera-overlays-iphonearkit/">iPhone Camera Overlays + Iphonearkit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-09-20T16:58:33+10:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>4:58 pm</span></time>
+        
+           | <a href="/2009/09/20/iphone-camera-overlays-iphonearkit/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2009/09/20/iphone-camera-overlays-iphonearkit/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today I have been hacking away on the <a href="http://github.com/zac/iphonearkit" target="_self">iphonearkit source</a> available at github and have incorporated the ARGeoViewController as an overlay over a ImagePickerController with the camera as the source (which was introduced with iPhone OS 3.1).  Results below.</p>
+
+<p><img class="size-medium wp-image-425" title="ARGeoViewController overlay" src="http://hamishrickerby.com/wp-content/uploads/2009/09/IMG_0337-300x200.PNG" alt="ARGeoViewController as the overlay on a ImagePickerController on iPhone" width="300" height="200" /></p>
+
+
+<p>I want to tidy up some of the code before I check it back into <a href="http://github.com/rickerbh/iphonearkit" target="_blank">my clone of the source</a>, but this is a really good basis for some smart location and direction aware augmented reality apps on iPhone.  Wonder what the iphonearkit license is - it&rsquo;s unclear&hellip;</p>
+
+<p>&mdash; EDIT &mdash;</p>
+
+<p>Bugger.  It appears that <a href="http://github.com/zac/" target="_blank">zac</a> has implemented similar functionality to me already :-(  Bloody github and it&rsquo;s slow (never!) updates to fork queues and network graphs.  Oh well, maybe I won&rsquo;t bother tidying my code.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -506,44 +547,6 @@ sudo passenger-install-apache2-module
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/05/11/my-first-iphone-app-approved-finally/">My First iPhone App Approved - Finally</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2009-05-11T19:50:09+10:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>7:50 pm</span></time>
-        
-           | <a href="/2009/05/11/my-first-iphone-app-approved-finally/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2009/05/11/my-first-iphone-app-approved-finally/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Send real postcards to your family and friends with <a href="http://sendit4.me">SendIt4.me</a>, now available as an <a href="http://is.gd/yVcY">iPhone client</a>.  The application is 100% free and each postcard you send will cost $2USD.  The postcards can be sent anywhere in the world, and postage time is dependent on your international and local mail services (they are posted from the US, so if you live there you should get it quicker).</p>
-
-<p><a href="http://is.gd/yVcY">Download now!</a></p>
-
-<p><a href="http://is.gd/yVcY"><img src="http://hamishrickerby.com/wp-content/uploads/2009/05/sendit4me-208x300.png" alt="sendit4me" title="sendit4me" width="208" height="300" class="alignnone size-medium wp-image-327" /></a></p>
-
-<p><em>Sidenote: I submitted this application initially to Apple on the 18th Jan 2009.  It was finally approved tonight.  There was only 1 &ldquo;Please wait&rdquo; mail, and one &ldquo;We need some help testing it&rdquo; mail - too long in my opinion. </em></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/6">&larr; Older</a>
@@ -561,6 +564,10 @@ sudo passenger-install-apache2-module
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/11/02/refactoring-legacy-code-gilded-rose-kata/">Refactoring Legacy Code - Gilded Rose Kata</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/08/25/hard-to-test-code/">Refactoring Hard to Test Code</a>
       </li>
     
@@ -574,10 +581,6 @@ sudo passenger-install-apache2-module
     
       <li class="post">
         <a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
       </li>
     
   </ul>

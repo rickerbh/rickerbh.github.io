@@ -9,8 +9,7 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="This is what I saw on my way home from work today. I have no idea how it got up there, or even got on that angle.  This is on a roundabout.
-">
+  <meta name="description" content="I was having some issues with Memory Management and dealloc'ing objects (and subsequently crashing software) and found the following resources very &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +87,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/12/13/memory-management-in-objective-c/">Memory Management in Objective-C</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2008-12-13T08:50:32+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2008</span></span> <span class='time'>8:50 am</span></time>
+        
+           | <a href="/2008/12/13/memory-management-in-objective-c/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2008/12/13/memory-management-in-objective-c/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was having some issues with Memory Management and dealloc&#8217;ing objects (and subsequently crashing software) and found the following resources very useful:</p>
+
+<ul>
+    <li><a title="Memory Management Blog Entry on iphonedevelopertips.com" href="http://iPhoneDeveloperTips.com/objective-c/memory-management.html" target="_blank">Memory Management Blog Entry</a> (<a href="http://iphonedevelopertips.com" target="_blank">iphonedevelopertips.com</a>)</li>
+    <li><a title="Memory Management Programming Guide for Cocoa PDF" href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/MemoryMgmt.pdf" target="_blank">Memory Management Programming Guide for Cocoa</a> (<a href="http://developer.apple.com" target="_blank">developer.apple.com</a>)</li>
+</ul>
+
+
+<div>To paraphrase</div>
+
+
+<div>
+<ol>
+    <li>Never <code>dealloc</code>, use <code>release</code></li>
+    <li>If you create an object it&#8217;s your responsibility to release it</li>
+    <li>If you want to own an object or use and object returned from another object you should <code>retain</code> it</li>
+    <li>Don&#8217;t release an object you didn&#8217;t create or own</li>
+</ol>
+<div>Now I remember why I like programming languages that take memory management out of my hands. Last time I touched memory management was at university, and it was a pain then too.</div>
+<div></div>
+<div>Good thing is that Objective-C/Cocoa has those simple rules/conventions to follow.  Memory Management is not onerous on the mac/iPhone, so I can&#8217;t complain too much.</div>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -442,44 +495,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/09/02/people-as-assets/">People as Assets</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2008-09-02T19:00:48+10:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2008</span></span> <span class='time'>7:00 pm</span></time>
-        
-           | <a href="/2008/09/02/people-as-assets/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2008/09/02/people-as-assets/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I was sitting at a desk last week and overheard a man yelling down a phone to someone else that &ldquo;People aren&rsquo;t an asset.  They don&rsquo;t appear on a balance sheet&rdquo;. I agree with that view - not because of the strict accounting definition of an asset, but because of what I believe people in companies should mean (either consciously or subconsciously) when humans are called assets.</p>
-
-<p>Companies refer to humans as assets for 2 reasons.  (1) To make employees feel good and (2) because of the value they create for and contribute to the business.</p>
-
-<p>I believe humans are assets <em>to</em> companies, but they are not assets <em>of</em> the companies.  The actual asset belongs to the individual - their time - and they trade it for money.  The company gets the output of that trade, but the value of the asset remains in the power of the individual.</p>
-
-<p>They won&rsquo;t appear on a balance sheet, but the work they do with their time that they have swapped for money is the &ldquo;asset&rdquo; in the eyes of the business.  That appears on the books in the form of IP, physical goods, inventions, patents, or money received for the company on-selling that time (like the work I do).</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/8">&larr; Older</a>
@@ -497,6 +512,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/11/02/refactoring-legacy-code-gilded-rose-kata/">Refactoring Legacy Code - Gilded Rose Kata</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/08/25/hard-to-test-code/">Refactoring Hard to Test Code</a>
       </li>
     
@@ -510,10 +529,6 @@
     
       <li class="post">
         <a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
       </li>
     
   </ul>

@@ -9,7 +9,12 @@
   <meta name="author" content="Hamish Rickerby">
 
   
-  <meta name="description" content="I&rsquo;ve relapsed. I swore I&rsquo;d never do it again, but I have. I&rsquo;ve accepted a full time job. I&rsquo;m not in it for the money I&rsquo; &hellip;">
+  <meta name="description" content="It&rsquo;s been ages. Completed that 1000km run goal
+Sold a house
+Wife got a new job
+Sold another house
+Moved to Sydney
+Getting there with Haskell ( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +92,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/05/17/brief-update/">Brief Update</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-05-17T21:52:33+10:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>9:52 pm</span></time>
+        
+           | <a href="/2016/05/17/brief-update/#disqus_thread"
+             data-disqus-identifier="https://hamishrickerby.com/2016/05/17/brief-update/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It&rsquo;s been ages.</p>
+
+<ul>
+<li>Completed that 1000km run goal</li>
+<li>Sold a house</li>
+<li>Wife got a new job</li>
+<li>Sold another house</li>
+<li>Moved to Sydney</li>
+<li>Getting there with Haskell (thanks to <a href="http://haskellbook.com">Haskell Programming from First Principles</a> - buy it - it&rsquo;s great)</li>
+<li>Bought a house</li>
+<li>Feeling in a really good place professionally</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -592,52 +641,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2012/07/06/updating-a-uitableview-without-calling-reloaddata/">Updating a UITableView Without Calling reloadData</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-07-06T11:21:00+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>11:21 am</span></time>
-        
-           | <a href="/2012/07/06/updating-a-uitableview-without-calling-reloaddata/#disqus_thread"
-             data-disqus-identifier="https://hamishrickerby.com/2012/07/06/updating-a-uitableview-without-calling-reloaddata/">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>For a new app I&rsquo;ve been working on for the past few days I wanted to a nice &ldquo;inline&rdquo; way of gathering data from the user. Typically, if I&rsquo;ve needed to have a user put in more than a single line of text, I would have popped the user to a different screen that has a UITextView as the sole point of focus, get them to type in the data, and then have them navigate back and have the data appear within a tableview.</p>
-
-<p>For this new app, I wanted them to be able to enter large amounts of text inline within a cell of a tableview. This also means that the cell would have to dynamically grow and shrink, as the user is entering the data. The UITextView (where the user is entering the data) would need to resize itself based on the users input, as well as the UITableViewCell that contains the text view, and have the UITableView adjust on the fly to the users input.</p>
-
-<p>What I needed to happen was for the UITableView to go through the process of querying the height of each of the cells via the UITableViewDelegate&rsquo;s tableView:heightForRowAtIndexPath: method, and executing the necessary layout code to push/pull the cells around as an individual cell expands or shrinks. The other complication is that the UITextView that the user is typing in cannot lose focus (i.e., it cannot resignFirstResponder). The obvious way to get the UITableView to perform layout is to call [tableview reloadData], however, this causes the UITextView to lose focus, and the keyboard disappears. This seems to happen when creating the cells via the tableview:cellForRow:atIndexPath: method.</p>
-
-<p>Then I found a sneaky trick.</p>
-
-<p>If you execute the following code the table view will query the height for the individual cells, and lay them out, but not reload the cells, and not cause the UITextView to resignFirstResponder.</p>
-
-<pre><code>[tableview beginUpdates];
-[tableview endUpdates];
-</code></pre>
-
-<p>So, now I have cells that can grow and shrink dynamically, and not lose focus for the user as they are inputting data.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/3">&larr; Older</a>
@@ -655,6 +658,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/11/02/refactoring-legacy-code-gilded-rose-kata/">Refactoring Legacy Code - Gilded Rose Kata</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/08/25/hard-to-test-code/">Refactoring Hard to Test Code</a>
       </li>
     
@@ -668,10 +675,6 @@
     
       <li class="post">
         <a href="/2016/07/25/wrapping-3rd-party-code/">Wrapping 3rd Party Code</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/07/20/function-arguments/">Function Arguments</a>
       </li>
     
   </ul>
