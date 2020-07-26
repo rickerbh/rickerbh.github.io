@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Back to Basics - Editors&quot;</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="My boss bought me a copy of the seminal classic The Pragmatic Programmer. It&#39;s full of sensible advice for both beginners and experienced software professionals.I have lots of thoughts about the contents of this book but what I&#39;d like to cover is usage of text editors, and specifically becoming proficient with a editor that&#39;s typically universally available. I can think of 3 of these for UNIX systems. vi, emacs, and nano.">
+
+<meta property="og:description" content="My boss bought me a copy of the seminal classic The Pragmatic Programmer. It&#39;s full of sensible advice for both beginners and experienced software professionals.I have lots of thoughts about the contents of this book but what I&#39;d like to cover is usage of text editors, and specifically becoming proficient with a editor that&#39;s typically universally available. I can think of 3 of these for UNIX systems. vi, emacs, and nano.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2016-06-27-back-to-basics-editors/" />
+<meta property="og:title" content="&quot;Back to Basics - Editors&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>June 27, 2016</strong>
+        
+    </div>
+    <h1>&quot;Back to Basics - Editors&quot;</h1>
+</div>
+<div>
+    
+    <p>My boss bought me a copy of the seminal classic <a href="http://www.bookdepository.com/Pragmatic-Programmer-Andrew-Hunt/9780201616224?a_aid=rickerbh">The Pragmatic Programmer</a>. It's full of sensible advice for both beginners and experienced software professionals.</p><p>I have lots of thoughts about the contents of this book but what I'd like to cover is usage of text editors, and specifically becoming proficient with a editor that's typically universally available. I can think of 3 of these for UNIX systems. <code>vi</code>, <code>emacs</code>, and <code>nano</code>.</p><p>When I was at university I used emacs for all CS course text editing. In my first job, the UNIX servers we had didn't have emacs installed. I wanted to install emacs, but the application vendor didn't allow us to, as they had a support contract and hadn't tested their application with emacs on the box, so no-dice. vi was it for a few years. Then, I just a stopped using these types of editors for about 11 years. The advent of IDEs (Eclipse, Xcode) meant I didn't have to use these "basic" editors about had a lot of point-and-click, plugins, refactoring etc functionality available.</p><p>Until now.</p><p>The Pragmatic Programmer has convinced me to relearn basic (and powerful) UNIX tools, and I'm starting with emacs. In my job (at the moment) I typically do about 50-80% dev, the rest other stuff (sales, management, architecture, analysis). So I spend a fair amount of time in development environments. I'm not a big shortcut key user, and this needs to change - it's just wasting time moving that mouse around to get to menu items and select text.</p><p>So far, I've started with base emacs installations, Haskell packages, git packages, Clojure packages, some convenience packages, and I'm about to start with some JavaScript packages. Also getting used to the keystrokes again is a bit tricky, but I'm getting there. To help out, I've moved other IDEs I use (like WebStorm) to use emacs bindings as well.</p><p>I'm enjoying the ability to use the same environment for text + 3 languages + code control. Super powerful.</p><p>If you're interested in my setup, I have an emacs file in my <a href="https://github.com/rickerbh/dotfiles">dotfiles git repo</a>. Check it out (ho ho ho).</p><p>If you have any tips for emacs please let me know in the comments or on Twitter - <a href="http://twitter.com/rickerbh">@rickerbh</a></p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2016-06-29-meteor-heroku-and-bcrypt/">&laquo; &quot;Meteor, Heroku, and bcrypt&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2016-06-23-reading-not-reading/">&quot;Reading not Reading&quot; &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2016-06-27-back-to-basics-editors/";
+            this.page.identifier = "&quot;Back to Basics - Editors&quot;";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

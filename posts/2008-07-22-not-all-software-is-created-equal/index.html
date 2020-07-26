@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Not all software is created equal</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="The types of companies I (used to) work for and (now) consult to,  love release management.  At least their IT people do.For those who are not in the know, check out the following 2 resources for a bit of background">
+
+<meta property="og:description" content="The types of companies I (used to) work for and (now) consult to,  love release management.  At least their IT people do.For those who are not in the know, check out the following 2 resources for a bit of background">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2008-07-22-not-all-software-is-created-equal/" />
+<meta property="og:title" content="Not all software is created equal" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>July 22, 2008</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Not all software is created equal</h1>
+</div>
+<div>
+    
+    <p>The types of companies I (used to) work for and (now) consult to,  love release management.  At least their IT people do.</p><p>For those who are not in the know, check out the following 2 resources for a bit of background</p><ul><li><a title="http://en.wikipedia.org/wiki/Software_release_life_cycle" href="http://en.wikipedia.org/wiki/Software_release_life_cycle" target="_blank">http://en.wikipedia.org/wiki/Software_release_life_cycle</a></li><li> <a title="http://en.wikipedia.org/wiki/Release_Management" href="http://en.wikipedia.org/wiki/Release_Management" target="_blank">http://en.wikipedia.org/wiki/Release_Management</a></li></ul>
+When companies often start out, they focus on getting IT systems enhanced as soon as possible.  A simplified, but common cycle is design (maybe), build (definitely), test (should) and deploy (definitely).  Steps in this process may be skipped when an organisation is small, and the side-effects of getting something wrong in build or deploy can be handled on-the-fly.  As companies mature and grow (in both size, application complexity, and IT landscape complexity), they often wish to have more control over the processes that manages software design, development and deployment.  As enhancements start to involve distributed application development (eg, introducing a new feature on a customer care system, that requires a service on a billing system, and have that exposed by an integration bus, and that integrated with from a web or <a title="IVR" href="http://en.wikipedia.org/wiki/Interactive_voice_response" target="_blank">IVR</a> channel), the process and dependencies involved with deploying that application become more complex.
+<p>To ensure that the cross system (and often) cross department, company or country design, development, test and deploy process, companies introduce Release Management Processes.  Different application development projects are collected together, and managed from a central point - who is unimaginatively known as the Release Manager.  The release manager usually has responsibility for delivery and deployment of all the changes requried within a system, and across systems for a particular instance of deployment activities (that's a wordy way of saying that a whole load of stuff gets developed, tested, and then deployed together).</p><p>So, to recap - early days - applications designed, developed, tested and deployed whenever people want.  More mature business - applications designed, developed, tested and deployed under a managed process, with defined implementation dates.  In principle, that sounds fine.  In fact, it sounds like a sensible way to manage development and deployment.  Software can be complex, and complexity grows as you have more systems involved, different parties, different skills, and in some extreme cases, different countries and cultures.</p><p>Business users (ie, the people paying for the development, and specifying the functionality) rarely like release management.  It's costly.  It's slow.  It's inflexible.  And this is more true if the business users know a little bit about software development, and <em>especially </em>if it involves the web.</p><p>The web is known for being an inherently agile environment.  Web applications are usually self-contained and loosely coupled, and can be easily and quickly altered.  There are other types of applications that exist in enterprises that do not have the same inherent agility.  Customer Management Systems, Billing Systems, Banking Systems, ERP systems.  All of these systems usually have long lead time on changes, strict testing requirements, are have historically been designed and developed in a different (monolithic) manner to web systems.   The requirements on them are often different too - they often aren't about exposing new "services" to the public, but more about internal services, bug fixes, operational fixes, or enhancements to allow new products to be offered.  However, they don't interface with the external customer and often aren't driven by the same requirement for agility - it's often easier in business (for your brand, and bottom line) to deploy something that is a bit crappy internally (manual processes, double-keying data etc) if you can get the message out to the customer.</p><p>Business users want the ability to alter the messages and functions that are delivered to their customers on their terms - when they want - not bound to some (in their eyes) arbitrary release schedule.  They don't understand why their functionality must be deployed with another, completely unrelated, system or process.  They want to get their product to market.</p><p>I feel strongly that certain types of systems fall nicely in a "release managed" category, and others fall into a "system owner" managed category.  (sidenote: <em>I feel that for a platform that supports as much functionality as "the web" that often The System is too coarse a unit for splitting - it could be taken down to business process, journey, or user type</em>).  For me, I believe that systems that have a requirement to be highly agile, provide a high level of flexibility (configuration/scripting, as opposed to packaging and release of compiled code), and support essentially decoupled functions and flows, should not necessarily form part of conventional release management processes.  The "release early, release often" convention can be followed on these systems.  Obviously, a business must be made aware of the risks with this approach (e.g., more defects are likely to arise), and they should also be made aware of some of the sensible processes and changes in methodology to make this approach work (e.g., agile development methodologies).  In my mind, integration and web implementations fall into this category.</p><p>Integration systems enhance the ability for each system to remain decoupled from it's peers - and this in turn means the systems are more modular, and should be able to support development and implementation (outside of a monster sized release), even when all of the required functions are not implemented.  Integration systems can provide stubs that indicate a service is unavailable, and when each system is finally ready, then the processes can be turned on in each.  Integration systems are inherently cross application, yet system independent at once.  This paradoxical view on integration is what makes them great candidates for exclusion from release cycles - they are self contained, but support both the situations where external systems are present, as well as when they aren't.  This level of resilience and flexibility means that they are a core enabler to allow other systems to deploy functions, and still work when the up/downstream systems they are reliant on do not exist.</p><p>I have a couple of recommendations if your organization is considering looking to migrate to a release management style approach for application development and deployment:</p><ol><li>Applying release management only to systems where it makes sense to do so, will allow a business to maintain the necessary rigour required for financial, legal, regulatory, professional and moral obligations.  Release management should not be a one-size-fits-all approach.</li><li>Shielding systems with integration and process configuration flexibility (on/off switch for process/service enabling) will reduce the dependency of each system on it's peers to be launched - and this in turn increases the flexibility to make changes to an individual system without them having a downstream impact, and increases the ability to more quickly make changes.</li><li>Applying a finer-grained design, build, test and deploy scope (i.e., not cross-system) to customer facing systems will give businesses the agility they desire to get their messages to market.  This in turn will allow businesses to try more products and services in the market, and respond to competition in a more timely manner.</li></ol>
+I believe following an approach that ensures that your systems are shielded from changes in each other, and promotes flexibility and agility in the customer facing systems is key to delivering true value to the business in terms of both responsiveness, and reliability.
+
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2008-07-22-wordpress-for-iphone/">&laquo; Wordpress for iphone</a>
+        
+        
+        <a class="right button" href="/posts/2008-06-14-redesigned-glimmer-design/">Redesigned Glimmer Design &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2008-07-22-not-all-software-is-created-equal/";
+            this.page.identifier = "Not all software is created equal";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

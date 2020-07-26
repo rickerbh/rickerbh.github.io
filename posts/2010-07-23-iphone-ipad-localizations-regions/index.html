@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &#39;iPhone &amp; iPad (iOS) Localizations and Regions &#39;</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="Recently I have been doing some localizations of an iOS app from English (US) to English (UK). The iPhone development guides from Apple describe how to support multiple languages (such as English, German, Japanese), but fail to describe how to support multiple variants of a single language. By this I mean support support for US English, English, NZ English, AU English. The word I needed to regionalize was Behavior (or Behaviour, depending where you come from).In the Apple Developer Library, it explicitly states that for MacOS applications take both the Language and Regional preferences of the user into account, but only look at the preferred language on iOS - Support for Internationalization.  This means that a single variant per language is supported.">
+
+<meta property="og:description" content="Recently I have been doing some localizations of an iOS app from English (US) to English (UK). The iPhone development guides from Apple describe how to support multiple languages (such as English, German, Japanese), but fail to describe how to support multiple variants of a single language. By this I mean support support for US English, English, NZ English, AU English. The word I needed to regionalize was Behavior (or Behaviour, depending where you come from).In the Apple Developer Library, it explicitly states that for MacOS applications take both the Language and Regional preferences of the user into account, but only look at the preferred language on iOS - Support for Internationalization.  This means that a single variant per language is supported.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2010-07-23-iphone-ipad-localizations-regions/" />
+<meta property="og:title" content="&#39;iPhone &amp; iPad (iOS) Localizations and Regions &#39;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>July 23, 2010</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>&#39;iPhone &amp; iPad (iOS) Localizations and Regions &#39;</h1>
+</div>
+<div>
+    
+    <p>Recently I have been doing some localizations of an iOS app from English (US) to English (UK). The iPhone development guides from Apple describe how to support multiple languages (such as English, German, Japanese), but fail to describe how to support multiple variants of a single language. By this I mean support support for US English, English, NZ English, AU English. The word I needed to regionalize was Behavior (or Behaviour, depending where you come from).</p><p>In the Apple Developer Library, it explicitly states that for MacOS applications take both the Language and Regional preferences of the user into account, but only look at the preferred <em>language</em> on iOS - <a href="http://developer.apple.com/iphone/library/documentation/MacOSX/Conceptual/BPInternational/Articles/InternatSupport.html">Support for Internationalization</a>.  This means that a single variant <em>per language</em> is supported.</p><p>However, these is a way around this. I'm not sure if this is a <em>good</em> thing to do, but it works for me and I haven't noticed any ill side effects yet.</p><p>To support both US English and British English in your iOS application, create 2x Localization.strings files just as you would for multiple language. Put the US English translation file Localization.strings in a directory in your iPhone app called English.lproj (Apple defaults) and the British English translation in a directory named en_GB.lproj (just in case they decide to support regions in the future).</p><p>Then, you'll need to create some code to manually set the preferred localization. In your main.m file (yup, main.m is being edited) alter it so it performs some logic similar to below.</p><pre><code class="objective-c">int main(int argc, char *argv[]) {
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0];
+	NSString *locale = [[NSLocale currentLocale] objectForKey: NSLocaleCountryCode];
+	if ([language isEqualToString:@"en"] &amp;&amp; [locale isEqualToString:@"GB"]) {
+		[[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithObjects:@"en_GB", @"en", nil] forKey:@"AppleLanguages"];
+	}
+	int retVal = UIApplicationMain(argc, argv, nil, nil);
+	[pool release];
+	return retVal;
+}
+</code></pre><p>When the line</p><pre><code class="objective-c">int retVal = UIApplicationMain(argc, argv, nil, nil);
+</code></pre><p>gets executed, it seems to set up all the Localization bundles before calling the application:didFinishLaunchingWithOptions method on your app delegate, so putting Localization code in the app delegate is too late. So, what the code above does is retrieve the users current language and region, and compares those against pre-determined values - en for the language and gb for the region. If these match, then I force a new setting in the NSUserDefaults to overwrite the users preferred language. Then, when the UIApplicationManager function gets called, it appears to retrieve the users preferred language setting, and look up the Localization for that - which in my case I've forced to be en_GB.</p><p>One thing you need to be careful about is persistence of this NSUserDefault setting.  It is saved once it's set, and persists through multiple application executions. To get around this (lets say the user changes their region back to US), you need to remove the setting after the bundle initialization has taken place.  In you app delegates application:didFinishLaunchingWithOptions method, just execute the following code.</p><pre><code class="objective-c">[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AppleLanguages"];
+</code></pre><p>This wipes out the NSUserDefault setting that the app made in the main.m file.</p><p>If anyone knows of issues with this approach (apart from being a dirty hack), or faults with my code please let me know in the comments below. I wish Apple supported different regions per language natively in iOS but they don't. This is the only way I've found to do this, and continue to use localization functions such as NSLocalizedString.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2011-10-22-big-changes/">&laquo; &quot;Big Changes&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2010-03-04-moving-van/">Moving Van &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2010-07-23-iphone-ipad-localizations-regions/";
+            this.page.identifier = "&#39;iPhone &amp; iPad (iOS) Localizations and Regions &#39;";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Lonely, lonely classes</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="I just had my most pleasant experience with Singletons ever.  I had a little problem I was trying to solve in ruby, and I contacted a friend of mine who is quite a good developer.  He suggested I should be looking at global variables, to static (class) variables, or singletons.  I gave globals a go, and they didn&#39;t give me the love I expected, so I said &quot;bye bye&quot; to them - probably never to be used again.  I next tried Singletons.Ruby defines a Singleton module.  This is mixin&#39;d with your code thusly:">
+
+<meta property="og:description" content="I just had my most pleasant experience with Singletons ever.  I had a little problem I was trying to solve in ruby, and I contacted a friend of mine who is quite a good developer.  He suggested I should be looking at global variables, to static (class) variables, or singletons.  I gave globals a go, and they didn&#39;t give me the love I expected, so I said &quot;bye bye&quot; to them - probably never to be used again.  I next tried Singletons.Ruby defines a Singleton module.  This is mixin&#39;d with your code thusly:">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2007-01-12-lonely-lonely-classes/" />
+<meta property="og:title" content="Lonely, lonely classes" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>January 12, 2007</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Lonely, lonely classes</h1>
+</div>
+<div>
+    
+    <p>I just had my most pleasant experience with Singletons ever.  I had a little problem I was trying to solve in ruby, and I contacted a friend of mine who is quite a good developer.  He suggested I should be looking at global variables, to static (class) variables, or singletons.  I gave globals a go, and they didn't give me the love I expected, so I said "bye bye" to them - probably never to be used again.  I next tried Singletons.</p><p>Ruby defines a Singleton module.  This is mixin'd with your code thusly:</p><pre><code class="ruby">class Lonely
+include Singleton
+end
+</code></pre><p>Easy peasy.</p><p>That, creates a singleton of Lonely for you.  The include modifies the signatures of the new and allocate Class methods (Lonely.new and Lonely.allocate) to be private, and creates (or modifies) some other methods to provide some loveliness (gory details to be found at <a href="http://www.ruby-doc.org/stdlib/libdoc/singleton/rdoc/index.html">http://www.ruby-doc.org/stdlib/libdoc/singleton/rdoc/index.html</a>).</p><p>Basically, then all you need to do is call the instance method of the class you have created.</p><pre><code class="ruby">m = Lonely.instance
+</code></pre><p>And then you can use m as you like.  You can create more</p><pre><code class="ruby">m = Lonely.instance
+n = Lonely.instance
+</code></pre><p>And m and n refer to the same instance.  Nice Singleton.  No need for me to check out class variables.  I think my Singleton will be more portable.  BTW - Don't try to .new your class - you'll get a NoMethodError thrown as the new method has been made private by the mixin.</p><p>Ruby rocks.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2007-01-24-mojax/">&laquo; mojax</a>
+        
+        
+        <a class="right button" href="/posts/2007-01-10-taking-the-vietnam-out-of-iraq/">Taking the Vietnam out of Iraq &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2007-01-12-lonely-lonely-classes/";
+            this.page.identifier = "Lonely, lonely classes";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

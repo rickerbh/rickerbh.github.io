@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Wrapping 3rd Party Code&quot;</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="I&#39;ve been integrating a system I&#39;ve been developing with a third party service for data synchronisation. We&#39;re looking to synchronise tasks out with systems like Pivotal Tracker, Jira, Trello etc, but were unsure which of those systems we would actually use. I&#39;m currently reading Clean Code, and there&#39;s a really interesting and relevant chapter on &quot;Boundaries&quot;. It covers a similar scenario to what we were facing: Using Third-Party Code.Isolation">
+
+<meta property="og:description" content="I&#39;ve been integrating a system I&#39;ve been developing with a third party service for data synchronisation. We&#39;re looking to synchronise tasks out with systems like Pivotal Tracker, Jira, Trello etc, but were unsure which of those systems we would actually use. I&#39;m currently reading Clean Code, and there&#39;s a really interesting and relevant chapter on &quot;Boundaries&quot;. It covers a similar scenario to what we were facing: Using Third-Party Code.Isolation">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2016-07-25-wrapping-3rd-party-code/" />
+<meta property="og:title" content="&quot;Wrapping 3rd Party Code&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>July 25, 2016</strong>
+        
+    </div>
+    <h1>&quot;Wrapping 3rd Party Code&quot;</h1>
+</div>
+<div>
+    
+    <p>I've been integrating a system I've been developing with a third party service for data synchronisation. We're looking to synchronise tasks out with systems like Pivotal Tracker, Jira, Trello etc, but were unsure which of those systems we would actually use. I'm currently <a href="https://hamishrickerby.com/books/">reading</a> <a href="https://www.bookdepository.com/Clean-Code-Robert-C-Martin/9780132350884?a_aid=rickerbh">Clean Code</a>, and there's a really interesting and relevant chapter on "Boundaries". It covers a similar scenario to what we were facing: <em>Using Third-Party Code</em>.</p><h2 id="isolation">Isolation</h2><p>Generally, you should wrap any third party code that you're dependent on with your own interfaces for that code. That way you get to define <em>how</em> your main application logic interfaces with the third party code, rather than having to have to bend your application to conform to a third party library, API, or applications structure. Isolating the complexities of dealing with third parties within an application to a particular class or module behind an interface that you control also allows you to:</p><ol><li>deal with changes to that third party (e.g., API upgrade)</li><li>swap out that integration with another one</li></ol><p>If we were building direct integration (with a project management tool like Jira, Pivotal Tracker, Trello) into our application, the models and interfaces of the third party system would leak into our core system.</p><p><em>Our application has support for Projects, Stories and Epics. Pivotal Tracker models these entities as well, but the relationship between Stories and Epics is based on a labelId assigned to the Epic at Pivotal. To attach a story to an epic we actually attach it to the label of the epic. Pivotal Tracker also handles story creation with labels/epics differently from story updates with labels/epics. Epics were introduced with v5 of the Tracker API. Previously, they didn't exist as a concept.</em></p><pre><code class="javascript">const saveStoryCallback = (response, error) =&gt; {
+  if error {
+    handleError(error)
+    return
+  }
+  
+  const story = response.data
+  // Perform other post-save actions (eg, update aggregated or count fields)
+  ...
+  
+  // Sync with Pivotal
+  let labelId = null
+  if story.epic {
+    const epicModel = story.epic.syncData
+    if epicModel {
+      labelId = pivotal.getEpic(epicModel.id).labelId
+    } else {
+      data = pivotal.createEpic(story.epic.pivotalModel)
+      story.epic.syncData = data
+      labelId = data.labelId
+    }
+  }
+  
+  const storyModel = story.syncData
+  if storyModel &amp;&amp; pivotal.getStory(storyModel.id) {
+    pivotal.updateStory(story.pivotalModel)
+  } else {
+    story.syncData = pivotal.createStory(story.pivotalModel)
+  }
+
+  if (labelId) {
+    pivotal.attachLabel(story, labelId)
+  }
+}
+</code></pre><p>Our save story callback will need to deal with the intricacies of the external system/library. If we wanted to swap this out for another tool (e.g. Trello) we'd need to completely rewrite the logic in our save story callback, which is intermingled with core application logic. If we wanted to model the same synchronisation process with Trello, the logic would be different because the external model is different. We'd model epics as a Board, and stories as a Card.</p><p>To avoid changes to our core application logic, we need to isolate the synchronisation logic behind an interface that represents entities in the language of our application, not the third party application.</p><pre><code class="javascript">const getStory = (story) =&gt; { ... }
+const syncStory = (story) =&gt; { ... }
+const deleteStory = (story) =&gt; { ... }
+const syncProject = (project) =&gt; { ... }
+const deleteProject = (project) =&gt; { ... }
+const syncEpic = (epic) =&gt; { ... }
+const deleteEpic = (epic) =&gt; { ... }
+</code></pre><p>Then, we need to implement an <a href="https://en.wikipedia.org/wiki/Adapter_pattern">adapter</a> to interface with one of the third parties. Lets say we're interacting with Pivotal again:</p><pre><code class="javascript">import { syncEpic, syncStory } from "sync-adapter"
+
+const saveStoryCallback = (response, error) =&gt; {
+  if error {
+    handleError(error)
+    return
+  }
+  
+  const story = response.data
+  // Perform other post-save actions (eg, update aggregated or count fields)
+  ...
+  
+  syncEpic(story.epic)
+  syncStory(story)
+}
+</code></pre><p>Then in our sync-module:</p><pre><code class="javascript">const syncEpic = (epic) =&gt; {
+  if epic {
+    const epicModel = epic.syncData
+    if epicModel {
+      labelId = pivotal.getEpic(epicModel.id).labelId
+    } else {
+      data = pivotal.createEpic(epic.pivotalModel)
+      epic.syncData = data
+    }
+  }
+}
+</code></pre><p>If we need to swap out Pivotal for Trello, we can simply replace the contents of the <code>sync-adapter</code> with the implementation for the different provider. The core application callback won't have to change if the interface is isolated in this way.</p><h2 id="multiple-third-parties">Multiple Third Parties</h2><p>Let's say in the future we have a requirement to support more than one external system. The existing isolation model between the callback and the sync-module still applies. We'd just need to inject another adapter in the middle of this flow.</p><ol><li>Rename <code>sync-adapter</code> to represent the specific external system it relates to: <code>pivotal-adapter</code>.</li><li>Implement the appropriate adapter for the new external system: <code>trello-adapter</code></li><li>Implement a new <code>sync-adapter</code> that will interface with both of these modules.</li></ol><pre><code class="javascript">import { syncEpic as syncPivotalEpic } from 'pivotal-adapter'
+import { syncEpic as syncTrelloEpic } from 'trello-adapter'
+
+const syncEpic = (epic) =&gt; {
+  const syncData = epic.syncData
+  if syncData.service == 'pivotal' {
+    syncPivotalEpic(epic)
+  } else if syncData.service == 'trello' {
+    syncTrelloEpic(epic)
+  }
+}
+</code></pre><p>Addition of more third parties can take place in the future without further changes to the core application logic. All the changes are pushed out to the boundaries of the sytems.</p><h2 id="upgrades-and-changes">Upgrades and Changes</h2><p>If a third party changes their interface, or even their domain model, all changes will be isolated to the integration module alone. Your core application flow should be unaffected by the change, as the interface it interacts with should remain stable.</p><p><em>When Pivotal changed their API from v3 to v5, they introduced the concept of the Epic. Previously our application would have had epics internally, but the adapter would have converted epics to labels to support Pivotals model. With changes for their v5 API, Epics become a first class citizen as far as they are concerned and we'd update the adapter, but our application core application would not need to change.</em></p><h2 id="wrap-up">Wrap Up</h2><p>Isolating third party code via adapters provides benefits in terms of abstracting logic and complexity out of your main application flow. Your application will communicate with the third parties in a consistent manner via the interface, and not be forced to change if a change appears. It ensures that any future conceptual, model, flow/logic and interface changes in the third party only impact the code that deals with that third party. It gives you the ability to swap out your external dependencies with little to no impact on your core applications, as well inject new functionality.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2016-08-04-interface-segregation/">&laquo; &quot;Interface Segregation&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2016-07-20-function-arguments/">&quot;Function Arguments&quot; &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2016-07-25-wrapping-3rd-party-code/";
+            this.page.identifier = "&quot;Wrapping 3rd Party Code&quot;";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

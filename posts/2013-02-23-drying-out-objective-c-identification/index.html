@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;DRYing out Objective-C - Identification&quot;</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="I have a large objective-c codebase I&#39;ve been working on with a client for over a year now. The application started off as a prototype, and transitioned into a demo client, and is currently undergoing modifications for security/penetration testing and commercialization. Initially for the protoype and demo, the objective was to get a working application as quickly as possible - speed of initial development was the key. With the current change in focus to a more productized codebase, and improving maintainability as part of that, I decided I&#39;d actively go hunting for areas in the application that can be tidied up, and particularly, looking for duplicate segments of code and eliminating them where feasible.DRY - or Don&#39;t Repeat Yourself - is (according to Wikipedia) a principle is stated as &quot;Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.&quot; ... When the DRY principle is applied successfully, a modification of any single element of a system does not require a change in other logically unrelated elements. Additionally, elements that are logically related all change predictably and uniformly, and are thus kept in sync.">
+
+<meta property="og:description" content="I have a large objective-c codebase I&#39;ve been working on with a client for over a year now. The application started off as a prototype, and transitioned into a demo client, and is currently undergoing modifications for security/penetration testing and commercialization. Initially for the protoype and demo, the objective was to get a working application as quickly as possible - speed of initial development was the key. With the current change in focus to a more productized codebase, and improving maintainability as part of that, I decided I&#39;d actively go hunting for areas in the application that can be tidied up, and particularly, looking for duplicate segments of code and eliminating them where feasible.DRY - or Don&#39;t Repeat Yourself - is (according to Wikipedia) a principle is stated as &quot;Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.&quot; ... When the DRY principle is applied successfully, a modification of any single element of a system does not require a change in other logically unrelated elements. Additionally, elements that are logically related all change predictably and uniformly, and are thus kept in sync.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2013-02-23-drying-out-objective-c-identification/" />
+<meta property="og:title" content="&quot;DRYing out Objective-C - Identification&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>February 23, 2013</strong>
+        
+    </div>
+    <h1>&quot;DRYing out Objective-C - Identification&quot;</h1>
+</div>
+<div>
+    
+    <p>I have a large objective-c codebase I've been working on with a client for over a year now. The application started off as a prototype, and transitioned into a demo client, and is currently undergoing modifications for security/penetration testing and commercialization. Initially for the protoype and demo, the objective was to get a working application as quickly as possible - speed of initial development was the key. With the current change in focus to a more productized codebase, and improving maintainability as part of that, I decided I'd actively go hunting for areas in the application that can be tidied up, and particularly, looking for duplicate segments of code and eliminating them where feasible.</p><p><a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY - or Don't Repeat Yourself</a> - is (according to Wikipedia) a <em>principle is stated as "Every piece of knowledge must have a single, unambiguous, authoritative representation within a system."</em> ... <em>When the DRY principle is applied successfully, a modification of any single element of a system does not require a change in other logically unrelated elements. Additionally, elements that are logically related all change predictably and uniformly, and are thus kept in sync.</em></p><p>One big problem with a larger code base that has been developed over a long period of time is that you may not know where the duplicate code actually is. You know it's there, you're just not sure where.</p><h2 id="finding-duplicate-code">Finding Duplicate Code</h2><p>What I wanted for DRYing up the code base was for duplicate chunks of code to be identified for me.</p><p>Searching out there I stumbled across a project called <a href="http://www.harukizaemon.com/simian/">Simian</a> - it's a java based tool for identifing duplicate code in a set of different programming languages - one being Objective-C. Simian supports output in a number of different formats - plain text being the default, but also supports an XML based output. The project is available on a 15 day evaluation period, and then should be paid for commercial or enterprise use. A Build Server license costs $499 US.</p><p>Simian can be run against a codebase just by feeding it include/exclude directory and file patterns.</p><pre><code>java -jar simian-2.3.33.jar -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre><p>You can also change the format of the output</p><pre><code>java -jar simian-2.3.33.jar -formatter=xml -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre><p>And even output to a file</p><pre><code>java -jar simian-2.3.33.jar -formatter=xml:simian.xml -excludes=\"External Libraries\" **/*.m **/*.h
+</code></pre><h2 id="integration-with-jenkins">Integration with Jenkins</h2><p>I've previously written here about setting up and using Jenkins as a build/CI system with Objective-C/iOS projects, and I really wanted to integrate this duplicate code reporting as part of my standard build process, along with my unit and application test reports.</p><p>To get Simian reports integrated with Jenkins there is a Jenkins extension available called the <a href="https://wiki.jenkins-ci.org/display/JENKINS/DRY+Plugin">DRY Plugin</a>. Just navigate to your Jenkins instance and click... Manage Jenkins -&gt; Manage Plugins -&gt; Available and type Duplicate in the filter box. The plugin is called "Duplicate Code Scanner Plug-in". Install it.</p><p>To get the Simian process running is really simple. I added a new project that I could trigger after my unit tests have run, called "Code Analysis". This project has a very small number of steps.</p><ol><li>Pull the source from your code repo</li><li>Set a Build Trigger for the project to start after your unit test project has completed. <em>This step isn't necessary, but you need some sort of build trigger. I like mine to work after unit tests as then I know the codebase is in a good state.</em></li><li>Add an Execute Shell task. The task should look something like below</li></ol><p>{% codeblock %}
+cd "<Path to="to" your="your" jenkins="jenkins" project="project">/workspace"
+git submodule update --recursive --init
+echo "#!/bin/bash" &gt; simian.sh
+echo "java -jar <Path to="to" your="your" simiar="simiar" jar="jar">/simian-2.3.33.jar -balanceSquareBrackets=true -formatter=xml:simian.xml -excludes="External Libraries" **/<em>.m **/</em>.h" &gt;&gt; simian.sh
+echo "exit 0" &gt;&gt; simian.sh
+chmod u+x simian.sh
+./simian.sh
+rm simian.sh
+{% endcodeblock %}</Path></Path></p><p>What the above task does is change directory to the correct jenkins workspace, ensure all submodules are updated (if you don't use submodules, you probably won't want this), then create a shell script that runs Simian and exits with a 0 return code, sets the script to be executable, runs the script, then cleans up after itself. The reason why the build task needs to create a shell script to run Simian is because the return code from Java/Simian seems to be interpreted by Jenkins as non-0 i.e. a build failure. You don't want that.</p><p>The <code>-balanceSquareBrackets=true</code> flag to Simian ensures that code that is split across multiple lines inside square brackets is treated as a single unit. It might be a good idea to use the <code>-balanceParentheses=true</code> flag as well to help matching on things like <code>if</code> statements.</p><p>Then it's just a matter of configuring the reporting. If you've installed the DRY plugin correctly, you should be able to add a Post Build Action of "Publish duplicate code analysis results". In the "Duplicate code results" field, type in the path and filename you gave the output XML from simian - in the example above I called mine <code>simian.xml</code>.</p><p>That's it.</p><p>Save and "Build Now" your new project, and after this is complete, click on the project. There should be a fancy trend graph showing Duplicate Code in the upper right of the screen, and a "Duplicate Code" item on the left navigation menu. That will show you all the files with duplicate code chunks, and the other files they are repeated in.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2013-03-22-medical-regulation-and-apps/">&laquo; &quot;Medical Regulation and Apps&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2012-10-25-the-value-of-contracting/">&quot;The Value of Contracting&quot; &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2013-02-23-drying-out-objective-c-identification/";
+            this.page.identifier = "&quot;DRYing out Objective-C - Identification&quot;";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

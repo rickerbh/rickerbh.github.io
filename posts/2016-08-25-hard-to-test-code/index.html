@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Refactoring Hard to Test Code&quot;</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="As part of the Apprenticeship, I need to create an HTTP server. The purpose of the activity is to create a relatively complex, real-world system with TDD, following SOLID/clean code principles. It&#39;s going well so far. There is a FitNesse spec for acceptance tests that the server needs to pass, and I have to create it in Java. I&#39;m getting there.However, I recently found that I was having to jump through some hoops to test my socket connection completion handler, and my mentor suggested this might be a code smell, and that I should look at refactoring the code to make it easier to test. As an aside, I&#39;m using the &quot;new&quot; non-blocking IO socket classes rather than the traditional socket classes, so that multithreading should be simpler as I shouldn&#39;t need to manage threadpools.">
+
+<meta property="og:description" content="As part of the Apprenticeship, I need to create an HTTP server. The purpose of the activity is to create a relatively complex, real-world system with TDD, following SOLID/clean code principles. It&#39;s going well so far. There is a FitNesse spec for acceptance tests that the server needs to pass, and I have to create it in Java. I&#39;m getting there.However, I recently found that I was having to jump through some hoops to test my socket connection completion handler, and my mentor suggested this might be a code smell, and that I should look at refactoring the code to make it easier to test. As an aside, I&#39;m using the &quot;new&quot; non-blocking IO socket classes rather than the traditional socket classes, so that multithreading should be simpler as I shouldn&#39;t need to manage threadpools.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2016-08-25-hard-to-test-code/" />
+<meta property="og:title" content="&quot;Refactoring Hard to Test Code&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>August 25, 2016</strong>
+        
+    </div>
+    <h1>&quot;Refactoring Hard to Test Code&quot;</h1>
+</div>
+<div>
+    
+    <p>As part of the <a href="https://hamishrickerby.com/2016/08/20/software-apprenticeships/">Apprenticeship</a>, I need to create an <a href="https://github.com/rickerbh/http_server_java">HTTP server</a>. The purpose of the activity is to create a relatively complex, real-world system with TDD, following SOLID/clean code principles. It's going well so far. There is a FitNesse spec for acceptance tests that the server needs to pass, and I have to create it in Java. I'm getting there.</p><p>However, I recently found that I was having to jump through some hoops to test my socket connection completion handler, and my mentor suggested this might be a code smell, and that I should look at refactoring the code to make it easier to test. <em>As an aside, I'm using the "new" non-blocking IO socket classes rather than the traditional socket classes, so that multithreading should be simpler as I shouldn't need to manage threadpools.</em></p><p>The design I had come up with for handling HTTP requests and responses was quite tightly tied to the Java <a href="https://docs.oracle.com/javase/7/docs/api/java/nio/channels/CompletionHandler.html"><code>CompletionHandler</code></a> generic interface, and specifically the <code>completed</code> method that receives <a href="https://docs.oracle.com/javase/7/docs/api/java/nio/channels/AsynchronousSocketChannel.html"><code>AsynchronousSocketChannel</code></a>s. Testing it, by generating fake <code>AsynchronousSocketChannels</code> felt super hacky. The code for dealing with processing requests and responses was also tied in with the channel handling code, so the responsibility of the class was not very clear.</p><pre><code class="java">public class HTTPCompletionHandler implements CompletionHandler&lt;AsynchronousSocketChannel, Void&gt; {
+    ResponseFactory responseFactory;
+    AsynchronousServerSocketChannel listeningChannel;
+
+    public HTTPCompletionHandler(String rootDirectory, AsynchronousServerSocketChannel listeningChannel) {
+        responseFactory = new ResponseFactory(rootDirectory);
+        this.listeningChannel = listeningChannel;
+    }
+
+    @Override
+    public void completed(AsynchronousSocketChannel ch, Void attachment) {
+        listeningChannel.accept(null, this);
+        String requestText = extractRequestText(ch);
+
+        Request request = new Request(requestText);
+        Response response = responseFactory.makeResponse(request);
+
+        sendResponse(ch, response);
+
+        closeChannel(ch);
+    }
+
+@Override
+    public void failed(Throwable exc, Void attachment) {
+
+    }
+
+    private String extractRequestText(AsynchronousSocketChannel ch) {
+        ByteBuffer buffer = ByteBuffer.allocate(8192);
+        byte[] requestBytes = null;
+        try {
+            int bytesRead = ch.read(buffer).get(20, TimeUnit.SECONDS);
+            requestBytes = new byte[bytesRead];
+
+            if (bytesRead &gt; 0 &amp;&amp; buffer.position() &gt; 2) {
+                buffer.flip();
+                buffer.get(requestBytes, 0, bytesRead);
+                buffer.clear();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return new String(requestBytes);
+        }
+    }
+
+    private void sendResponse(AsynchronousSocketChannel ch, Response response) {
+        ch.write(ByteBuffer.wrap(response.getBytes()));
+    }
+
+    private void closeChannel(AsynchronousSocketChannel ch) {
+        if (ch.isOpen()) {
+            try {
+                ch.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+}
+</code></pre><h2 id="time-to-refactor">Time to refactor</h2><p>Below are a series of steps that I went through to refactor this class to ensure single-responsibility, and make it significantly easier to test the functionality.</p><p><em>Links are provided at the end to github for the steps as commits. Github also contains the tests. 100% TDD baby!</em></p><h3 id="create-interfaces">Create interfaces</h3><p>First of all, I needed to break the dependency between the HTTP Request/Repsonse code, and the <code>AsynchronousSocketChannel</code> code. I introduced an abstraction for reading and writing data.</p><pre><code class="java">public interface ByteReader {
+     byte[] read();
+}
+</code></pre><pre><code class="java">public interface ByteWriter {
+    void write(byte[] bytes);
+}
+</code></pre><p>I could have put these in a single interface, but splitting them gives easier support for different implementation models, such as reading from a socket, and writing out to a file.</p><h3 id="concrete-implementations">Concrete implementations</h3><p>Then, implement classes that support these interfaces that use the <code>AsynchronousSocketChannel</code> to read and write from.</p><pre><code class="java">public class AsynchronousSocketChannelReader implements ByteReader {
+
+    AsynchronousSocketChannel channel;
+
+    public AsynchronousSocketChannelReader(AsynchronousSocketChannel channel) {
+        this.channel = channel;
+    }
+
+    @Override
+    public byte[] read() {
+        ByteBuffer buffer = ByteBuffer.allocate(8192);
+        byte[] requestBytes = null;
+        try {
+            int bytesRead = channel.read(buffer).get(20, TimeUnit.SECONDS);
+            requestBytes = new byte[bytesRead];
+
+            if (bytesRead &gt; 0 &amp;&amp; buffer.position() &gt; 2) {
+                buffer.flip();
+                buffer.get(requestBytes, 0, bytesRead);
+                buffer.clear();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return requestBytes;
+        }
+    }
+}
+</code></pre><pre><code class="java">public class AsynchronousSocketChannelWriter implements ByteWriter {
+    private AsynchronousSocketChannel channel;
+
+    public AsynchronousSocketChannelWriter(AsynchronousSocketChannel channel) {
+        this.channel = channel;
+    }
+
+    @Override
+    public void write(byte[] bytes) {
+        channel.write(ByteBuffer.wrap(bytes));
+    }
+}
+</code></pre><h3 id="integrate-these-back-in">Integrate these back in</h3><p>The next step is to start to use these within the <code>HTTPCompletionHandler</code> class. The bulk of the <code>extractRequestText</code> and <code>sendResponse</code> functions can also be dropped from the <code>HTTPCompletionHandler</code>.</p><pre><code class="java">...
+
+    private String extractRequestText(AsynchronousSocketChannel ch) {
+        ByteReader reader = new AsynchronousSocketChannelReader(ch);
+        return new String(reader.read());
+    }
+
+...
+
+    private void sendResponse(AsynchronousSocketChannel ch, Response response) {
+        ch.write(ByteBuffer.wrap(response.getBytes()));
+        ByteWriter writer = new AsynchronousSocketChannelWriter(ch);
+        writer.write(response.getBytes());
+      }
+
+...
+
+</code></pre><p>The code in <code>sendResponse</code> at this interim step has grown longer, but what we've actually done here is enable a very clean break in the dependency between the HTTP request/response processing, and the <code>AsynchronousSocketChannel</code>, as we'll see in the next step.</p><h3 id="extract-http-requestresponse-handling">Extract HTTP Request/Response handling</h3><p>Now, we need to remove the HTTP Request and Response handling out of this completion handler. The completion handler will soon have a very specific responsibility in providing an interface adapter between <code>AsynchronousSocketChannel</code>s and processing that data. The reading, writing, or orchestration of the data flow will no longer be part of that classes responsibility.</p><p>We're creating a new class called <code>HTTPHandler</code>. This class will take the configuration required (a directory) on instantiation, and for each request it needs to process it'll receive a <code>ByteReader</code> and <code>ByteWriter</code>.</p><pre><code class="java">public class HTTPHandler {
+    ResponseFactory responseFactory;
+
+    public HTTPHandler(String rootDirectory) {
+        responseFactory = new ResponseFactory(rootDirectory);
+    }
+
+    public void run(ByteReader reader, ByteWriter writer) {
+        String requestText = extractRequestText(reader);
+
+        Request request = new Request(requestText);
+        Response response = responseFactory.makeResponse(request);
+
+        sendResponse(writer, response);
+    }
+
+    private String extractRequestText(ByteReader reader) {
+        return new String(reader.read());
+    }
+
+    private void sendResponse(ByteWriter writer, Response response) {
+        writer.write(response.getBytes());
+    }
+}
+</code></pre><p>The beauty in creating a class like this where the reader and writer are abstract and provided to it, is that it's not dependent on any particular type of Socket, or Stream, of Buffer.</p><h3 id="fake-reader-and-writer-for-testing">Fake Reader and Writer for testing</h3><p>The interface for these two types is very simple, and very, very, very easy to create Fake versions of to test.</p><pre><code class="java">public class FakeReader implements ByteReader {
+
+    private byte[] byteData;
+
+    public FakeReader(String data) {
+        byteData = data.getBytes();
+    }
+
+    @Override
+    public byte[] read() {
+        return byteData;
+    }
+}
+
+public class FakeWriter implements ByteWriter {
+
+    private byte[] byteData;
+
+    @Override
+    public void write(byte[] bytes) {
+        byteData = bytes;
+    }
+
+    public byte[] readWrittenBytes() {
+        return byteData;
+    }
+}
+</code></pre><h3 id="remove-http-functionality-from-completionhandler">Remove HTTP functionality from CompletionHandler</h3><p>We can drop the <code>extractRequestText</code> and <code>sendResponse</code> methods from the <code>HTTPCompletionHandler</code> altogether, as these are now provided by the <code>HTTPHandler</code>.</p><p>The relevant parts of the <code>HTTPCompletionHandler</code> will change as below.</p><pre><code class="java">public class HTTPCompletionHandler implements CompletionHandler&lt;AsynchronousSocketChannel, Void&gt; {
+HTTPHandler handler;
+...
+
+    public HTTPCompletionHandler(String rootDirectory, AsynchronousServerSocketChannel listeningChannel) {
+        responseFactory = new ResponseFactory(rootDirectory);
+        handler = new HTTPHandler(rootDirectory);
+        this.listeningChannel = listeningChannel;
+        }
+
+    @Override
+    public void completed(AsynchronousSocketChannel ch, Void attachment) {
+        listeningChannel.accept(null, this);
+        
+        ByteReader reader = new AsynchronousSocketChannelReader(ch);
+        ByteWriter writer = new AsynchronousSocketChannelWriter(ch);
+        handler.run(reader, writer);
+    
+        closeChannel(ch);
+    }
+
+...
+}
+
+</code></pre><h3 id="complete">Complete</h3><p>The <code>completed</code> method now only instatiates <code>ByteReader</code> and <code>ByteWriter</code>s that can handle <code>AsynchronousSocketChannel</code>s, and asks the instantiated handler to begin processing with the reader and writers.</p><p>The concrete <code>ByteReader</code> and <code>ByteWriter</code>s now encapsulate the logic for reading from and writing to <code>AsynchronousSocketChannel</code>s, rather than this being tied with with dealing with HTTP requests and responses.</p><p>The <code>HTTPHandler</code> now supports any sort of interface that can conform to <code>ByteReader</code> and <code>ByteWriter</code> for receiving and sending HTTP content.</p><p>And, all classes are small, all methods are small, and due to the interface abstractions, super simple to test.</p><h2 id="end">End</h2><p>Refactoring is never really over, but I hope this has been a useful example of how you could refactor a class to</p><ul><li>extract dependencies</li><li>provide a simpler API</li><li>ensure single-responsibility, and</li><li>make functionality easier to test</li></ul><p>If you want to see the whole refactor as a single diff, check out <a href="https://github.com/rickerbh/http_server_java/commit/d524a31562969bb39351f7cbd0567b9db503d815">this commit</a>, or if you're interested in seeing each individual step, check the <a href="https://github.com/rickerbh/http_server_java/commits/feature/refactor-completion-handler">last 8 commits on this branch</a>.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2016-11-02-refactoring-legacy-code-gilded-rose-kata/">&laquo; &quot;Refactoring Legacy Code - Gilded Rose Kata&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2016-08-20-software-apprenticeships/">&quot;Software Apprenticeships&quot; &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2016-08-25-hard-to-test-code/";
+            this.page.identifier = "&quot;Refactoring Hard to Test Code&quot;";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

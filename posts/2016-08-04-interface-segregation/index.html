@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Interface Segregation&quot;</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="The Interface Segregation principle (part of S.O.L.I.D. is about, very simply, not making subclasses or clients implement interfaces they&#39;re not concerned with. Robert Martin calls these &#39;fat&#39; interfaces. They contain functions or methods that are unrelated to each other, and could be split out into more cohesive interfaces.Forcing clients to implement interfaces they&#39;re not concerned with causes unnecessary tight coupling of the client to the interface. If the interface changes, the client needs to reimplement/update itself even if it doesn&#39;t use that specific interface function. The result is wasted development effort in maintaining unnecessary code for testing and implementation. This should be avoided.">
+
+<meta property="og:description" content="The Interface Segregation principle (part of S.O.L.I.D. is about, very simply, not making subclasses or clients implement interfaces they&#39;re not concerned with. Robert Martin calls these &#39;fat&#39; interfaces. They contain functions or methods that are unrelated to each other, and could be split out into more cohesive interfaces.Forcing clients to implement interfaces they&#39;re not concerned with causes unnecessary tight coupling of the client to the interface. If the interface changes, the client needs to reimplement/update itself even if it doesn&#39;t use that specific interface function. The result is wasted development effort in maintaining unnecessary code for testing and implementation. This should be avoided.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2016-08-04-interface-segregation/" />
+<meta property="og:title" content="&quot;Interface Segregation&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>August 4, 2016</strong>
+        
+    </div>
+    <h1>&quot;Interface Segregation&quot;</h1>
+</div>
+<div>
+    
+    <p>The Interface Segregation principle (part of <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design))">S.O.L.I.D.</a> is about, very simply, not making subclasses or clients implement interfaces they're not concerned with. <a href="https://drive.google.com/a/simplemachines.com.au/file/d/0BwhCYaYDn8EgOTViYjJhYzMtMzYxMC00MzFjLWJjMzYtOGJiMDc5N2JkYmJi/view">Robert Martin</a> calls these 'fat' interfaces. They contain functions or methods that are unrelated to each other, and could be split out into more cohesive interfaces.</p><p>Forcing clients to implement interfaces they're not concerned with causes unnecessary tight coupling of the client to the interface. If the interface changes, the client needs to reimplement/update itself even if it doesn't use that specific interface function. The result is wasted development effort in maintaining unnecessary code for testing and implementation. This should be avoided.</p><p>Issues with interface definition can arise in languages that support [inheritance](https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)), <a href="https://en.wikipedia.org/wiki/Subtyping">subtype</a> conformance, or concepts like <a href="https://en.wikipedia.org/wiki/Interface_%28Java%29">Interface</a> or [Protocol](https://en.wikipedia.org/wiki/Protocol_(object-oriented_programming)). Specifically, issues are more likely to occur when an object or type can only inherit/implement one super-class or protocol/interface, such as with inheritance with (most) object-oriented languages. C++ is a notable exception here with support for multiple-inheritance, and implementation of protocols/interfaces via abstract base classes with pure virtual functions. The majority of languages I've seen that support the concept of interfaces, also support multiple interface inheritance. This is supported in Swift, Java, and Objective-C. Ruby can support this via the include statement, although the duck typing removals the formal need for this definition - same with Python. Haskell supports this via type class conformance.</p><h2 id="show-me-some-code">Show me some code</h2><p>Here's a contrived example of an interface that tries to do too much. It's in swift, but it should be understandable. Lets say we're modelling animals.</p><pre><code class="swift">protocol Animal {
+  var species: String { get }
+  var legs: Int { get }
+  func speak() -&gt; String
+  func birth() -&gt; Animal
+}
+</code></pre><p>And we define a couple of animals.</p><pre><code class="swift">class Dog: Animal {
+  var species = "Canis lupus familiaris"
+  
+  var legs = 4
+  
+  func speak() -&gt; String {
+    return "Woof"
+  }
+  
+  func birth() -&gt; Animal {
+    return Dog()
+  }
+}
+
+class Cat: Animal {
+  var species = "Felis catus"
+  
+  var legs = 4
+  
+  func speak() -&gt; String {
+    return "Meow"
+  }
+  
+  func birth() -&gt; Animal {
+    return Cat()
+  }
+}
+</code></pre><p>This all seems fine, but becomes unstuck when we attempt to model something <a href="https://en.wikipedia.org/wiki/Oviparity">Oviparous</a>, or a sterile hybrid.</p><pre><code class="swift">class Chicken: Animal {
+  var species = "Gallus gallus domesticus"
+
+  var legs = 2
+  
+  func speak() -&gt; String {
+    return "Cluck"
+  }
+  
+  func birth() -&gt; Animal {
+    // Chickens have eggs, not chickens. 
+    // And they don't "birth" them. They lay them.
+  }
+}
+
+class Mule: Animal {
+  var species = "Equus asinus x Equus caballus"
+
+  var legs = 4
+  
+  func speak() -&gt; String {
+    return "Bray"
+  }
+  
+  func birth() -&gt; Animal {
+    // Uh oh, Mules are typically sterile. They can't reproduce.
+  }
+}
+</code></pre><p>The interface for Animal forces all animals to be able to birth things, and not all animals do. To solve this, I see a couple of options.</p><ul><li>We make the <code>birth()</code> function optional</li><li>We extract the <code>birth()</code> function out to a separate <code>Protocol</code> and compose multiple protocols together</li></ul><p>Personally I prefer the extraction of the function to a separate protocol. If we made the <code>birth()</code> function optional, any object that attempts to use it on any animal will need to ensure it's available before it can use it, and potentially force consumers of a function that uses that function to also deal with optional returns.</p><pre><code class="swift">func birthSays(parent: Animal) -&gt; String? {
+  if let child = parent.birth()? {
+    return child.speak()
+  } else {
+    return nil
+  }
+}
+</code></pre><p>If the <code>birth()</code> function is extracted out, then:</p><ol><li>Chickens and Mules won't need to implement the <code>birth()</code> method, and</li><li>We can typecheck methods so we don't need optionals, in languages that support this construct.</li></ol><pre><code class="swift">protocol Animal {
+  var species: String { get }
+  var legs: Int { get }
+  func speak() -&gt; String
+}
+
+protocol Egg {
+  func hatch() -&gt; Animal
+}
+
+protocol Viviparous {
+  func birth() -&gt; Animal
+}
+
+protocol Oviparous {
+  func lay() -&gt; Egg
+}
+
+class ChickenEgg: Egg {
+  func hatch() -&gt; Animal {
+    return Chicken()
+  }
+}
+
+class Chicken: Animal {
+  var species = "Gallus gallus domesticus"
+
+  var legs = 2
+  
+  func speak() -&gt; String {
+    return "Cluck"
+  }
+}
+
+extension Chicken: Oviparious {
+  func lay() -&gt; Egg {
+    return ChickenEgg()
+  }
+}
+
+func birthSays(parent: Viviparous) -&gt; String {
+  return parent.birth().speak()
+}
+</code></pre><p>You can see above that the Chicken is no longer required to implement birth. Through conformance to multiple, specific/detailed protocols it only needs to support functions and properties that make sense to that specific Class. This splitting of protocols alse ensures that we can typecheck inputs to functions, reducing the need for boilerplate code performing nil checks on optionals.</p><h3 id="surprising-usage">Surprising Usage</h3><p>To illustrate another benefit of small interfaces, we consider the relationship between parents and children. If the relationship between two entities is abstracted out and made generic, we can think of it as a Node in a Graph, with a parent (node), and multiple children (other nodes).</p><pre><code class="swift">protocol Node {
+  var parent: Node { get }
+  var children: [Node] { get }
+}
+</code></pre><p>With this view of a <code>Node</code>, we can model families of Viviparous animals. A Dog can return it's children, and they can reference their parents. This <code>Node</code> however, can also be reused for any directed graph, such as dependencies between different software libraries. If a client implements a function to produce a family tree of Dogs via the <code>Node</code> interface, the exact same code can be reused to produce a tree of library dependencies, as it's based on the generic <code>Node</code>, not <code>Animal</code>.</p><p><em>hat tip to <a href="https://twitter.com/triggernz">@triggerNZ</a> for this example</em></p><p>Interface Segregation is one of the S.O.L.I.D. principles (I). Through ensuring that your interfaces small, targetted, and cohesive, you simplify implementation for clients. Clients won't be required to implement interfaces that don't make sense in the context of their object. Your interfaces also have greater opportunities for reuse, due to being more composable. Clients will be forced to change less, as only changes that impact their operation will need to be managed, rather than interface changes that they don't care about.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2016-08-20-software-apprenticeships/">&laquo; &quot;Software Apprenticeships&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2016-07-25-wrapping-3rd-party-code/">&quot;Wrapping 3rd Party Code&quot; &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2016-08-04-interface-segregation/";
+            this.page.identifier = "&quot;Interface Segregation&quot;";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

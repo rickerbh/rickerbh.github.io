@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Dealing with SemanticHacker in Ruby</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="I&#39;m having a bit of a play with SemanticHacker at the moment, seeing what their service thinks of some text I&#39;m poking at it.  To make this a bit simpler I created a small ruby lib that wraps their API to make my life a little easier.  And hopefully it&#39;ll make someone elses life easier - enjoy.(It requires hpricot for XML parsing - make sure it&#39;s installed)">
+
+<meta property="og:description" content="I&#39;m having a bit of a play with SemanticHacker at the moment, seeing what their service thinks of some text I&#39;m poking at it.  To make this a bit simpler I created a small ruby lib that wraps their API to make my life a little easier.  And hopefully it&#39;ll make someone elses life easier - enjoy.(It requires hpricot for XML parsing - make sure it&#39;s installed)">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2009-02-26-dealing-with-semantichacker-in-ruby/" />
+<meta property="og:title" content="Dealing with SemanticHacker in Ruby" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>February 26, 2009</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Dealing with SemanticHacker in Ruby</h1>
+</div>
+<div>
+    
+    <p>I'm having a bit of a play with <a href="http://www.semantichacker.com/">SemanticHacker</a> at the moment, seeing what their service thinks of some text I'm poking at it.  To make this a bit simpler I created a small ruby lib that wraps their API to make my life a little easier.  And hopefully it'll make someone elses life easier - enjoy.</p><p>(It requires <a href="http://github.com/why/hpricot/tree/master">hpricot</a> for XML parsing - make sure it's installed)</p><pre><code class="ruby">require 'rubygems'
+require 'hpricot'
+require 'cgi'
+require 'open-uri'
+
+class SemanticHacker
+
+  URL = "http://api.semantichacker.com"
+  attr_accessor :token, :doc, :content
+
+  def initialize(token)
+    @token = token
+  end
+
+  def get_signature(content)
+    @content = ::CGI::escape(content)
+    url = "#{URL}/#{@token}/signature?content=#{@content}"
+    @doc = Hpricot.XML(open(url))
+  end
+
+  def get_concepts(content)
+    @content = ::CGI::escape(content)
+    url = "#{URL}/#{@token}/concept?content=#{@content}"
+    @doc = Hpricot.XML(open(url))
+  end
+
+  def get_categories(content)
+    @content = ::CGI::escape(content)
+    url = "#{URL}/#{@token}/category?content=#{@content}"
+    @doc = Hpricot.XML(open(url))
+  end
+
+  def type
+    (doc/:response/:about/:systemType).inner_html
+  end
+
+  def config_id
+    (doc/:response/:about/:configId).inner_html
+  end
+
+  def categories
+    response = []
+    (doc/:response/:categorizer/:categorizerResponse/:categories/:category).each do |item|
+      response &lt;&lt; {:id =&gt; item.attributes['id'], :weight =&gt; item.attributes['weight']}
+    end
+    response
+  end
+
+  def concepts
+    response = []
+    (doc/:response/:conceptExtractor/:conceptExtractorResponse/:concepts/:concept).each do |item|
+      response &lt;&lt; {:label =&gt; item.attributes['label'], :weight =&gt; item.attributes['weight']}
+    end
+    response
+  end
+
+  def signatures
+    response = []
+    (doc/:response/:siggen/:siggenResponse/:signature/:dimension).each do |item|
+      response &lt;&lt; {:index =&gt; item.attributes['index'], :weight =&gt; item.attributes['weight']}
+    end
+    response
+  end
+
+end
+</code></pre><p>And to make things happen</p><pre><code class="ruby">sh = SemanticHacker.new("mysecrettoken")
+sh.get_signature("Wow!  Some semantic analysis on my text")
+puts sh.signatures.inspect 
+#returns an array of hashes with the weights and indexes of the categories
+</code></pre>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2009-03-02-esta-and-confusion/">&laquo; ESTA and Confusion</a>
+        
+        
+        <a class="right button" href="/posts/2009-02-20-installing-f2c-on-a-mac/">Installing f2c on a mac &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2009-02-26-dealing-with-semantichacker-in-ruby/";
+            this.page.identifier = "Dealing with SemanticHacker in Ruby";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Radiant CMS Tutorial - Custom Javascript in Admin Pages</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="At the moment I&#39;m working on a fairly complex extension for Radiant CMS. In creating the administrative pages I want to use a javascript library that is not distributed with the core radiant code. This post will describe how to implement your own extension that can use an external javascript library, without playing around with any of the core radiant files to inject the javascript into the administrative layout.It&#39;s actually really easy to do.  If you haven&#39;t created a Radiant extension before I&#39;d recommend following this tutorial on the Radiant wiki.">
+
+<meta property="og:description" content="At the moment I&#39;m working on a fairly complex extension for Radiant CMS. In creating the administrative pages I want to use a javascript library that is not distributed with the core radiant code. This post will describe how to implement your own extension that can use an external javascript library, without playing around with any of the core radiant files to inject the javascript into the administrative layout.It&#39;s actually really easy to do.  If you haven&#39;t created a Radiant extension before I&#39;d recommend following this tutorial on the Radiant wiki.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2008-08-15-radiant-cms-tutorial-custom-javascript-in-admin-pages/" />
+<meta property="og:title" content="Radiant CMS Tutorial - Custom Javascript in Admin Pages" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>August 15, 2008</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Radiant CMS Tutorial - Custom Javascript in Admin Pages</h1>
+</div>
+<div>
+    
+    <p>At the moment I'm working on a fairly complex extension for <a href="http://radiantcms.org/" target="_blank">Radiant CMS</a>. In creating the administrative pages I want to use a javascript library that is not distributed with the core radiant code. This post will describe how to implement your own extension that can use an external javascript library, without playing around with any of the core radiant files to inject the javascript into the administrative layout.</p><p>It's actually really easy to do.  If you haven't created a Radiant extension before I'd recommend following <a href="http://wiki.radiantcms.org/Creating_Radiant_Extensions" target="_blank">this tutorial</a> on the <a href="http://wiki.radiantcms.org" target="_blank">Radiant wiki</a>.</p><p>Inside the Radiant GEM, the standard page layout resides at app/views/layouts/application.html.haml</p><p>The lines of code that insert the javascript tags are:</p><pre><code class="ruby">- @javascripts.uniq.each do |javascript|
+  = javascript_include_tag javascript
+</code></pre><p>The @javascripts variable is populated from inside the app/controllers/application_controller.rb file. The culprit is below.</p><pre><code class="ruby">def include_javascript(script)
+  @javascripts &amp;lt;&amp;lt; script
+end
+</code></pre><p>Pretty simple huh? So, all you need to do, is call this method from within your new controller, because all controllers inherit from the application_controller.rb file, so they have access to this method, and you can have different javascript included for each method if you so wish. In (assuming the example LinkRoll extension was built as linked above) vendor/extensions/link_roll/app/controllers/admin/links_controller.rb</p><pre><code class="ruby">def index
+  include_javascript("admin/mootools-1.2-core-yc.js")
+  @links = Link.find(:all)
+end
+</code></pre><p>That will insert a link to admin/mootools-1.2-core-yc.js inside the admin/links/index page. Righto, so now the only thing left to do is get the mootools-1.2-core-yc.js file into the actual public/javascripts/admin directory within the project. What you want to do is alter the vendor/extensions/link_roll/link_roll_extension.rb file so that within the activate method the file is copied over. I'd recommend making a public/javascripts/admin directory within your extension folder, and putting the file in there. Then, when activate is called on the link_roll_extension.rb file, the activate method will copy the file over to the projects public/javascripts/admin directory. You should also delete the file when the deactivate method is called in the link_roll_extension.rb file.</p><p>Questions and comments please!</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2008-08-20-dumb-things-company-websites-dont-do/">&laquo; Dumb Things Company Websites Dont, But Should Do</a>
+        
+        
+        <a class="right button" href="/posts/2008-08-05-googles-ajax-libraries-api/">Google&#39;s AJAX Libraries API &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2008-08-15-radiant-cms-tutorial-custom-javascript-in-admin-pages/";
+            this.page.identifier = "Radiant CMS Tutorial - Custom Javascript in Admin Pages";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>

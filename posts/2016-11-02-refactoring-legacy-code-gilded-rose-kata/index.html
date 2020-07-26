@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Refactoring Legacy Code - Gilded Rose Kata&quot;</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="Often getting legacy code into a state where you&#39;re comfortable making changes to it can be challenging. Legacy code can often have varying levels of quality throughout the codebase, as well as different levels of testing applied to it. I&#39;ve taken over my fair share of old projects that have no tests, or haven&#39;t followed SOLID principles, and understanding how the code works and what it does can be a challenge.The Gilded Rose Kata is an exercise in taking a system that calculates &quot;quality&quot; and expiry dates for items in a shop over time. When you start the Kata, you have a single method that calculates the changes in quality and expiry for the items. The business logic implemented is hard to understand, and features nested if statements with conditionals that feel inverted. You also need to add functionality to support a new item type to the shop to complete the Kata.">
+
+<meta property="og:description" content="Often getting legacy code into a state where you&#39;re comfortable making changes to it can be challenging. Legacy code can often have varying levels of quality throughout the codebase, as well as different levels of testing applied to it. I&#39;ve taken over my fair share of old projects that have no tests, or haven&#39;t followed SOLID principles, and understanding how the code works and what it does can be a challenge.The Gilded Rose Kata is an exercise in taking a system that calculates &quot;quality&quot; and expiry dates for items in a shop over time. When you start the Kata, you have a single method that calculates the changes in quality and expiry for the items. The business logic implemented is hard to understand, and features nested if statements with conditionals that feel inverted. You also need to add functionality to support a new item type to the shop to complete the Kata.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2016-11-02-refactoring-legacy-code-gilded-rose-kata/" />
+<meta property="og:title" content="&quot;Refactoring Legacy Code - Gilded Rose Kata&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>November 2, 2016</strong>
+        
+    </div>
+    <h1>&quot;Refactoring Legacy Code - Gilded Rose Kata&quot;</h1>
+</div>
+<div>
+    
+    <p>Often getting legacy code into a state where you're comfortable making changes to it can be challenging. Legacy code can often have varying levels of quality throughout the codebase, as well as different levels of testing applied to it. I've taken over my fair share of old projects that have no tests, or haven't followed SOLID principles, and understanding how the code works and what it does can be a challenge.</p><p>The <a href="https://github.com/emilybache/GildedRose-Refactoring-Kata">Gilded Rose Kata</a> is an exercise in taking a system that calculates "quality" and expiry dates for items in a shop over time. When you start the Kata, you have a single method that calculates the changes in quality and expiry for the items. The business logic implemented is hard to understand, and features nested <code>if</code> statements with conditionals that feel inverted. You also need to add functionality to support a new item type to the shop to complete the Kata.</p><p>This post will describe how I refactored the code. All code and commits are available at <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift">https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift</a></p><h2 id="my-approach">My Approach</h2><h3 id="acceptance-tests">Acceptance Tests</h3><p>When refactoring, you're typically looking to improve the internal structure of the code without changing the externally observable behaviour of the system. To ensure the existing behaviour didn't change whilst I was refactoring, I followed the advice in the <a href="https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/master/README.md">readme</a> that recommends "Text-Based Approval Testing". This is essentially an acceptance test in which the behaviour of the system is captured before you start refactoring, and then while refactoring you can compare the changed systems' output with the original output.</p><p>To implement this, I captured the text output from running the application in a file and stored it in the repo. I then implemented a test that would replicate running the application, but storing the results in memory. Then the test compared the results of my application with the output from the original application. <em>As an aside here, when I first implemented this I did a <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/25add659ca61871fd65d5204b1ef307c3adf8fc0/GildedRoseTests/GildedRoseTests.swift">comparison of the full body</a>. I quickly found this to be a terrible solution, and then <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/commit/ea2f4273b22b1dc61e2bfbb943c8f9874b2bc523">implemented a line-by-line comparison</a> so I could easily tell what part of the calculations were going wrong. Also, I found an issue with the original project setup, so submitted an (accepted) PR to the original repo that corrected the store definintion.</em></p><h3 id="understanding-the-existing-logic">Understanding the Existing Logic</h3><p>I've recently read <a href="http://www.bookdepository.com/Working-Effectively-with-Legacy-Code-Michael-Feathers/9780131177055?a_aid=rickerbh">Working Effectively With Legacy Code</a> by Michael Feathers and there was one approach in this book that seemed to jump out at me to help understand the Gilded Roses logic - Sprout Method. This is where you take a small block of existing functionality (e.g., an <code>if</code> statement), extract it out to it's own function, and give it a sensible name. Then, rather than seeing a block of code such as</p><pre><code class="swift">if (items[i].name != "Sulfuras, Hand of Ragnaros") {
+  items[i].sellIn = items[i].sellIn - 1
+}
+</code></pre><p>you see something like</p><pre><code class="swift">decrementSellDate(item[i])
+</code></pre><p>Example of this <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/commit/685e521451764d339d48849d5a9d11b02df01da5#diff-9f2a98a59f7438329af132a5cb5651e0">here</a>.</p><p>The behaviour of the system doesn't change, but suddenly it becomes more readable.  Each "sprouted" method is also accompanied by a test. This allows you to also validate that your extracted code will then continue to work as expected, even with other changes taking place.</p><p>For this refactor, I continued to write tests and extract methods to get the giant block of if statements to a <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/685e521451764d339d48849d5a9d11b02df01da5/GildedRose/GildedRose.swift">point</a> where I could understand what they were doing.</p><p>After this, I considered the <code>if</code> statement itself. It used a bunch of negation statements to control the flow of execution through the application e.g., <code>if (items[i].name != "Aged Brie" &amp;&amp; items[i].name != "Backstage passes to a TAFKAL80ETC concert")</code>. Personally, I find this style of <code>if</code> statement creates a higher congnitive load that "positive" statement, so I <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/bbd3b0c71efec492cda6cc1326954098844cab9a/GildedRose/GildedRose.swift">restructured it</a> to use statements more like <code>if (items[i].name == "Aged Brie" || items[i].name == "Backstage passes to a TAFKAL80ETC concert")</code>. Maybe that's a personal thing, but I find it simpler to understand - being explicit about what the predicate matches, rather than "everything but these items". During this activity, having the acceptance tests run was crucial to ensure the system behaved the same, while the statements were changing.</p><p>After this, I extracted one more method for managing expiry dates. I felt that I had a good understanding of how the existing system worked and the logic was clear in the codebase. Time for some bigger changes.</p><h3 id="restrictions">Restrictions</h3><p>One of the key restrictions in the Gilded Rose Kata is that you're not allowed to alter the <code>Items</code> class or the <code>Items</code> property. Not having this restriction would have made the refactor relatively trivial as you could just create different subclasses that represent the behavour of each of the types of items. To do this however, would have involved altering the <code>Items</code> property to instantiate the different item types, or turning the <code>Items</code> class into a factory that would return items of different types. So, I needed a way to move the rules for specific types of items away from the main calculation flow, so that new item types could be introduced without impacting the existing processes.</p><h3 id="behaviours">Behaviours</h3><p>I decided to add an <code>ItemBehaviour</code> <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/533be7a6b599cbe97b2537cbed4a7e8820e63ebc/GildedRose/ItemBehaviour.swift">class</a> that would act as a superclass for each of the items to encapsulate the rules/logic for that specific item. The goal was to separate out the process of incrementing a day in the store, and how each item changes as the days increment. Then I created subclasses (<a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/142973824c68c64a637c3826f59949ac90572348/GildedRose/AgedBrieBehaviour.swift">Brie</a>, <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/a36201b42314a8c2a80c155f3e9aab72610b4e5b/GildedRose/SulfurasBehaviour.swift">Sulfuras</a>, <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/41ce082a2db297176da6dcb4ab68d663e9a3e4e4/GildedRose/BackstagePassBehaviour.swift">BackStagePass</a>) to override the default behaviour for each item that has unique logic. To surface this behaviour, a <code>BehaviourFactory</code> <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/23c09686703a0248858fef55de8fbb25bc10f96f/GildedRose/BehaviourFactory.swift">class</a> was implemented that would return an <code>ItemBehaviour</code> based on the items name (not the approach I would have liked to implement, but not being allowed to change the <code>Item</code> class is quite a restriction).</p><p>The behaviour was then <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/3809fe56f32c55e2b0c839a0060a16b61ebd55c4/GildedRose/GildedRose.swift">integrated</a> into the main application flow by replacing the if-statement/logic that takes place before the date change with a single call to <code>updateQualityPreDateChange</code>.</p><p>Next, the functionality to <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/commit/ae3a6b704a124f697778e1409d11d03d525a49de">decrement the sales date</a> was extracted from the sprouted method, and placed into the specific item behaviour classes. And finally, the changes to <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/commit/f12c0174a27e43484cc3bd23b077cc087509b94b">process expired items</a> was extracted out into the item behaviour classes.</p><h3 id="done">Done</h3><p>The main body of the store updating function has been dramatically simplified. It now <code>map</code>s through all the items, retrieves the behaviour for an item, and calls the functions to advance the item through a day. Simples.</p><pre><code class="swift">let _ = items.map { item in
+  let itemBehaviour = BehaviourFactory.getBehaviour(item)
+  itemBehaviour.updateQualityPreDateChange(item)
+  itemBehaviour.decrementSellDate(item)
+  itemBehaviour.processExpiredItem(item)
+}
+</code></pre><p>I believe that's significantly easier to understand than the <a href="https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/master/swift/Sources/GildedRose.swift">original code</a>.</p><h2 id="new-item">New Item</h2><p>Now that the item behaviour is decoupled from the main day-end processing, adding a new item type is trivial. The new type gets <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/188b53c4122ec2fb25e8888633acd9a72d4cee29/GildedRose/ConjuredBehaviour.swift">added</a> and then integrated into the <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/188b53c4122ec2fb25e8888633acd9a72d4cee29/GildedRose/BehaviourFactory.swift">factory</a>. The only other thing that needs to happen is the old acceptance test needs to be updated, as this item didn't exist in the original set. Ideally at this point the acceptance test would be updated (or removed) as the system behaviour has moved on, but for the purposes of this exercise I <a href="https://github.com/rickerbh/GildedRose-Refactoring-Kata-Swift/blob/188b53c4122ec2fb25e8888633acd9a72d4cee29/GildedRoseTests/GildedRoseTests.swift">excluded</a> the new item from the test.</p><h2 id="wrap-up">Wrap Up</h2><p>Legacy System maintenance is hard, but not impossible. You can always get a piece of business logic to be able to be tested, and restructure messy code so it's simple and understandable. Techniques such as sprout method make gaining initial understanding and making code a bit more clear relatively easy to perform. <a href="http://www.bookdepository.com/Working-Effectively-with-Legacy-Code-Michael-Feathers/9780131177055?a_aid=rickerbh">Working Effectively With Legacy Code</a> was a super-valuable resource, and covers many, many techniques to get an unwieldy codebase under control, both in terms of gaining understanding as well as getting code testable.</p><p>Personally, I found this kata a valuable experience in getting an existing system under control, whilst maintaining existing behaviour. I recommend if you have a spare hour or so give it a go yourself.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        
+        <a class="right button" href="/posts/2016-08-25-hard-to-test-code/">&quot;Refactoring Hard to Test Code&quot; &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2016-11-02-refactoring-legacy-code-gilded-rose-kata/";
+            this.page.identifier = "&quot;Refactoring Legacy Code - Gilded Rose Kata&quot;";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2020 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="text/javascript"></script>
+
+
+</body>
+</html>
