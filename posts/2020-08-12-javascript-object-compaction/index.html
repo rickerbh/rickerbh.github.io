@@ -7,11 +7,18 @@
     <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
     <!-- Modified to fit Cryogen.-->
     <meta charset="UTF-8">
-    <title>Hamish Rickerby</title>
+    <title>Hamish Rickerby: Javascript Object Compaction</title>
     
-    <meta name="description" content="Hamish Rickerby&#39;s blog. I write about software and technology in general.">
-    <meta name="keywords" content="">
-    
+<meta name="keywords" content="">
+
+<meta name="description" content="I&#39;m working on a feature in BeeCastle at the moment to ingest call data from Microsoft Teams to augment our interaction records. It requires a flexible approach to updating existing records, as with different types of interactions and calls, we get different data.During this process we get a javascript object that might have null or undefined values and these should not be persisted in the database, so we need a way to strip these out. Idiomatic ES6 usage would mean we need to do something like below.">
+
+<meta property="og:description" content="I&#39;m working on a feature in BeeCastle at the moment to ingest call data from Microsoft Teams to augment our interaction records. It requires a flexible approach to updating existing records, as with different types of interactions and calls, we get different data.During this process we get a javascript object that might have null or undefined values and these should not be persisted in the database, so we need a way to strip these out. Idiomatic ES6 usage would mean we need to do something like below.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2020-08-12-javascript-object-compaction/" />
+<meta property="og:title" content="Javascript Object Compaction" />
+<meta property="og:type" content="article" />
+
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
@@ -44,7 +51,7 @@
             <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
         </div>
         <ul class="menu">
-            <li  class="active" ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
             
             
@@ -109,18 +116,29 @@ const compacted = reject(isNil)(a)
 
 <br/>
 
-    
-    <div id="comments">
-        <a href="/posts/2020-08-12-javascript-object-compaction/#disqus_thread">View Comments</a>
-    </div>
-    
-
     <div id="prev-next">
         
         
-        <a class="button right" href="/posts/2020-07-26-port-to-cryogen/">Porting blog to cryogen &raquo;</a>
+        <a class="right button" href="/posts/2020-07-26-port-to-cryogen/">Porting blog to cryogen &raquo;</a>
         
     </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2020-08-12-javascript-object-compaction/";
+            this.page.identifier = "Javascript Object Compaction";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
 </div>
 
 <hr/>
