@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
+    <!-- Modified to fit Cryogen.-->
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Advent of Code 2021 - Puzzle 1</title>
+    
+<meta name="keywords" content="">
+
+<meta name="description" content="One of the issues with getting started with a new language in a time-pressured scenario is setting up environment and tooling. Last year I used VSCode and the ReasonML plugin. It installed relatively straight-forwardly (from what I remember), and supported type hints, and autocompletion. This year I decided I&#39;d setup Emacs, given I use it for everything else. Long story short - what an utter shambles. I tried to follow the installation guide for the Real World OCaml book plus the Prelude OCaml support (I use Prelude with Emacs, due to the great Clojure support it has). It was generally a struggle to get the extensions to handle resolving imports of local files, as well as 3rd party libraries imported via opam. I gave up and went back to VSCode. The plugin setup was straightforward, but I still struggle with being able to actually run a program. I use the utop repl(like) interface to evaluate the statements in my program files, but even that wasn&#39;t that simple. Needing to deal with merlin and dune config files just to get my files recognised feels like a bunch of unnecessary complexity. I need to resolve this (and I&#39;d still love to get it all working in emacs), but I can limp along with what I&#39;ve currently got.Anyway, puzzle 1, step 1 - my solution for this was to run a reducing function over the array, incrementing a counter when a new value is greater than the prior value. It required 2 functions to be created to execute and produce the answer. The input needs to be a list of ints as well.">
+
+<meta property="og:description" content="One of the issues with getting started with a new language in a time-pressured scenario is setting up environment and tooling. Last year I used VSCode and the ReasonML plugin. It installed relatively straight-forwardly (from what I remember), and supported type hints, and autocompletion. This year I decided I&#39;d setup Emacs, given I use it for everything else. Long story short - what an utter shambles. I tried to follow the installation guide for the Real World OCaml book plus the Prelude OCaml support (I use Prelude with Emacs, due to the great Clojure support it has). It was generally a struggle to get the extensions to handle resolving imports of local files, as well as 3rd party libraries imported via opam. I gave up and went back to VSCode. The plugin setup was straightforward, but I still struggle with being able to actually run a program. I use the utop repl(like) interface to evaluate the statements in my program files, but even that wasn&#39;t that simple. Needing to deal with merlin and dune config files just to get my files recognised feels like a bunch of unnecessary complexity. I need to resolve this (and I&#39;d still love to get it all working in emacs), but I can limp along with what I&#39;ve currently got.Anyway, puzzle 1, step 1 - my solution for this was to run a reducing function over the array, incrementing a counter when a new value is greater than the prior value. It required 2 functions to be created to execute and produce the answer. The input needs to be a list of ints as well.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2021-12-01-advent-of-code-2021-setup/" />
+<meta property="og:title" content="Advent of Code 2021 - Puzzle 1" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <!--[if IE]><![endif]-->
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/tomorrow-night-eighties.min.css">
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body>
+
+<div id="left">
+
+    <p id="logo">
+        <a title="Hamish Rickerby" href="/">
+            <span class="fa fa-rocket"></span>
+            <span class="text">Hamish Rickerby</span>
+        </a>
+    </p>
+
+    <div id="menucont" class="bodycontainer clearfix">
+        <div class="menutitle">
+            <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
+        </div>
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+    </div>
+
+    <div id="socialmedia" class="clearfix">
+        <ul>
+            <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa fa-github"></span></a></li>
+            <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="external"><span class="fa fa-stack-overflow"></span></a></li>
+            <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa fa-linkedin"></span></a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="right" class="clearfix">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 1, 2021</strong>
+        
+    </div>
+    <h1>Advent of Code 2021 - Puzzle 1</h1>
+</div>
+<div>
+    
+    <p>One of the issues with getting started with a new language in a time-pressured scenario is setting up environment and tooling. Last year I used VSCode and the <a href="https://github.com/reasonml-editor/vscode-reasonml">ReasonML plugin</a>. It installed relatively straight-forwardly (from what I remember), and supported type hints, and autocompletion. This year I decided I'd setup Emacs, given I use it for everything else. Long story short - what an utter shambles. I tried to follow the <a href="https://dev.realworldocaml.org/install.html">installation guide</a> for the Real World OCaml book plus the Prelude OCaml support (I use Prelude with Emacs, due to the great Clojure support it has). It was generally a struggle to get the extensions to handle resolving imports of local files, as well as 3rd party libraries imported via opam. I gave up and went back to VSCode. The plugin setup was straightforward, but I still struggle with being able to actually run a program. I use the utop repl(like) interface to evaluate the statements in my program files, but even that wasn't that simple. Needing to deal with merlin and dune config files just to get my files recognised feels like a bunch of unnecessary complexity. I need to resolve this (and I'd still love to get it all working in emacs), but I can limp along with what I've currently got.</p><p>Anyway, puzzle 1, step 1 - my solution for this was to run a reducing function over the array, incrementing a counter when a new value is greater than the prior value. It required 2 functions to be created to execute and produce the answer. The input needs to be a list of ints as well.</p><pre><code class="ocaml">(* This function receives a tuple that consists of the prior number, and the
+   count of "increments" that have been observed, as well a a new number for
+   comparison. The match statement compares the prior with the new, and if the
+   new is greater, it will return a tuple of the new and increment the count,
+   otherwise it returns a tuple of the new and the old increment count. *)
+
+let increment_counter (prior, inc_count) x =
+  match x with _ when x &gt; prior -&gt; (x, inc_count + 1) | _ -&gt; (x, inc_count)
+
+
+(* This just performs a left fold oven the input list, applying the increment
+   counter function to each input value. The result tuple is destructured and
+   the increment count is returned *)
+
+let problem_1 input =
+  let _, result = List.fold_left increment_counter (List.hd input, 0) input in
+  result
+</code></pre>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2021-12-01-advent-of-code-2021/">&laquo; Advent of Code 2021</a>
+        
+        
+        <a class="right button" href="/posts/2020-08-12-javascript-object-compaction/">Javascript Object Compaction &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2021-12-01-advent-of-code-2021-setup/";
+            this.page.identifier = "Advent of Code 2021 - Puzzle 1";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+<hr/>
+<div id="footercont" class="clearfix">Copyright &copy; 2021 Hamish Rickerby
+    <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
+
+</div>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+
+
+</body>
+</html>
