@@ -74,25 +74,42 @@
         <strong>December 1, 2021</strong>
         
     </div>
-    <h1>Advent of Code 2021</h1>
+    <h1>Advent of Code 2021 - Puzzle 1</h1>
 </div>
 <div>
     
-    <p>I try to do at least some of the <a href="https://adventofcode.com">Advent of Code</a> puzzles each year. Usually I get a few days in then other pressures come up and I have to bail, but I use the puzzles as an opportunity to try out programming languages that are new to me, or ones I want to become more familiar with. Last year I attempted to use OCaml. This went OK for a couple of days, but then we moved internationally and were locked in a hotel room for 2 weeks with young kids, so AoC was the first thing to go out the window.</p><p>This year I'm looking to use <a href="https://ocaml.org">OCaml</a> again to solve the puzzles - I didn't give it a fair shake last year. I've had a bit of experience with ML-style languages via Haskell, so I'm hoping the learning curve isn't too steep.</p><p>I'm terrible at keeping on top of this blog, but I'd like to document the process I go through with learning this language via the puzzles.</p><p>Stay tuned.</p>
+    <p>One of the issues with getting started with a new language in a time-pressured scenario is setting up environment and tooling. Last year I used VSCode and the <a href="https://github.com/reasonml-editor/vscode-reasonml">ReasonML plugin</a>. It installed relatively straight-forwardly (from what I remember), and supported type hints, and autocompletion. This year I decided I'd setup Emacs, given I use it for everything else. Long story short - what an utter shambles. I tried to follow the <a href="https://dev.realworldocaml.org/install.html">installation guide</a> for the Real World OCaml book plus the Prelude OCaml support (I use Prelude with Emacs, due to the great Clojure support it has). It was generally a struggle to get the extensions to handle resolving imports of local files, as well as 3rd party libraries imported via opam. I gave up and went back to VSCode. The plugin setup was straightforward, but I still struggle with being able to actually run a program. I use the utop repl(like) interface to evaluate the statements in my program files, but even that wasn't that simple. Needing to deal with merlin and dune config files just to get my files recognised feels like a bunch of unnecessary complexity. I need to resolve this (and I'd still love to get it all working in emacs), but I can limp along with what I've currently got.</p><p>Anyway, puzzle 1, step 1 - my solution for this was to run a reducing function over the array, incrementing a counter when a new value is greater than the prior value. It required 2 functions to be created to execute and produce the answer. The input needs to be a list of ints as well.</p><pre><code class="ocaml">(* This function receives a tuple that consists of the prior number, and the
+   count of "increments" that have been observed, as well a a new number for
+   comparison. The match statement compares the prior with the new, and if the
+   new is greater, it will return a tuple of the new and increment the count,
+   otherwise it returns a tuple of the new and the old increment count. *)
+
+let increment_counter (prior, inc_count) x =
+  match x with _ when x &gt; prior -&gt; (x, inc_count + 1) | _ -&gt; (x, inc_count)
+
+
+(* This just performs a left fold oven the input list, applying the increment
+   counter function to each input value. The result tuple is destructured and
+   the increment count is returned *)
+
+let problem_1 input =
+  let _, result = List.fold_left increment_counter (List.hd input, 0) input in
+  result
+</code></pre>
 </div>
 
 <br/>
 
     
     <div id="comments">
-        <a href="/posts/2021-12-01-advent-of-code-2021/#disqus_thread">View Comments</a>
+        <a href="/posts/2021-12-01-advent-of-code-2021-setup/#disqus_thread">View Comments</a>
     </div>
     
 
     <div id="prev-next">
         
         
-        <a class="button right" href="/posts/2021-12-01-advent-of-code-2021-setup/">Advent of Code 2021 - Puzzle 1 &raquo;</a>
+        <a class="button right" href="/posts/2021-12-01-advent-of-code-2021/">Advent of Code 2021 &raquo;</a>
         
     </div>
 </div>
