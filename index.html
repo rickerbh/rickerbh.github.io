@@ -83,8 +83,7 @@
 type sub_pos = { hpos : int; depth : int }
 </code></pre><p>Then we need a way to get the input values. The file has an instruction per line, and we need to split the instructions into their direction and "amount" components. We map over the lines.</p><pre><code class="ocaml">(* OCaml doesn't support \s+ ?!*)
 let split_on_space x = Str.split (Str.regexp "[ ]+") x
-</code></pre><pre><code>For converting the strings into instructions, we can use a pattern match. In Haskell I'd have used a `Parser`, but I haven't done enough investigation in OCaml around specific support for this. This solution seems OK though. I've implemented an `Unknown` value to handle any instructions that don't match. None were encountered though.
-</code></pre><pre><code class="ocaml">let direction_generator s i =
+</code></pre><p>For converting the strings into instructions, we can use a pattern match. In Haskell I'd have used a <code>Parser</code>, but I haven't done enough investigation in OCaml around specific support for this. This solution seems OK though. I've implemented an <code>Unknown</code> value to handle any instructions that don't match. None were encountered though.</p><pre><code class="ocaml">let direction_generator s i =
   match s with
   | "forward" -&gt; Forward (int_of_string i)
   | "down" -&gt; Down (int_of_string i)
