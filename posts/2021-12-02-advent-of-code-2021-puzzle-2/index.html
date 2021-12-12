@@ -11,9 +11,9 @@
     
 <meta name="keywords" content="">
 
-<meta name="description" content="Puzzle 2 Step 1For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.">
+<meta name="description" content="Puzzle 2 - Step 1For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.">
 
-<meta property="og:description" content="Puzzle 2 Step 1For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.">
+<meta property="og:description" content="Puzzle 2 - Step 1For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.">
 
 <meta property="og:url" content="https://hamishrickerby.com/posts/2021-12-02-advent-of-code-2021-puzzle-2/" />
 <meta property="og:title" content="Advent of Code 2021 - Puzzle 2" />
@@ -85,7 +85,7 @@
 </div>
 <div>
     
-    <h2 id="puzzle-2-step-1">Puzzle 2 Step 1</h2><p>For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.</p><p>Lets introduce two cutom types. One for the instructions (<code>direction</code>) and one for the submarine position.</p><pre><code class="ocaml">type direction = Forward of int | Up of int | Down of int | Unknown
+    <h2 id="puzzle-2---step-1">Puzzle 2 - Step 1</h2><p>For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.</p><p>Lets introduce two cutom types. One for the instructions (<code>direction</code>) and one for the submarine position.</p><pre><code class="ocaml">type direction = Forward of int | Up of int | Down of int | Unknown
 
 type sub_pos = { hpos : int; depth : int }
 </code></pre><p>Then we need a way to get the input values. The file has an instruction per line, and we need to split the instructions into their direction and "amount" components. We map over the lines.</p><pre><code class="ocaml">(* OCaml doesn't support \s+ ?!*)
@@ -105,7 +105,7 @@ let convert_input (instruction::num::_) = direction_generator instruction num;
   | Unknown -&gt; {hpos= acc.hpos; depth= acc.depth}
 </code></pre><p>And then we just tie it all together</p><pre><code class="ocaml">let answer = List.map split_on_space input |&gt; List.map convert_input |&gt; List.fold_left move {hpos = 0; depth = 0} in
   answer.hpos * answer.depth
-</code></pre><h2 id="puzzle-2-step-2">Puzzle 2, Step 2</h2><p>There are a couple of changes required for step 2. The first is that the custom type that represents the position of the sub needs a third datapoint to represent the aim. The second is that the movement calculation needs to be changed. No biggie.</p><pre><code class="ocaml">type sub_pos2 = { hpos : int; depth : int ; aim: int}
+</code></pre><h2 id="puzzle-2---step-2">Puzzle 2 - Step 2</h2><p>There are a couple of changes required for step 2. The first is that the custom type that represents the position of the sub needs a third datapoint to represent the aim. The second is that the movement calculation needs to be changed. No biggie.</p><pre><code class="ocaml">type sub_pos2 = { hpos : int; depth : int ; aim: int}
 
 let move2 acc d = match d with
   | Forward i -&gt; {hpos= acc.hpos + i; depth= acc.depth + (acc.aim * i); aim= acc.aim}
