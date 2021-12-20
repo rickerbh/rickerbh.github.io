@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <title>Hamish Rickerby: select with value - rubyonrails</title>
     
-<meta name="keywords" content="">
+<meta name="keywords" content="ocaml,aoc,aoc2021">
 
 <meta name="description" content="Grrr, just spent a little while playing with the &quot;select&quot; form tag in rails.  Pain in the ass.  The issue I was having is that I want to give users an option of 2 values with a default selected value on the &quot;new&quot; form.  I also have a edit form that I want to let users update their objects with, and again, only 2 values.  These values are static, and I didn&#39;t want to have the pain of creating a db table, and an object to represent it.  That would result in unnecessary code, and unnecessary database hits.The issue with the &quot;select&quot; tag is that I cannot determine how to set the selected value, without using a collection of objects.  I had a look for a solution for this problem, and found this site.  This gave me a helper that lets me put in an object, with some methods to get the value and text options for my option set.  that was alright.  But, I didn&#39;t want the full object model to be supported.  I was after a very simple implementation with using a hash, and a string as the selected value.">
 
@@ -53,6 +53,8 @@
         <ul class="menu">
             <li ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
             
             
             <li >

@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <title>Hamish Rickerby: Advent of Code 2021 - Puzzle 2</title>
     
-<meta name="keywords" content="">
+<meta name="keywords" content="ocaml,aoc,aoc2021">
 
 <meta name="description" content="Puzzle 2 - Step 1For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.">
 
@@ -53,6 +53,8 @@
         <ul class="menu">
             <li ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
             
             
             <li >
@@ -115,6 +117,18 @@ let move2 acc d = match d with
 </code></pre><p>And then, we just execute with this different move function.</p><pre><code class="ocaml">    let answer = List.map split_on_space input |&gt; List.map convert_input |&gt; List.fold_left move2 {hpos= 0; depth=0; aim=0} in
     answer.hpos * answer.depth
 </code></pre>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/ocaml/">ocaml</a>
+    
+    <a href="/tags-output/aoc/">aoc</a>
+    
+    <a href="/tags-output/aoc2021/">aoc2021</a>
+    
 </div>
 
 <br/>

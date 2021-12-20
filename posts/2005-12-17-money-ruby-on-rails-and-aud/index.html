@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <title>Hamish Rickerby: Money, Ruby on Rails and AUD</title>
     
-<meta name="keywords" content="">
+<meta name="keywords" content="ocaml,aoc,aoc2021">
 
 <meta name="description" content="I had a bit of a play with the Money and Paypal GEMs available at http://dist.leetsoft.com .  The Money API only supports Euro, US and Canadian dollars.  For my paypal integration, I need to support Australian dollar (as dirty old paypal don&#39;t support NZD).  So, I&#39;ve extended the Money class to create an AUD implementation.  There&#39;s nothing special about it, but if you&#39;re too lazy to write the couple of lines of code yourself, here it is.Also, I&#39;ve been having a bit of trouble getting the Money and Paypal GEMs to work.  The issue is that from within a rails controller it doesn&#39;t recognise the Money or Paypal classes.  It can&#39;t find them.  This is the only GEM that I&#39;m having troubles with.  My solution was to import the .rb files into the /vendor directory.  If anyone has this problem, or has a solution for this problem - or even tips, please let me know.  It&#39;s annoying me now.">
 
@@ -53,6 +53,8 @@
         <ul class="menu">
             <li ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
             
             
             <li >

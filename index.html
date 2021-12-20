@@ -47,6 +47,8 @@
             <li  class="active" ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
             
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
             
             <li >
                 <a href="/about/">About Hamish</a>
@@ -71,121 +73,98 @@
 <div id="post">
     <div class="post-header">
     <div id="post-meta" class="row">
-        <strong>December 4, 2021</strong>
+        <strong>December 5, 2021</strong>
         
     </div>
-    <h1>Advent of Code 2021 - Puzzle 4</h1>
+    <h1>Advent of Code 2021 - Puzzle 5</h1>
 </div>
 <div>
     
-    <h2 id="ocaml---how-its-going">OCaml - How it's going</h2><p>I'm feeling much more confident with OCaml now, and becoming familiar with the standard List module. The helper functions I've been developing have had a surprising amount of reuse. Things I've discovered so far:</p><ul><li>tiny functions are great in OCaml - single line functions are your friend.</li><li>pattern matching is pervasive - I'm not sure if that's just because I only know the one tool, but it's a great facility, and the compiler really helps with the requirement for exhaustive matching.</li><li>type hints - when I'm struggling a bit to get the types to line up on a function, it really helps to provide the typehints on the function. This ensures that the compiler complains about the code in the function not matching the signature, rather than inferring the "wrong" signature and complaining about the callers of the code.</li></ul><h2 id="puzzle-4---step-1">Puzzle 4 - Step 1</h2><p>The puzzle today is to build a bingo card solver/checker. To solve this, I first considered the types we'd need to represent the card structure. These cards are made up of a 5x5 grid of integers. We also need to have a columnar view of the card, so we can check for winning cards. We can transform the rows to columns with the <code>transpose_matrix</code> function developed in the last puzzle.</p><pre><code class="ocaml">type row = int list
-type card = row list
+    <h2 id="puzzle-5---step-1">Puzzle 5 - Step 1</h2><p>Todays puzzle is about mapping a bunch of lines that have start/end coordinates, and checking for intersections. We need to count the number of intersections in the map. We are also to only consider horizontal or vertical lines.</p><p>To model this, I implemented two new types to represent points, and lines.</p><pre><code class="ocaml">type point = int * int
 
-let columns card =
-  Utils.transpose_matrix card
-  |&gt; List.filter (fun x -&gt; 0 == List.length x |&gt; not)
-</code></pre><p>To find if a card is a winner, either a full row or full column must be marked as seen.</p><pre><code class="ocaml">let row_won numbers row = List.for_all (fun x -&gt; List.mem x numbers) row
+type line = point * point
+</code></pre><p>Lines are to be defined by start/end points, that look like this: <code>((0, 9), (5, 9))</code>.</p><p>To include only horizontal or vertical lines, we need a checker. To check for horizontal or verticalness, we need to ensure that either the first 2 values or the second 2 values of the points are the same.</p><pre><code class="ocaml">let is_horizontal_or_vertical line =
+  let (x1, y1), (x2, y2) = line in
+  match (x1, y1, x2, y2) with
+  | a, _, b, _ when a = b -&gt; true
+  | _, a, _, b when a = b -&gt; true
+  | _, _, _, _ -&gt; false
+</code></pre><p>To calculate the intersections, we need to consider all points along a line. So, lets generate them. I developed a function that given 2 ints, will move them closer to each other (<code>to_target</code>). We can then use this by passing in the first 2 and last 2 values from the start/end of the line, and they'll converge. We recursively generate the points of a line, until they meet. The <code>expanded_lines</code> function will take an input and generate the points for each line (i.e., the full board).</p><pre><code class="ocaml">let to_target a b =
+  match (a, b) with
+  | _, _ when a &lt; b -&gt; a + 1
+  | _, _ when a &gt; b -&gt; a - 1
+  | _ -&gt; a
 
-let any_true xs =
-  List.fold_left (fun acc x -&gt; match acc with true -&gt; true | _ -&gt; x) false xs
-
-let card_won numbers card =
-  let rows_won = List.map (row_won numbers) card in
-  let columns_won = List.map (row_won numbers) (columns card) in
-  any_true (List.append rows_won columns_won)
-</code></pre><p>We are also dealt a set of cards, so we must be able to check many cards. This uses Option to wrap the winning cards, and then filter_map to unwrap the option and remove the Nones. To determine the winning card, we also need to be able to extract the first winning card. This wraps the result in Option.</p><pre><code class="ocaml">let winning_cards numbers cards =
-  List.filter_map
-    (fun c -&gt;
-      let has_won = card_won numbers c in
-      match has_won with true -&gt; Some c | false -&gt; Option.none)
-    cards
-
-let first_winning_card numbers cards =
-  let (winning_cards : card list) = winning_cards numbers cards in
-  match winning_cards with
-  | [] -&gt; Option.none
-  | _ -&gt; Some (List.hd winning_cards)
-</code></pre><p>Finally we can assemble all this into a game playing function. This function will reduce over the numbers provided, and when it first encounters a winning card, will continue to return the number sequence to that point and the winning card (via the match for Some).</p><pre><code class="ocaml">let play_game numbers cards =
-  List.fold_left
-    (fun (priors, result) x -&gt;
-      match result with
-      | Some _ -&gt; (priors, result)
-      | None -&gt;
-          let new_priors = x :: priors in
-          let c = first_winning_card new_priors cards in
-          (new_priors, c))
-    ([], Option.none) numbers
-</code></pre><p>The scoring mechanism needs to determine which numbers on the winning card were not seen, as well as the last number in the sequence that caused this card to be the winner. This list is summed, and multiplied by the last number. To figure out the numbers not see, we can calculate the difference between the numbers on the card and the numbers that made up the presented sequence.</p><pre><code class="ocaml">let difference l1 l2 = List.filter (fun x -&gt; not (List.mem x l2)) l1
-</code></pre><p>Then the score calculation just takes the difference, the last number in the sequence, and multiplies them together.</p><pre><code class="ocaml">let calculate_score numbers card =
-  let missing_numbers_sum =
-    List.map (fun x -&gt; difference x numbers) card |&gt; List.flatten |&gt; Utils.sum
-  in
-  let last_number = List.hd numbers in
-  missing_numbers_sum * last_number
-</code></pre><p>And we plug it all together...</p><pre><code class="ocaml">let problem_4_1 input =
-  let numbers, cards = input in
-  let winning_numbers, winning_card = play_game numbers cards in
-  match winning_card with
-  | None -&gt; -1
-  | Some c -&gt;
-      let score = calculate_score winning_numbers c in
-      score
-</code></pre><h2 id="puzzle-4---step-2">Puzzle 4 - Step 2</h2><p>The change with step 2 is that all cards need to be solved, and the last card to be solved is to be used to calculate the score. With the <code>play_game</code> function from part 1, I implemented the game solver as a fold, which would run over the entire set of numbers but keep the winning sequence and card. This solution does not work with the second step, as the order of solving is important, and running the solution for step 1 to the end doesn't show the order that the cards were solved in.</p><p>The game runner for step 2 was implemented as a recursive solver, which keeps the cards solved in solving order, and reduces the unsolved card set as the cards get solved. This way, when the unsolved card set is empty, we can return the last solved card.</p><pre><code class="ocaml">let play_game_part_2 numbers cards =
-  let rec finder priors winners numbers cards =
-    match List.length cards with
-    | 0 -&gt; (priors, winners)
-    | _ -&gt; (
-        match numbers with
-        | [] -&gt; (priors, []) (* unsolvable *)
-        | x :: _ -&gt;
-            let new_priors = x :: priors in
-            let these_winners = winning_cards new_priors cards in
-            let new_winners = winners @ these_winners in
-            let remaining_cards = difference cards new_winners in
-            finder new_priors new_winners (Utils.drop 1 numbers) remaining_cards
-        )
-  in
-  finder [] [] numbers cards
-</code></pre><p>And the function to play then score:</p><pre><code class="ocaml">let problem_4_2 input =
-  let numbers, cards = input in
-  let winning_numbers, winning_cards = play_game_part_2 numbers cards in
-  let winning_card = List.rev winning_cards |&gt; List.hd in
-  let score = calculate_score winning_numbers winning_card in
-  score
-</code></pre><h2 id="parsing">Parsing</h2><p>The parsing solution for the input file was a bit different than prior puzzles as the file had multiple "sections" representing the selected numbers, and the cards, and then within the card section all the different cards were listed. I'm not that happy with my solution here, but it works and I consider it secondary to the puzzle solving logic.</p><p>To parse out a card we split the lines that represent the numbers on the card by space, and then convert them into a list of integers. To then parse out the cards, we split the input into block of 5 lines (5 rows per card), parse the card, then skip the card and space separator by dropping 6 lines from the input.</p><pre><code class="ocaml">let parse_card lines =
-  List.map
-    (fun l -&gt; Str.split (Str.regexp "[ ]+") l |&gt; List.map int_of_string)
-    lines
-
-let rec parse_cards lines =
-  match lines with
-  | [] -&gt; []
+let rec generate_line_points line =
+  let start_point, end_point = line in
+  match start_point = end_point with
+  | true -&gt; [ start_point ]
   | _ -&gt;
-      let card_lines = Utils.take 5 lines in
-      let card = parse_card card_lines in
-      card :: parse_cards (Utils.drop 6 lines)
-</code></pre><p>To finalise the parsing, the total input includes the list of numbers in the first line, and then an empty line as the separator. Then, the cards.</p><pre><code class="ocaml">let parse_input filename =
-  let lines = Utils.read_lines filename in
-  let numbers =
-    List.hd lines |&gt; Str.split (Str.regexp "[,]") |&gt; List.map int_of_string
+      let (x1, y1), (x2, y2) = line in
+      let next_x = to_target x1 x2 in
+      let next_y = to_target y1 y2 in
+      start_point :: generate_line_points ((next_x, next_y), end_point)
+
+let expanded_lines input = List.map generate_line_points input
+</code></pre><p>This gives us all the tools we need to generate the list of all lines. Next step is to determine the "dangerous" points on the board i.e., where the lines intersect. To do this, I use a <code>frequency</code> function to count how many lines are at each point, and then match each of these and emit true when there are more than 1.</p><pre><code class="ocaml">let is_dangerous_vent t = match t with _, f when f &gt; 1 -&gt; true | _, _ -&gt; false
+</code></pre><p>And tying it all together...</p><pre><code class="ocaml">et problem_5_1 input =
+  let lines =
+    List.filter is_horizontal_or_vertical input
+    |&gt; expanded_lines |&gt; List.flatten
   in
-  let cards = parse_cards (Utils.drop 2 lines) in
-  (numbers, cards)
-</code></pre>
+  let freqs = Utils.frequencies lines in
+  let dangerous_count = List.filter is_dangerous_vent freqs |&gt; List.length in
+  dangerous_count
+</code></pre><p>This works, but it is <strong>SLOW</strong>.</p><h2 id="puzzle-5---step-2">Puzzle 5 - Step 2</h2><p>The twist with step 2 is that we need to include the diagonal lines. I think I cheated a bit here. The instructions were explicit with only 45º lines being supported, but I just removed the filter check for horizontal and vertical, and I was done 😅</p><pre><code class="ocaml">let problem_5_2 input =
+  let lines = expanded_lines input |&gt; List.flatten in
+  let freqs = Utils.frequencies lines in
+  let dangerous_count = List.filter is_dangerous_vent freqs |&gt; List.length in
+  dangerous_count
+</code></pre><p>Also <strong>SLOW</strong>.</p><h2 id="parser">Parser</h2><p>This parser is a bit clunky. I needed to turn a string of <code>0,9 -&gt; 0,5</code> into a <code>((0, 9), (0, 5))</code>. This is just a series of nested maps, and some fun with optionals.</p><pre><code class="ocaml">let parse_line_to_ints lines =
+  let pairs =
+    List.map (fun l -&gt; Str.split (Str.regexp " -&gt; ") l) lines
+    |&gt; List.map (fun l -&gt;
+           List.map
+             (fun p -&gt;
+               let t = Str.split (Str.regexp ",") p |&gt; List.map int_of_string in
+               match t with a :: b :: _ -&gt; Option.some (a, b) | _ -&gt; None)
+             l)
+    |&gt; List.map Utils.deoptionalize
+    |&gt; List.map (fun xs -&gt;
+           match xs with a :: b :: _ -&gt; Option.some (a, b) | _ -&gt; None)
+    |&gt; Utils.deoptionalize
+  in
+  pairs
+</code></pre><p>And the familiar function to read some lines from a file.</p><pre><code class="ocaml">let parse_input filename =
+  let lines = Utils.read_lines filename in
+  parse_line_to_ints lines
+</code></pre><h2 id="slow">Slow</h2><img src="https://memegenerator.net/img/instances/49324497.jpg" width="512" height="380" /><p>Haven't figured it out yet. Obviously one of these steps is taking a very long time, or maybe many are, or maybe there are just a lot of steps. I started to investigate potential performance tweaks with the help of <a href="https://ocaml.org/learn/tutorials/performance_and_profiling.html">Performance and Profiling on OCaml.org</a>. The low hanging fruit was to de-genericise some of the functions by providing type hints to the compiler. I'm not sure if this actually helped, as it was taking upwards of 220 seconds to run on my machine, so I feel that unless there was a massive change in speed, this wasn't the issue. There must be a fundamentally different way to solve this problem.</p><p>I also looked at generating the annotated execution stats with ocamlprof, but I'm already behind with these puzzles and couldn't immediately figure out how ocamlprof interacts with dune. 🤷</p>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/ocaml/">ocaml</a>
+    
+    <a href="/tags-output/aoc/">aoc</a>
+    
+    <a href="/tags-output/aoc2021/">aoc2021</a>
+    
 </div>
 
 <br/>
 
     
     <div id="comments">
-        <a href="/posts/2021-12-04-advent-of-code-2021-puzzle-4/#disqus_thread">View Comments</a>
+        <a href="/posts/2021-12-05-advent-of-code-2021-puzzle-5/#disqus_thread">View Comments</a>
     </div>
     
 
     <div id="prev-next">
         
         
-        <a class="button right" href="/posts/2021-12-03-advent-of-code-2021-puzzle-3/">Advent of Code 2021 - Puzzle 3 &raquo;</a>
+        <a class="button right" href="/posts/2021-12-04-advent-of-code-2021-puzzle-4/">Advent of Code 2021 - Puzzle 4 &raquo;</a>
         
     </div>
 </div>

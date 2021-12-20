@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <title>Hamish Rickerby: &quot;Updating a UITableView without calling reloadData&quot;</title>
     
-<meta name="keywords" content="">
+<meta name="keywords" content="ocaml,aoc,aoc2021">
 
 <meta name="description" content="For a new app I&#39;ve been working on for the past few days I wanted to a nice &quot;inline&quot; way of gathering data from the user. Typically, if I&#39;ve needed to have a user put in more than a single line of text, I would have popped the user to a different screen that has a UITextView as the sole point of focus, get them to type in the data, and then have them navigate back and have the data appear within a tableview.For this new app, I wanted them to be able to enter large amounts of text inline within a cell of a tableview. This also means that the cell would have to dynamically grow and shrink, as the user is entering the data. The UITextView (where the user is entering the data) would need to resize itself based on the users input, as well as the UITableViewCell that contains the text view, and have the UITableView adjust on the fly to the users input.">
 
@@ -53,6 +53,8 @@
         <ul class="menu">
             <li ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
             
             
             <li >

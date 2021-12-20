@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <title>Hamish Rickerby: Go PayPal!</title>
     
-<meta name="keywords" content="">
+<meta name="keywords" content="ocaml,aoc,aoc2021">
 
 <meta name="description" content="Woohoo!  I got PayPal IPN integration working.  Now you can register with my application, make a payment via PayPal, and PayPal will come back to my web app and let me know that you&#39;ve registered.  Clever stuff.I used the PayPal IPN GEM from http://dist.leetsoft.com, and integrated it with my own Payment object.  I don&#39;t really have the need for a full &quot;ordering&quot;-type system with my application.  There is only ever 1 line item per order, so only a single payment object is required.  I could have implemented an order, with order_line_items, and shipping and billing addresses, and tax and handling calculations, but I don&#39;t need them.">
 
@@ -53,6 +53,8 @@
         <ul class="menu">
             <li ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
             
             
             <li >

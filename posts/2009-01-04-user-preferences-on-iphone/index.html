@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <title>Hamish Rickerby: User Preferences on iPhone</title>
     
-<meta name="keywords" content="">
+<meta name="keywords" content="ocaml,aoc,aoc2021">
 
 <meta name="description" content="Getting and setting user preferences on iPhone is pretty darn easy.  I was looking for a way to automagically store a users email address between different application sessions, and found the linked tutorial immensely helpful (iphonedevelopertips.com).I needed to store a string (NSString object actually) however, and the tutorial didn&#39;t help me with that. The NSUserDefaults object has dedicated methods for storing and retrieving BOOL, float, and NSInteger values.  It also has a setObject:forKey: method - which is what I ended up using.  The setObject method handles data of types NSData, NSString, NSDate, NSArray or NSDictitionary - making it incredibly useful indeed.">
 
@@ -53,6 +53,8 @@
         <ul class="menu">
             <li ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
             
             
             <li >
