@@ -114,7 +114,7 @@ let rec generate_line_points line =
 
 let expanded_lines input = List.map generate_line_points input
 </code></pre><p>This gives us all the tools we need to generate the list of all lines. Next step is to determine the "dangerous" points on the board i.e., where the lines intersect. To do this, I use a <code>frequency</code> function to count how many lines are at each point, and then match each of these and emit true when there are more than 1.</p><pre><code class="ocaml">let is_dangerous_vent t = match t with _, f when f &gt; 1 -&gt; true | _, _ -&gt; false
-</code></pre><p>And tying it all together...</p><pre><code class="ocaml">et problem_5_1 input =
+</code></pre><p>And tying it all together...</p><pre><code class="ocaml">let problem_5_1 input =
   let lines =
     List.filter is_horizontal_or_vertical input
     |&gt; expanded_lines |&gt; List.flatten
