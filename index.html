@@ -73,62 +73,40 @@
 <div id="post">
     <div class="post-header">
     <div id="post-meta" class="row">
-        <strong>December 7, 2021</strong>
+        <strong>February 20, 2022</strong>
         
     </div>
-    <h1>Advent of Code 2021 - Puzzle 7</h1>
+    <h1>Getting started with Pure-C on the Atari ST</h1>
 </div>
 <div>
     
-    <h2 id="puzzle-7---step-1">Puzzle 7 - Step 1</h2><p>This puzzle is about calculating the minimum distance to a common integer for a set of integers. OK - the puzzle talks about crab submarines and whales, but that's not that important.</p><p>There is a sneaky trick to calculate the midpoint in a set of integers. You can sort the list, and then look at the middle value. This is the minimum distance to the rest of the numbers in the set.</p><pre><code class="ocaml">let middle input =
-  let list = List.sort compare input in
-  let half_length = List.length list / 2 in
-  List.nth (Utils.drop half_length list) 0
-</code></pre><p>Then, we need to calculate the actual distances to this middle.</p><pre><code class="ocaml">let fuel_usage position crabs =
-  List.map (fun x -&gt; if x &gt; position then x - position else position - x) crabs
-  |&gt; Utils.sum
-</code></pre><p>And that's it!</p><pre><code class="ocaml">let problem_7_1 input = fuel_usage (middle input) input
-</code></pre><h2 id="puzzle-7---step-2">Puzzle 7 - Step 2</h2><p>Step 2 is a bit trickier. It changes the fuel calculation function, so that the minimum distance is no longer the sorted-middle number. The further away a point is from the minimum distance number, it gets more "expensive" at a greater than linear rate. Eg, if you are 4 away, the cost is 10 = 1+2+3+4.</p><p>So, a new fuel calculation function that works with this increased cost per step of distance, as well as a function to calculate for each crab.</p><pre><code class="ocaml">let rec crabby_fuel i = match i with 0 -&gt; 0 | _ -&gt; i + crabby_fuel (pred i)
+    <h2 id="getting-started-with-pure-c-on-the-atari-st">Getting started with Pure-C on the Atari ST</h2><p>TLDR: <em>I found setting up Pure-C to get started with development took me too long (a hour or so on and off to figure it out), so have documented the key points in the process to get up and running. Install, Configure, Code, and Create a Project File are the key steps.</em></p><h3 id="why">Why?</h3><p>I got my first Atari ST back in the late 80's. It was magical. Sure, the games were good, but what I really loved was poking around the OS, playing with configuration files, and programming on it. Bending the computer to my will, and just experimenting, was really enjoyable.</p><p>One thing I never did was and GEM or AES programming. If you're not sure what these are, the short version is that it's the OS and UI built into the ROM of the machine, with AES being the framework providing the graphical UI. It might be part of a mid-life crisis, but I want to explore graphical UI programming on the Atari ST, so have decided to learn.</p><h3 id="pure-c">Pure-C</h3><p>I chose Pure-C due to a couple of posts in forums. The sensible options seemed to be Lattice-C or Pure-C, and Lattice-C GUI is rumored to be a bit unstable, so the 3 minutes of research I did settled on Pure-C.  It's downloadable from <a href="https://sites.google.com/site/stessential/development/pure-c">here</a>.</p><p>First step - unzip pure-c and install it in a directory on your ST. Then run <code>pc.prg</code>.</p><p><img src="./img/pc-prg.png" alt="" /></p><h3 id="configuration">Configuration</h3><p>Pure-C needs to know a couple of things to be able to build applications. It needs to know where to find the header files, and it also needs to know where to find the libraries with external functions (like standard library functions).</p><p>At a minimum, you need to set the Include directory (header files) for in the <code>Options -&gt; Compiler</code> menu, and the Library directory (LIB files) in <code>Options -&gt; Linker</code>. Once there are done, you're ready to code.</p><p><img src="./img/compiler-options.png" alt="" /></p><p><img src="./img/linker-options.png" alt="" /></p><h3 id="coding">Coding</h3><p>Use the <code>File -&gt; Open .C</code> menu item to create a new file, and get typing. I wrote my first C program (for about 15 years) based on the <a href="https://info-coach.fr/atari/software/_development/cmanship-v1.0.pdf">C-Manship Complete PDF</a>, and compiled it.</p><pre><code class="c">#include &lt;stdio.h&gt;
 
-let fuel_usage2 position crabs =
-  List.map
-    (fun x -&gt;
-      if x &gt; position then crabby_fuel (x - position)
-      else crabby_fuel (position - x))
-    crabs
-  |&gt; Utils.sum
-</code></pre><p>To figure out the minimum distance, I tried a number of options. The middle is obviously wrong because the test data fails, but the average works with the test data. However, this method doesn't work on the full data set (more on this later). So, I just brute-forced it.</p><p>All possible answers must be in the range of the minimum value in the list to the maximum value in the list. Lets get the min and max values, and generate a range of numbers.</p><pre><code class="ocaml">let list_min xs = List.sort compare xs |&gt; List.hd
+int main (void)
+{
+    char ch;
 
-let list_max xs = List.sort compare xs |&gt; List.rev |&gt; List.hd
-
-let range s e = List.init (e - s) (fun x -&gt; pred s + x + 1)
-</code></pre><p>Then we just brute-force it by folding over the range, and keeping the min fuel usage calculation.</p><pre><code class="ocaml">let problem_7_2 input =
-  let xs = range (list_min input) (succ (list_max input)) in
-  List.fold_left
-    (fun acc v -&gt;
-      let this_fuel = fuel_usage2 v input in
-      if acc &lt; this_fuel then acc else this_fuel)
-    Int.max_int xs
-</code></pre><p>This takes about 8 seconds to execute on my machine. So, not fast, but not impossibly slow.</p><h2 id="parser">Parser</h2><p>The parser for this is the same as yesterday - just a list of ints on a single line separated by <code>,</code>.</p><pre><code class="ocaml">let parse_input filename =
-  let lines = Utils.read_lines filename in
-  List.map
-    (fun l -&gt; Str.split (Str.regexp ",") l |&gt; List.map int_of_string)
-    lines
-  |&gt; List.flatten
-
-let input = parse_input "problem_7.input"
-</code></pre><h2 id="average-doesnt-work">Average doesn't work</h2><p>I have a suspicion that using the average is the key here. For the data set I was given, the using the average yeilded a result that was only 2 off the actual answer. I wonder if there is a trick here that would solve this for me. Eg, distance to the average as a float, rather than an int.</p>
+    printf("Press Return\n");
+    ch = getchar();
+    return(0);
+}
+</code></pre><p><code>Compile -&gt; Compile "&lt;my file.c&gt;"</code>. All good. Then, to make an executable application, you need to make a Project.</p><h3 id="project">Project</h3><p>Use <code>File -&gt; Open .PRJ</code> to make a new project file in the same directory as your <code>.C</code> file above. Then, in the first line put the name of the output file. Next line should have an <code>=</code>. Pure-C uses this as a separator between sections of the file.</p><p>Below this, you need to include all the dependencies for the compiler and linker. They are loaded in the order they are presented. I found for my simple file above, that 3 entries were needed.</p><pre><code>pressret.prg
+=
+PCSTART.O
+pressret.c
+PCSTDLIB.LIB
+</code></pre><p>The 3 files that are needed to build the executable are <code>PCSTART.O</code> (startup module), <code>pressret.c</code> (my code), and <code>PCSTDLIB.LIB</code> (the standard library - which provides the functions from <code>stdio.h</code>).</p><p><img src="./img/prj-contents.png" alt="" /></p><p>All the Pure-C libraries are in the <code>lib</code> directory within the Pure-C directory. The way I connected the use of stdio.h to <code>PDSTDLIB.LIB</code> was through the documentation. <code>Help -&gt; Libraries</code>, and you don't have to read German perfectly to figure it out. The top page connects the files to general areas, and the details show which functions are in those libraries, and which headers need to be imported.</p><p><img src="./img/help-libraries.png" alt="" /><img src="./img/help-stdlib.png" alt="" /></p><p>Project files can get much more complex, with submodules and multiple dependencies. Check the <code>Pure C English Overview</code> available in <code>PURE_C.TXT</code> in initial link to Pure C up the top of this post.</p><h3 id="running">Running</h3><p>Once all that setup is done in the project file, the application executable should be able to be built and run.  <code>Project -&gt; Select</code> to choose the project file to use, and then <code>Project -&gt; Make All</code> to make the application, or <code>Project -&gt; Run</code> to make and run.</p><p><img src="./img/project-select.png" alt="" /></p><p>Behold the majesty!</p><p><img src="./img/running-pressret.png" alt="" /></p><p>Hope that helps. I want to document more of the GEM programming journey as well. I plan on doing this by running through the C-Manship book - fingers crossed I find the time.</p>
 </div>
 
 <div id="post-tags">
     <br/> 
     <b>Tags: </b>
     
-    <a href="/tags-output/ocaml/">ocaml</a>
+    <a href="/tags-output/programming/">programming</a>
     
-    <a href="/tags-output/aoc/">aoc</a>
+    <a href="/tags-output/atari%20st/">atari st</a>
     
-    <a href="/tags-output/aoc2021/">aoc2021</a>
+    <a href="/tags-output/c/">c</a>
     
 </div>
 
@@ -136,20 +114,20 @@ let input = parse_input "problem_7.input"
 
     
     <div id="comments">
-        <a href="/posts/2021-12-06-advent-of-code-2021-puzzle-7/#disqus_thread">View Comments</a>
+        <a href="/posts/2022-02-20-pure-c-atari-st/#disqus_thread">View Comments</a>
     </div>
     
 
     <div id="prev-next">
         
         
-        <a class="button right" href="/posts/2021-12-06-advent-of-code-2021-puzzle-6/">Advent of Code 2021 - Puzzle 6 &raquo;</a>
+        <a class="button right" href="/posts/2021-12-06-advent-of-code-2021-puzzle-7/">Advent of Code 2021 - Puzzle 7 &raquo;</a>
         
     </div>
 </div>
 
 <hr/>
-<div id="footercont" class="clearfix">Copyright &copy; 2021 Hamish Rickerby
+<div id="footercont" class="clearfix">Copyright &copy; 2022 Hamish Rickerby
     <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
 
 </div>
