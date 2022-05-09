@@ -7,11 +7,18 @@
     <!-- Website Template designed by www.downloadwebsitetemplates.co.uk -->
     <!-- Modified to fit Cryogen.-->
     <meta charset="UTF-8">
-    <title>Hamish Rickerby</title>
+    <title>Hamish Rickerby: Baby&#39;s First GEM Program</title>
     
-    <meta name="description" content="Hamish Rickerby&#39;s blog. I write about software and technology in general.">
-    <meta name="keywords" content="">
-    
+<meta name="keywords" content="programming,atari st,c,ocaml,aoc,aoc2021">
+
+<meta name="description" content="Got my first GEM program running. It&#39;s a stripped down version of the example VDI drawing program in C-Manship. The complexities here were related to my understanding of the functions used to draw, due to the Pure-C documentation being auf Deutsch. I can read a little german, but not programmer documentation german. The port from Pure-C was fairly straightforward, with only finding the header files for functions (not all are documented), and also which libs to include being slightly time consuming.Code">
+
+<meta property="og:description" content="Got my first GEM program running. It&#39;s a stripped down version of the example VDI drawing program in C-Manship. The complexities here were related to my understanding of the functions used to draw, due to the Pure-C documentation being auf Deutsch. I can read a little german, but not programmer documentation german. The port from Pure-C was fairly straightforward, with only finding the header files for functions (not all are documented), and also which libs to include being slightly time consuming.Code">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2022-03-01-first-gem-program/" />
+<meta property="og:title" content="Baby&#39;s First GEM Program" />
+<meta property="og:type" content="article" />
+
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
@@ -44,7 +51,7 @@
             <p><span class="fa fa-reorder"></span><strong>Menu</strong></p>
         </div>
         <ul class="menu">
-            <li  class="active" ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Home" href="/">Home</a></li>
             <li ><a title="Archives" href="/archives/">Archives</a></li>
             
             <li ><a title="Tags" href="/tags/">Tags</a></li>
@@ -156,18 +163,29 @@ PCGEMLIB.LIB
 
 <br/>
 
-    
-    <div id="comments">
-        <a href="/posts/2022-03-01-first-gem-program/#disqus_thread">View Comments</a>
-    </div>
-    
-
     <div id="prev-next">
         
         
-        <a class="button right" href="/posts/2022-02-20-pure-c-atari-st/">Getting started with Pure-C on the Atari ST &raquo;</a>
+        <a class="right button" href="/posts/2022-02-20-pure-c-atari-st/">Getting started with Pure-C on the Atari ST &raquo;</a>
         
     </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://hamishrickerby.com/posts/2022-03-01-first-gem-program/";
+            this.page.identifier = "Baby&#39;s First GEM Program";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//itickedthewrongbox.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
 </div>
 
 <hr/>
