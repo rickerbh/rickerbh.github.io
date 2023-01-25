@@ -74,84 +74,45 @@
 <div id="post">
     <div class="post-header">
     <div id="post-meta" class="row">
-        <strong>March 1, 2022</strong>
+        <strong>January 25, 2023</strong>
         
     </div>
-    <h1>Baby&#39;s First GEM Program</h1>
+    <h1>Configuring Dhall with Emacs</h1>
 </div>
 <div>
     
-    <p>Got my first GEM program running. It's a stripped down version of the example VDI drawing program in C-Manship. The complexities here were related to my understanding of the functions used to draw, due to the Pure-C documentation being auf Deutsch. I can read a little german, but not programmer documentation german. The port from Pure-C was fairly straightforward, with only finding the header files for functions (not all are documented), and also which libs to include being slightly time consuming.</p><h2 id="code">Code</h2><p>I grabbed the <code>do_circle</code> example and got that working. The comments in the code are executive versions of the translation via google from the german docs.</p><pre><code class="c">#include &lt;aes.h&gt;
-#include &lt;tos.h&gt;
-#include &lt;vdi.h&gt;
+    <p>I use Dhall with archlinux, and emacs, but don't use <code>use-package</code>. The documentation at https://docs.dhall-lang.org/howtos/Text-Editor-Configuration.html#EMACS assumes you do use this, but I use <code>prelude</code> to simplify a bunch of my emacs setup, and am not interested in another tool that does similar setup work.</p><p>To get Dhall (and in particular, the lsp server) setup, the following steps worked for me.</p><ol><li>Install dhall, dhall-json, and dhall-lsp-server:</li></ol><pre><code class="shell">pacman -Syu dhall dhall-json dhall-lsp-server
+</code></pre><ol start="2"><li>Ensure they're on the path, and smoke-test dhall-json:</li></ol><pre><code class="shell">dhall-to-json &lt;&lt;&lt; '{ foo = [1, 2, 3], bar = True }'
+</code></pre><ol start="3"><li>Install <code>dhall-mode</code> in emacs</li></ol><pre><code class="text">M-x package-install
+Type dhall-mode
+Then enter to install
+</code></pre><ol start="4"><li>Configure emacs to use dhall, and the lsp server</li></ol><pre><code class="emacs-lisp">;; Setup Dhall
+(require 'dhall-mode)
+(setq
+ ;; comment the next line to use unicode syntax
+ dhall-format-arguments (\` ("--ascii"))
 
-int work_in[11], work_out[57];
-int handle;
-int gr_hwchar, gr_hhchar, gr_hwbox, gr_hhbox;
+ ;; header-line is obsoleted by lsp-mode
+ dhall-use-header-line nil)
 
-void open_vwork(void);
-void do_circle(void);
+(add-hook 'dhall-mode-hook 'lsp)
+</code></pre><ol start="5"><li>Evaluate the above in emacs, and then open a <code>.dhall</code> file. lsp should start up, and be ready to go.</li></ol><p>You can test the integration with the following configuration file</p><pre><code class="dhall">let user = "Dhall"
 
-int main(void)
-{
-    appl_init(); /* GEM - init application */
-    open_vwork();
-    do_circle();
-    v_clsvwk(handle); /* Close the virtual screen */
-    appl_exit();      /* GEM - exit application */
-    return (0);
-}
+let welcome = \(name : Text) -&gt; "Welcome ${name}"
 
-void open_vwork(void)
-{
-    int i;
-
-    for (i = 0; i &lt; 10; work_in[i++] = 1)
-    {
-    };              /* setup work_in array with all values set to 1 */
-    work_in[2] = 2; /* apart from 2 (polyline colour), which is 2. */
-    /* get a graphics handle for this workstation */
-    handle = graf_handle(&amp;gr_hwchar, &amp;gr_hhchar, &amp;gr_hwbox, &amp;gr_hhbox);
-    v_opnvwk(work_in, &amp;handle, work_out); /* Open the virtual screen */
-}
-
-void do_circle(void)
-{
-    int color, radius;
-
-    /* Resets or empties the handles state - clear screen or line feed if printer */
-    v_clrwk(handle);
-    radius = 100;
-    for (color = 1; color &lt; 8; ++color)
-    {
-        /* Set the fill colour */
-        vsf_color(handle, color);
-        /* Draw circle on handle, at x, y, of size radius */
-        v_circle(handle, 150, 100, radius);
-        radius -= 15;
-    }
-    /* Read an input character */
-    Cconin(); /* tos.h */
-}
-</code></pre><p>Not having done any GEM before, one of the things I learnt during this process was about the portability of GEM and drawing routines. GEM attempts to abstract output devices from their implementations, allowing the developer to treat an output device as an output device, regardless of where it renders. What this means in concrete terms is that when you print to a screen or a printer, the functions to do so are the same. This abstraction is really nice, and can free the dev from concerns of specific implementations in hardware. In reality, the developer totally needs to be aware of hardware nuances because of UX and quality concerns, but the API commonality across hardware devices is great.</p><h2 id="project-file">Project File</h2><p>And the project file to build the application (I may have too many libraries included, I was struggling to get it to build so just included a bunch of stuff and didn't go back and figure out what was actually required.</p><pre><code class="c">TEST.PRG
-=
-PCSTART.O
-TEST.C
-PCSTDLIB.LIB
-PCTOSLIB.LIB
-PCGEMLIB.LIB
-</code></pre><p>And the output</p><p><img src="./img/gem-1.png" alt="" /></p><p>This only shows 4 colours due to ST-Medium resolution. ST-Low should show the full 8, but I use mono when developing so more text can fit on screen at once - that just shows a single black circle.</p><p>Next up, AES and windows and resources - hopefully.</p>
+in  welcome user ++ 42
+</code></pre><p>It should warn you on the last line with <code>Error: (++) only works on (Text)</code></p>
 </div>
 
 <div id="post-tags">
     <br/> 
     <b>Tags: </b>
     
-    <a href="/tags-output/programming/">programming</a>
+    <a href="/tags-output/linux/">linux</a>
     
-    <a href="/tags-output/atari%20st/">atari st</a>
+    <a href="/tags-output/emacs/">emacs</a>
     
-    <a href="/tags-output/c/">c</a>
+    <a href="/tags-output/dhall/">dhall</a>
     
 </div>
 
@@ -159,20 +120,20 @@ PCGEMLIB.LIB
 
     
     <div id="comments">
-        <a href="/posts/2022-03-01-first-gem-program/#disqus_thread">View Comments</a>
+        <a href="/posts/2023-01-25-configure-dhall-in-emacs/#disqus_thread">View Comments</a>
     </div>
     
 
     <div id="prev-next">
         
         
-        <a class="button right" href="/posts/2022-02-20-pure-c-atari-st/">Getting started with Pure-C on the Atari ST &raquo;</a>
+        <a class="button right" href="/posts/2022-03-01-first-gem-program/">Baby&#39;s First GEM Program &raquo;</a>
         
     </div>
 </div>
 
 <hr/>
-<div id="footercont" class="clearfix">Copyright &copy; 2022 Hamish Rickerby
+<div id="footercont" class="clearfix">Copyright &copy; 2023 Hamish Rickerby
     <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
 
 </div>

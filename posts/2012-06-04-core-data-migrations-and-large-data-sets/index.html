@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <title>Hamish Rickerby: &quot;Core Data Migrations and Large Data Sets&quot;</title>
     
-<meta name="keywords" content="programming,atari st,c,ocaml,aoc,aoc2021">
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
 
 <meta name="description" content="I recently updated Moving Van (you should buy it now!) and published the new version in the app store late last week. It was a substantial update to the application - it had a completely new UI with custom interface controls, as well as a whole stack of features that customers had been asking for - things like room autocompletion, saving images to camera roll, more export options, moving items between boxes etc.As part of this update, I also remodelled the Core Data entities that power the application. The initial model that was used was, let&#39;s say, a little naïve in terms of the way that the stored data would impact performance of the application. It stored an image on an item as binary data within the Item entity itself, which in retrospect was a terrible idea because of table view performance. The new version split out the image to a separate entity, which means that when the Item entity loads, the image doesn&#39;t get loaded unless explicitly needed because of the faulting behaviour of Core Data and entity relationships.">
 
@@ -199,7 +199,7 @@ for (NSManagedObject *oldEntity in entities) {
 </div>
 
 <hr/>
-<div id="footercont" class="clearfix">Copyright &copy; 2022 Hamish Rickerby
+<div id="footercont" class="clearfix">Copyright &copy; 2023 Hamish Rickerby
     <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
 
 </div>

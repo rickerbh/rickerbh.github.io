@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <title>Hamish Rickerby: &quot;Continuous Integration and iOS&quot;</title>
     
-<meta name="keywords" content="programming,atari st,c,ocaml,aoc,aoc2021">
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
 
 <meta name="description" content="The client project I&#39;m currently working on is quite large. There are over 90 different screens required in the application, and regression testing all of these, with the different data variants and scenarios is not something I&#39;d like to attempt by hand, and is not something I would expect my client to pay for me (or anyone for that matter) to do. Both unit and application tests can be automated, and I figured that this was something that I should do for this project to ensure changes I introduce don&#39;t break existing functionality, and any bugs found won&#39;t be introduced.To solve this challenge I have introduced a Continuous Integration (CI) server to my workflow. My goals were to have unit and application tests automatically executed when an commit is made to a specific branch in a (local) git repository, and if both of these phases are successful, have the application packaged up, ready for distribution. I also wanted this successful build to be deployed on a daily basis to TestFlight so my client (and any other human testers in the future) could pick it up on their devices. I also wanted code coverage reporting, for both the unit and application tests, so I can see what parts of the application logic and screen flows are actually being tested to give me a level of confidence that the right stuff is getting the attention. The application tests also needed to be executed in a headless manner - I don&#39;t have a physically separate machine (or VM) to run the CI server in, so I don&#39;t want the simulator popping up and distracting me.">
 
@@ -240,7 +240,7 @@ curl http://testflightapp.com/api/builds.json -F file=@Project\ TestFlight/lastS
 </div>
 
 <hr/>
-<div id="footercont" class="clearfix">Copyright &copy; 2022 Hamish Rickerby
+<div id="footercont" class="clearfix">Copyright &copy; 2023 Hamish Rickerby
     <p>Powered by <a href="http://cryogenweb.org">Cryogen</a> | Free Website Template by <a title="free website templates" href="http://www.downloadwebsitetemplates.co.uk" rel="external">Download Website Templates</a></p>
 
 </div>
