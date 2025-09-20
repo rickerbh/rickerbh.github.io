@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Meteor, Heroku, and bcrypt&quot;</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Just had a very frustrating day. Was getting a deployment error on Heroku with a Meteor app I&#39;m making.">
+
+<meta property="og:description" content="Just had a very frustrating day. Was getting a deployment error on Heroku with a Meteor app I&#39;m making.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2016-06-29-meteor-heroku-and-bcrypt/" />
+<meta property="og:title" content="&quot;Meteor, Heroku, and bcrypt&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>June 29, 2016</strong>
+        
+    </div>
+    <h1>&quot;Meteor, Heroku, and bcrypt&quot;</h1>
+</div>
+<div>
+    
+    <p>Just had a very frustrating day. Was getting a deployment error on Heroku with a Meteor app I'm making.</p><pre><code>Starting process with command `node build/bundle/main.js`
+/app/build/bundle/programs/server/boot.js:324
+}).run();
+   ^
+Error: Module did not self-register.
+    at Module.require (module.js:365:17)
+    at Module._compile (module.js:460:26)
+    at Module.load (module.js:355:32)
+    at Object.&lt;anonymous&gt; (/app/build/bundle/programs/server/npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt/bcrypt.js:3:35)
+    at Error (native)
+    at require (module.js:384:17)
+    at Function.Module._load (module.js:310:12)
+    at Object.Module._extensions..js (module.js:478:10)
+    at bindings (/app/build/bundle/programs/server/npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt/node_modules/bindings/bindings.js:74:15)
+    at Module.load (module.js:355:32)
+Process exited with status 1
+State changed from starting to crashed
+</code></pre><p>I was using the build pack at <a href="https://github.com/srbartlett/heroku-buildpack-meteor">https://github.com/srbartlett/heroku-buildpack-meteor</a> due to its support for Meteor 1.3.</p><p>The issue seems to be that the <code>npm-bcrypt</code> atmosphere package doesn't force a recompliation of the npm <code>bcrypt</code> package via <code>node-gyp</code> (I could be wrong here, but that's what it seems like). It seems that the atmosphere package includes the wrong (or a fixed?) architecture, where as what we actually need is to recompile for the current target. To fix this, I've altered the buildpack to remove the bundled <code>bcrypt</code> package, reinstall from source, and copy back to the bundled location. The reinstall from source seems to force <code>node-gyp</code> to compile for the correct architecture.</p><p>My altered buildpack is available at <a href="https://github.com/rickerbh/heroku-buildpack-meteor">https://github.com/rickerbh/heroku-buildpack-meteor</a> if anyone wants it.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2016-07-05-a-small-functional-refactoring-of-some-javascript/">&laquo; &quot;A small functional refactoring of Javascript&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2016-06-27-back-to-basics-editors/">&quot;Back to Basics - Editors&quot; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

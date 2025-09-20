@@ -1,0 +1,105 @@
+/* ==================================================
+   Typography
+================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 20px 0;
+    color: #000;
+    font-weight: 400;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+h3 {
+    font-size: 24px;
+}
+
+h4 {
+    font-size: 20px;
+}
+
+h5 {
+    font-size: 18px;
+}
+
+h6 {
+    font-size: 16px;
+}
+
+blockquote {
+    margin: 0 0 20px 0;
+    padding: 0 0 0 20px;
+    border-left: 3px solid #000;
+    font-style: italic;
+}
+
+blockquote p {
+    font-style: italic;
+}
+
+code {
+    font-family: monospace;
+    background: #f5f5f5;
+    padding: 2px 5px;
+    border-radius: 0;
+}
+
+pre {
+    margin: 0 0 20px 0;
+    padding: 20px;
+    background: #1a1a1a;
+    color: #f0f0f0;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+}
+
+ul, ol {
+    margin: 0 0 20px 0;
+    padding-left: 20px;
+}
+
+ul {
+    list-style-type: disc;
+}
+
+ol {
+    list-style-type: decimal;
+}
+
+ul li, ol li {
+    margin: 0 0 10px 0;
+}
+
+table {
+    width: 100%;
+    margin: 0 0 20px 0;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #eee;
+    text-align: left;
+}
+
+table th {
+    font-weight: 700;
+    background: #f5f5f5;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #eee;
+    margin: 30px 0;
+}

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Getting started with Pure-C on the Atari ST</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Getting started with Pure-C on the Atari STTLDR: I found setting up Pure-C to get started with development took me too long (a hour or so on and off to figure it out), so have documented the key points in the process to get up and running. Install, Configure, Code, and Create a Project File are the key steps.">
+
+<meta property="og:description" content="Getting started with Pure-C on the Atari STTLDR: I found setting up Pure-C to get started with development took me too long (a hour or so on and off to figure it out), so have documented the key points in the process to get up and running. Install, Configure, Code, and Create a Project File are the key steps.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2022-02-20-pure-c-atari-st/" />
+<meta property="og:title" content="Getting started with Pure-C on the Atari ST" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>February 20, 2022</strong>
+        
+    </div>
+    <h1>Getting started with Pure-C on the Atari ST</h1>
+</div>
+<div>
+    
+    <h2 id="getting-started-with-pure-c-on-the-atari-st">Getting started with Pure-C on the Atari ST</h2><p>TLDR: <em>I found setting up Pure-C to get started with development took me too long (a hour or so on and off to figure it out), so have documented the key points in the process to get up and running. Install, Configure, Code, and Create a Project File are the key steps.</em></p><h3 id="why">Why?</h3><p>I got my first Atari ST back in the late 80's. It was magical. Sure, the games were good, but what I really loved was poking around the OS, playing with configuration files, and programming on it. Bending the computer to my will, and just experimenting, was really enjoyable.</p><p>One thing I never did was and GEM or AES programming. If you're not sure what these are, the short version is that it's the OS and UI built into the ROM of the machine, with AES being the framework providing the graphical UI. It might be part of a mid-life crisis, but I want to explore graphical UI programming on the Atari ST, so have decided to learn.</p><h3 id="pure-c">Pure-C</h3><p>I chose Pure-C due to a couple of posts in forums. The sensible options seemed to be Lattice-C or Pure-C, and Lattice-C GUI is rumored to be a bit unstable, so the 3 minutes of research I did settled on Pure-C.  It's downloadable from <a href="https://sites.google.com/site/stessential/development/pure-c">here</a>.</p><p>First step - unzip pure-c and install it in a directory on your ST. Then run <code>pc.prg</code>.</p><p><img src="../../img/pc-prg.png" alt="" /></p><h3 id="configuration">Configuration</h3><p>Pure-C needs to know a couple of things to be able to build applications. It needs to know where to find the header files, and it also needs to know where to find the libraries with external functions (like standard library functions).</p><p>At a minimum, you need to set the Include directory (header files) for in the <code>Options -&gt; Compiler</code> menu, and the Library directory (LIB files) in <code>Options -&gt; Linker</code>. Once there are done, you're ready to code.</p><p><img src="../../img/compiler-options.png" alt="" /></p><p><img src="../../img/linker-options.png" alt="" /></p><h3 id="coding">Coding</h3><p>Use the <code>File -&gt; Open .C</code> menu item to create a new file, and get typing. I wrote my first C program (for about 15 years) based on the <a href="https://info-coach.fr/atari/software/_development/cmanship-v1.0.pdf">C-Manship Complete PDF</a>, and compiled it.</p><pre><code class="c">#include &lt;stdio.h&gt;
+
+int main (void)
+{
+    char ch;
+
+    printf("Press return\n");
+    ch = getchar();
+    return(0);
+}
+</code></pre><p><code>Compile -&gt; Compile "&lt;my file.c&gt;"</code>. All good. Then, to make an executable application, you need to make a Project.</p><h3 id="project">Project</h3><p>Use <code>File -&gt; Open .PRJ</code> to make a new project file in the same directory as your <code>.C</code> file above. Then, in the first line put the name of the output file. Next line should have an <code>=</code>. Pure-C uses this as a separator between sections of the file.</p><p>Below this, you need to include all the dependencies for the compiler and linker. They are loaded in the order they are presented. I found for my simple file above, that 3 entries were needed.</p><pre><code>pressret.prg
+=
+PCSTART.O
+pressret.c
+PCSTDLIB.LIB
+</code></pre><p>The 3 files that are needed to build the executable are <code>PCSTART.O</code> (startup module), <code>pressret.c</code> (my code), and <code>PCSTDLIB.LIB</code> (the standard library - which provides the functions from <code>stdio.h</code>).</p><p><img src="../../img/prj-contents.png" alt="" /></p><p>All the Pure-C libraries are in the <code>lib</code> directory within the Pure-C directory. The way I connected the use of stdio.h to <code>PDSTDLIB.LIB</code> was through the documentation. <code>Help -&gt; Libraries</code>, and you don't have to read German perfectly to figure it out. The top page connects the files to general areas, and the details show which functions are in those libraries, and which headers need to be imported.</p><p><img src="../../img/help-libraries.png" alt="" /><img src="../../img/help-stdlib.png" alt="" /></p><p>Project files can get much more complex, with submodules and multiple dependencies. Check the <code>Pure C English Overview</code> available in <code>PURE_C.TXT</code> in initial link to Pure C up the top of this post.</p><h3 id="running">Running</h3><p>Once all that setup is done in the project file, the application executable should be able to be built and run.  <code>Project -&gt; Select</code> to choose the project file to use, and then <code>Project -&gt; Make All</code> to make the application, or <code>Project -&gt; Run</code> to make and run.</p><p><img src="../../img/project-select.png" alt="" /></p><p>Behold the majesty!</p><p><img src="../../img/running-pressret.png" alt="" /></p><p>Hope that helps. I want to document more of the GEM programming journey as well. I plan on doing this by running through the C-Manship book - fingers crossed I find the time.</p>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/programming/">programming</a>
+    
+    <a href="/tags-output/atari%20st/">atari st</a>
+    
+    <a href="/tags-output/c/">c</a>
+    
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2022-03-01-first-gem-program/">&laquo; Baby&#39;s First GEM Program</a>
+        
+        
+        <a class="right button" href="/posts/2021-12-06-advent-of-code-2021-puzzle-7/">Advent of Code 2021 - Puzzle 7 &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

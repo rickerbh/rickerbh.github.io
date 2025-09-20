@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Advent of Code 2021 - Puzzle 6</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Puzzle 6 - Step 1For todays puzzle we&#39;re modelling the lifecycle of fish. The short version is that a fish&#39;s timer goes from 8-&gt;0, and after 0 it regenerates itself as 6, and spawns a new 8, increasing the count of fish by 1. In this world, fish are represented as an integer with the value of the int being their timer. To advance a school of fish, we reduce over each of the fish, and when we see one that&#39;s a 0, we regenerate it as a 6 and add an 8.">
+
+<meta property="og:description" content="Puzzle 6 - Step 1For todays puzzle we&#39;re modelling the lifecycle of fish. The short version is that a fish&#39;s timer goes from 8-&gt;0, and after 0 it regenerates itself as 6, and spawns a new 8, increasing the count of fish by 1. In this world, fish are represented as an integer with the value of the int being their timer. To advance a school of fish, we reduce over each of the fish, and when we see one that&#39;s a 0, we regenerate it as a 6 and add an 8.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2021-12-06-advent-of-code-2021-puzzle-6/" />
+<meta property="og:title" content="Advent of Code 2021 - Puzzle 6" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 6, 2021</strong>
+        
+    </div>
+    <h1>Advent of Code 2021 - Puzzle 6</h1>
+</div>
+<div>
+    
+    <h2 id="puzzle-6---step-1">Puzzle 6 - Step 1</h2><p>For todays puzzle we're modelling the lifecycle of fish. The short version is that a fish's timer goes from 8-&gt;0, and after 0 it regenerates itself as 6, and spawns a new 8, increasing the count of fish by 1. In this world, fish are represented as an integer with the value of the int being their timer. To advance a school of fish, we reduce over each of the fish, and when we see one that's a 0, we regenerate it as a 6 and add an 8.</p><pre><code class="ocaml">let advance school =
+  List.fold_left
+    (fun acc f -&gt; match f with 0 -&gt; 8 :: 6 :: acc | _ -&gt; pred f :: acc)
+    [] school
+</code></pre><p>The solution of the puzzle is figuring out how many fish there are on a given day in the future. To do this, we need to run advance once for each day the fish are alive. I grabbed a bit of code from SO for this.  This will just recursively apply the function <code>f</code> <code>i</code> times, with input <code>acc</code>. And we can wrap it with something more domain based.</p><pre><code class="ocaml">let rec foldi i f acc = if i &lt;= 0 then acc else foldi (pred i) f (f acc)
+
+let days_count school days = foldi days advance school
+</code></pre><p>That's all we need. The runner is very simple, calculating the number of fish alive after 80 days.</p><pre><code class="ocaml">let problem_6_1 input = days_count input 80 |&gt; List.length
+</code></pre><h2 id="puzzle-6---step-2">Puzzle 6 - Step 2</h2><p>Step 2 is the same as step 1, just running it for 256 days. No worries.</p><p><strong>BLAMMO</strong></p><p>Uses up all the RAM. We need a different approach.</p><p>The issue is that generation of the lists of fish just results in lists that are too large, each with an increasing longer duration to calculate the next step. We need to consider a different data structure to hold the fish details.</p><p>I opted for a frequency based approach, mapping a school of fish into a structure that counts how many fish are in each timer state. OCaml has a nice list structure for this, called an association list. It's a tuple list where the first field of a tuple is a key, and the second is the value related to that key. Interestingly, this is exactly the same structure that the frequencies function I developed uses. Lets transform a school of fish into counts of the number of fish at each state.</p><pre><code class="ocaml">let school input = Utils.frequencies input
+</code></pre><p>Then we need to figure out how to advance the data structure to the next day. Given any state (e.g., <code>(5,7)</code> representing 7 fish with timer 5), the next state for this is <code>(4,7)</code>, so each step can just decrement the first number in the tuple, and keep the value the same. This is true for states 8, 6, 5, 4, 3, 2, 1. Not so much for 7, and 0. The reason why is that at 0, we spawn another fish at 8, and regenerate the current one at 6. So, some special handling is needed. If we didn't have the special handling, we'd get a double up in the keys. E.g., we process <code>(7,5)</code> -&gt; <code>(6,5)</code>, and then we process <code>(0,2)</code> -&gt; <code>[(6,2);(8,2)]</code> resulting in two tuples with a key of 6. The OCaml List module has a function <code>assoc</code> that we can use to lookup how many fish there are of a given state. This function also handily throws an exception when the key is not found. So, when we see state 0, we need to check to see how many 7's there were, and add the number of new 6's from the 0's, to the number of new 6's from the 7's. When processing the 7's, we need to generate the 6's if and only if there are no 0's in the input (otherwise we'd be double generating the 6's). This is all a bit convoluted, but it works.</p><pre><code class="ocaml">let advance2 (school : (int * int) list) =
+  List.sort (fun (a, _) (b, _) -&gt; compare b a) school
+  |&gt; List.map (fun (k, v) -&gt;
+         match k with
+         | 0 -&gt;
+             let new_sixes = try List.assoc 7 school with Not_found -&gt; 0 in
+             [ (8, v); (6, new_sixes + v) ]
+         | 7 -&gt; (
+             let has_zeros =
+               try Option.some (List.assoc 0 school)
+               with Not_found -&gt; Option.none
+             in
+             match has_zeros with None -&gt; [ (6, v) ] | _ -&gt; [])
+         | _ -&gt; [ (pred k, v) ])
+  |&gt; List.flatten
+</code></pre><p>Then we run it.</p><pre><code class="ocaml">let problem_6_2 input =
+  let school = school input in
+  foldi 256 advance2 school |&gt; List.map (fun (_, v) -&gt; v) |&gt; Utils.sum
+</code></pre><p>RUNS LIKE LIGHTNING! ⚡️ ⚡️ ⚡️</p><p>The RAM utilisation here is tiny compared with the last approach. This data structure has at most 9 elements in it, each with 2 ints inside. Granted, they can be very large ints, but there are only 9.</p><h2 id="parsing">Parsing</h2><p>The parsing solution for this was very simple. Single line input, separated by commas.</p><pre><code class="ocaml">let parse_input filename =
+  let lines = Utils.read_lines filename in
+  List.map
+    (fun l -&gt; Str.split (Str.regexp ",") l |&gt; List.map int_of_string)
+    lines
+  |&gt; List.flatten
+
+let input = parse_input "problem_6.input"
+</code></pre><p>I really enjoyed this puzzle. The first parts solution was elegant and simple to understand. The second parts complexity against a naive solution was a good challenge, and really satisfying to improve performance by such a massive amount. Fun.</p>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/ocaml/">ocaml</a>
+    
+    <a href="/tags-output/aoc/">aoc</a>
+    
+    <a href="/tags-output/aoc2021/">aoc2021</a>
+    
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2021-12-06-advent-of-code-2021-puzzle-7/">&laquo; Advent of Code 2021 - Puzzle 7</a>
+        
+        
+        <a class="right button" href="/posts/2021-12-05-advent-of-code-2021-puzzle-5/">Advent of Code 2021 - Puzzle 5 &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby</title>
+    
+    <meta name="description" content="Hamish Rickerby&#39;s blog. I write about software and technology in general.">
+    <meta name="keywords" content="">
+    
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li  class="active" ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>January 25, 2023</strong>
+        
+    </div>
+    <h1>Configuring Dhall with Emacs</h1>
+</div>
+<div>
+    
+    <p>I use Dhall with archlinux, and emacs, but don't use <code>use-package</code>. The documentation at https://docs.dhall-lang.org/howtos/Text-Editor-Configuration.html#EMACS assumes you do use this, but I use <code>prelude</code> to simplify a bunch of my emacs setup, and am not interested in another tool that does similar setup work.</p><p>To get Dhall (and in particular, the lsp server) setup, the following steps worked for me.</p><ol><li>Install dhall, dhall-json, and dhall-lsp-server:</li></ol><pre><code class="shell">pacman -Syu dhall dhall-json dhall-lsp-server
+</code></pre><ol start="2"><li>Ensure they're on the path, and smoke-test dhall-json:</li></ol><pre><code class="shell">dhall-to-json &lt;&lt;&lt; '{ foo = [1, 2, 3], bar = True }'
+</code></pre><ol start="3"><li>Install <code>dhall-mode</code> in emacs</li></ol><pre><code class="text">M-x package-install
+Type dhall-mode
+Then enter to install
+</code></pre><ol start="4"><li>Configure emacs to use dhall, and the lsp server</li></ol><pre><code class="emacs-lisp">;; Setup Dhall
+(require 'dhall-mode)
+(setq
+ ;; comment the next line to use unicode syntax
+ dhall-format-arguments (\` ("--ascii"))
+
+ ;; header-line is obsoleted by lsp-mode
+ dhall-use-header-line nil)
+
+(add-hook 'dhall-mode-hook 'lsp)
+</code></pre><ol start="5"><li>Evaluate the above in emacs, and then open a <code>.dhall</code> file. lsp should start up, and be ready to go.</li></ol><p>You can test the integration with the following configuration file</p><pre><code class="dhall">let user = "Dhall"
+
+let welcome = \(name : Text) -&gt; "Welcome ${name}"
+
+in  welcome user ++ 42
+</code></pre><p>It should warn you on the last line with <code>Error: (++) only works on (Text)</code></p>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/linux/">linux</a>
+    
+    <a href="/tags-output/emacs/">emacs</a>
+    
+    <a href="/tags-output/dhall/">dhall</a>
+    
+</div>
+
+<br/>
+
+
+
+    <div id="prev-next">
+        
+        
+        <a class="button right" href="/posts/2022-03-01-first-gem-program/">Baby&#39;s First GEM Program &raquo;</a>
+        
+    </div>
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

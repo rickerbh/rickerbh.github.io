@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &#39;Calculate age in objective-c &#39;</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="For an iPhone application I&#39;m developing for a client I need to capture the birthdate of a user, and then show their age on a profile screen. I went looking for a function to help with this simple and tedious task, but couldn&#39;t find any example code that could be lifted to help me, so I rolled my own.  Here is what I made, steal as you see fit.">
+
+<meta property="og:description" content="For an iPhone application I&#39;m developing for a client I need to capture the birthdate of a user, and then show their age on a profile screen. I went looking for a function to help with this simple and tedious task, but couldn&#39;t find any example code that could be lifted to help me, so I rolled my own.  Here is what I made, steal as you see fit.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2010-01-07-calculate-age-in-objective-c/" />
+<meta property="og:title" content="&#39;Calculate age in objective-c &#39;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>January 7, 2010</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>&#39;Calculate age in objective-c &#39;</h1>
+</div>
+<div>
+    
+    <p>For an iPhone application I'm developing for a client I need to capture the birthdate of a user, and then show their age on a profile screen. I went looking for a function to help with this simple and tedious task, but couldn't find any example code that could be lifted to help me, so I rolled my own.  Here is what I made, steal as you see fit.</p><pre><code class="objective-c">- (NSInteger)age:(NSDate *)dateOfBirth {
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+  NSDateComponents *dateComponentsNow = [calendar components:unitFlags fromDate:[NSDate date]];
+  NSDateComponents *dateComponentsBirth = [calendar components:unitFlags fromDate:dateOfBirth];
+  
+  if (([dateComponentsNow month] &lt; [dateComponentsBirth month]) ||
+      (([dateComponentsNow month] == [dateComponentsBirth month]) &amp;&amp; ([dateComponentsNow day] &lt; [dateComponentsBirth day]))) {
+    return [dateComponentsNow year] - [dateComponentsBirth year] - 1;
+  } else {
+    return [dateComponentsNow year] - [dateComponentsBirth year];
+  }
+}
+</code></pre>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2010-02-08-ad-from-digg/">&laquo; Ad from Digg</a>
+        
+        
+        <a class="right button" href="/posts/2009-09-20-iphone-camera-overlays-iphonearkit/">iPhone Camera Overlays + iphonearkit &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

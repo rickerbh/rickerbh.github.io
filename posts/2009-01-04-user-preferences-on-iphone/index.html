@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: User Preferences on iPhone</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Getting and setting user preferences on iPhone is pretty darn easy.  I was looking for a way to automagically store a users email address between different application sessions, and found the linked tutorial immensely helpful (iphonedevelopertips.com).I needed to store a string (NSString object actually) however, and the tutorial didn&#39;t help me with that. The NSUserDefaults object has dedicated methods for storing and retrieving BOOL, float, and NSInteger values.  It also has a setObject:forKey: method - which is what I ended up using.  The setObject method handles data of types NSData, NSString, NSDate, NSArray or NSDictitionary - making it incredibly useful indeed.">
+
+<meta property="og:description" content="Getting and setting user preferences on iPhone is pretty darn easy.  I was looking for a way to automagically store a users email address between different application sessions, and found the linked tutorial immensely helpful (iphonedevelopertips.com).I needed to store a string (NSString object actually) however, and the tutorial didn&#39;t help me with that. The NSUserDefaults object has dedicated methods for storing and retrieving BOOL, float, and NSInteger values.  It also has a setObject:forKey: method - which is what I ended up using.  The setObject method handles data of types NSData, NSString, NSDate, NSArray or NSDictitionary - making it incredibly useful indeed.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2009-01-04-user-preferences-on-iphone/" />
+<meta property="og:title" content="User Preferences on iPhone" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>January 4, 2009</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>User Preferences on iPhone</h1>
+</div>
+<div>
+    
+    <p>Getting and setting user preferences on iPhone is pretty darn easy.  I was looking for a way to automagically store a users email address between different application sessions, and found the linked tutorial immensely helpful (<a href="http://iphonedevelopertips.com/cocoa/read-and-write-user-preferences.html" target="_blank">iphonedevelopertips.com</a>).</p><p>I needed to store a string (NSString object actually) however, and the tutorial didn't help me with that. The NSUserDefaults object has dedicated methods for storing and retrieving BOOL, float, and NSInteger values.  It also has a setObject:forKey: method - which is what I ended up using.  The setObject method handles data of types NSData, NSString, NSDate, NSArray or NSDictitionary - making it incredibly useful indeed.</p><p>My Preferences.h</p><pre><code class="objective-c">#import &lt;Foundation/Foundation.h&gt;
+#import "Constants.h"
+@interface Preferences : NSObject {
+}
++ (NSString *)emailAddress;
++ (BOOL)setPreferences:(NSString *)emailAddress;
+@end
+</code></pre><p>My Preferences.m</p><pre><code class="objective-c">#import "Preferences.h"
+
+@implementation Preferences
+
+/*-------------------------------------------
+* Return the users default email address
+*-------------------------------------------*/
++ (NSString *)emailAddress {
+  NSString *returnValue;
+  // If preference exists
+  if ([[NSUserDefaults standardUserDefaults] stringForKey:kPreferencesEmailAddress]) {
+    returnValue = [[NSUserDefaults standardUserDefaults] stringForKey:kPreferencesEmailAddress];
+  } else {
+    returnValue = @"";
+  }
+  return returnValue;
+}
+
+/*-------------------------------------------
+* Write preferences to system
+*-------------------------------------------*/
++ (BOOL)setPreferences:(NSString *)emailAddress {
+  // Set values
+  [[NSUserDefaults standardUserDefaults] setObject:emailAddress forKey:kPreferencesEmailAddress];
+  // Return the results of attempting to write the preferences to system
+  return [[NSUserDefaults standardUserDefaults] synchronize];
+}
+@end
+</code></pre><p>kPreferencesEmailAddress is a constant I've defined with the key value of the users email address.  It just makes sure I don't mistype anything.</p><p>Key (only) differences between my code and the code at <a href="http://iphonedevelopertips.com/cocoa/read-and-write-user-preferences.html" target="_blank">iphonedevelopertips.com</a> are the use of the objectForKey method to set the NSString value, and stringForKey to retrieve the object and cast it to a NSString object.</p><p>Hope that helps someone!</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2009-01-31-error-on-line-1987/">&laquo; error on line 1987</a>
+        
+        
+        <a class="right button" href="/posts/2009-01-02-last-days-woolworths/">&#39;Last Days: Woolworths&#39; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

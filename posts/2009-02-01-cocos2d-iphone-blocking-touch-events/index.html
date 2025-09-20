@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: cocos2d-iphone blocking touch events</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="The game development is going well so far.  From yesterday when I knew NOTHING about game development I&#39;ve managed to figure out how to use sprites, labels, timed actions, sequenced actions, scenes and layers with cocos2d-iphone.I did hit a strange error though.  On the simulator the touch events were working correctly - screens transitioning, sprite/label touches generating events and triggering animation and so on.  On the actual device the story was quite different.  My menu items were triggering correctly, but no subsequent touch events were doing anything on the phone.  When the application exited (home button) all the touch events were then passed through as I could see them all fly up the screen in the console.">
+
+<meta property="og:description" content="The game development is going well so far.  From yesterday when I knew NOTHING about game development I&#39;ve managed to figure out how to use sprites, labels, timed actions, sequenced actions, scenes and layers with cocos2d-iphone.I did hit a strange error though.  On the simulator the touch events were working correctly - screens transitioning, sprite/label touches generating events and triggering animation and so on.  On the actual device the story was quite different.  My menu items were triggering correctly, but no subsequent touch events were doing anything on the phone.  When the application exited (home button) all the touch events were then passed through as I could see them all fly up the screen in the console.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2009-02-01-cocos2d-iphone-blocking-touch-events/" />
+<meta property="og:title" content="cocos2d-iphone blocking touch events" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>February 1, 2009</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>cocos2d-iphone blocking touch events</h1>
+</div>
+<div>
+    
+    <p>The game development is going well so far.  From yesterday when I knew NOTHING about game development I've managed to figure out how to use sprites, labels, timed actions, sequenced actions, scenes and layers with cocos2d-iphone.</p><p>I did hit a strange error though.  On the simulator the touch events were working correctly - screens transitioning, sprite/label touches generating events and triggering animation and so on.  On the actual device the story was quite different.  My menu items were triggering correctly, but no subsequent touch events were doing anything on the phone.  When the application exited (home button) all the touch events were then passed through as I could see them all fly up the screen in the console.</p><p>A long search in google yielded the following page:  <a href="http://groups.google.com/group/cocos2d-iphone-discuss/browse_thread/thread/8aae440d81721ff4" target="_blank">http://groups.google.com/group/cocos2d-iphone-discuss/browse_thread/thread/8aae440d81721ff4</a></p><p>I don't know what causes the actual issue, but the fix is to alter the Director.m's main method - adding the following code fixed the issue right up.</p><pre><code class="objective-c">while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, YES) ==  kCFRunLoopRunHandledSource) {}; 
+</code></pre><p>The odd thing is (and let me know if I'm wrong here) that that code doesn't actually do anything.  It performs a test, but changes nothing.  I don't get why this fix works.</p><p>?</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2009-02-20-installing-f2c-on-a-mac/">&laquo; Installing f2c on a mac</a>
+        
+        
+        <a class="right button" href="/posts/2009-01-31-error-on-line-1987/">error on line 1987 &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

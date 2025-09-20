@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Javascript Object Compaction</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I&#39;m working on a feature in BeeCastle at the moment to ingest call data from Microsoft Teams to augment our interaction records. It requires a flexible approach to updating existing records, as with different types of interactions and calls, we get different data.During this process we get a javascript object that might have null or undefined values and these should not be persisted in the database, so we need a way to strip these out. Idiomatic ES6 usage would mean we need to do something like below.">
+
+<meta property="og:description" content="I&#39;m working on a feature in BeeCastle at the moment to ingest call data from Microsoft Teams to augment our interaction records. It requires a flexible approach to updating existing records, as with different types of interactions and calls, we get different data.During this process we get a javascript object that might have null or undefined values and these should not be persisted in the database, so we need a way to strip these out. Idiomatic ES6 usage would mean we need to do something like below.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2020-08-12-javascript-object-compaction/" />
+<meta property="og:title" content="Javascript Object Compaction" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>August 12, 2020</strong>
+        
+    </div>
+    <h1>Javascript Object Compaction</h1>
+</div>
+<div>
+    
+    <p>I'm working on a feature in <a href="https://beecastle.com">BeeCastle</a> at the moment to ingest call data from Microsoft Teams to augment our interaction records. It requires a flexible approach to updating existing records, as with different types of interactions and calls, we get different data.</p><p>During this process we get a javascript object that might have <code>null</code> or <code>undefined</code> values and these should not be persisted in the database, so we need a way to strip these out. Idiomatic ES6 usage would mean we need to do something like below.</p><pre><code>const myObject = {
+  a: 'thing',
+  b: 1,
+  c: 0,
+  d: true,
+  e: false,
+  f: null,
+  g: undefined,
+}
+
+Object.keys(myObject).forEach((key) =&gt; (myObject[key] == null) &amp;&amp; delete myObject[key]);
+
+// myObject =&gt; {"a": "thing", "b": 1, "c": 0, "d": true, "e": false}
+</code></pre><p>I've got a couple of issues with this.</p><ul><li>It mutates <code>myObject</code>, and <code>myObject</code> is <code>const</code> - I know in Javascript this is about reassignment, not modification of the internal structure, but I generally avoid mutation of data structures</li><li>It's a bit obtuse - it requires knowledge of the chaining behaviour of <code>&amp;&amp;</code> and the very atypical syntax of <code>delete</code>. I find this implementation non-obvious at first glance</li><li>The inner function for <code>forEach</code> reaches outside its scope to get to <code>myObject</code> and modify it. You can't abstract that implementation out without rework to pass in <code>myObject</code> and the key it's operating on, and this sounds like more of a disaster because then the scoping and repassing of <code>myObject</code> needs to be handled - it would make more sense at this point to rewrite it as <code>reduce</code>.</li></ul><p>There must be a better way. Within the js parts of our codebase we use <a href="https://ramdajs.com">Ramda</a> heavily. Ramda doesn't have a single function to enable this, but it does have two we can compose to provide the same functionality.</p><pre><code>const myObject = {
+  a: 'thing',
+  b: 1,
+  c: 0,
+  d: true,
+  e: false,
+  f: null,
+  g: undefined,
+}
+
+const compacted = reject(isNil)(a)
+
+// compacted = {"a": "thing", "b": 1, "c": 0, "d": true, "e": false}
+</code></pre><p>It hides lots of the implementation, but the code is so much clearer, due to the declarative nature of the operations. It is also reusable, as functions in ramda are curried and the inner functions don't need to grab data outside their scope. <code>const compactObject = reject(isNil)</code> and applied with <code>compactObject(myObject)</code>.</p><p>There can be significant benefits in terms of clarity and reduction in LOC (implying fewer bugs in general: less code = fewer opportunities for bugs) from a utilisation of more pure functional principles. Give it a go :-)</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2021-12-01-advent-of-code-2021/">&laquo; Advent of Code 2021</a>
+        
+        
+        <a class="right button" href="/posts/2020-07-26-port-to-cryogen/">Porting blog to cryogen &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

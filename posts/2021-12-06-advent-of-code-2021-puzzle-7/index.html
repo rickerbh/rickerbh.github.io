@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Advent of Code 2021 - Puzzle 7</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Puzzle 7 - Step 1This puzzle is about calculating the minimum distance to a common integer for a set of integers. OK - the puzzle talks about crab submarines and whales, but that&#39;s not that important.">
+
+<meta property="og:description" content="Puzzle 7 - Step 1This puzzle is about calculating the minimum distance to a common integer for a set of integers. OK - the puzzle talks about crab submarines and whales, but that&#39;s not that important.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2021-12-06-advent-of-code-2021-puzzle-7/" />
+<meta property="og:title" content="Advent of Code 2021 - Puzzle 7" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 7, 2021</strong>
+        
+    </div>
+    <h1>Advent of Code 2021 - Puzzle 7</h1>
+</div>
+<div>
+    
+    <h2 id="puzzle-7---step-1">Puzzle 7 - Step 1</h2><p>This puzzle is about calculating the minimum distance to a common integer for a set of integers. OK - the puzzle talks about crab submarines and whales, but that's not that important.</p><p>There is a sneaky trick to calculate the midpoint in a set of integers. You can sort the list, and then look at the middle value. This is the minimum distance to the rest of the numbers in the set.</p><pre><code class="ocaml">let middle input =
+  let list = List.sort compare input in
+  let half_length = List.length list / 2 in
+  List.nth (Utils.drop half_length list) 0
+</code></pre><p>Then, we need to calculate the actual distances to this middle.</p><pre><code class="ocaml">let fuel_usage position crabs =
+  List.map (fun x -&gt; if x &gt; position then x - position else position - x) crabs
+  |&gt; Utils.sum
+</code></pre><p>And that's it!</p><pre><code class="ocaml">let problem_7_1 input = fuel_usage (middle input) input
+</code></pre><h2 id="puzzle-7---step-2">Puzzle 7 - Step 2</h2><p>Step 2 is a bit trickier. It changes the fuel calculation function, so that the minimum distance is no longer the sorted-middle number. The further away a point is from the minimum distance number, it gets more "expensive" at a greater than linear rate. Eg, if you are 4 away, the cost is 10 = 1+2+3+4.</p><p>So, a new fuel calculation function that works with this increased cost per step of distance, as well as a function to calculate for each crab.</p><pre><code class="ocaml">let rec crabby_fuel i = match i with 0 -&gt; 0 | _ -&gt; i + crabby_fuel (pred i)
+
+let fuel_usage2 position crabs =
+  List.map
+    (fun x -&gt;
+      if x &gt; position then crabby_fuel (x - position)
+      else crabby_fuel (position - x))
+    crabs
+  |&gt; Utils.sum
+</code></pre><p>To figure out the minimum distance, I tried a number of options. The middle is obviously wrong because the test data fails, but the average works with the test data. However, this method doesn't work on the full data set (more on this later). So, I just brute-forced it.</p><p>All possible answers must be in the range of the minimum value in the list to the maximum value in the list. Lets get the min and max values, and generate a range of numbers.</p><pre><code class="ocaml">let list_min xs = List.sort compare xs |&gt; List.hd
+
+let list_max xs = List.sort compare xs |&gt; List.rev |&gt; List.hd
+
+let range s e = List.init (e - s) (fun x -&gt; pred s + x + 1)
+</code></pre><p>Then we just brute-force it by folding over the range, and keeping the min fuel usage calculation.</p><pre><code class="ocaml">let problem_7_2 input =
+  let xs = range (list_min input) (succ (list_max input)) in
+  List.fold_left
+    (fun acc v -&gt;
+      let this_fuel = fuel_usage2 v input in
+      if acc &lt; this_fuel then acc else this_fuel)
+    Int.max_int xs
+</code></pre><p>This takes about 8 seconds to execute on my machine. So, not fast, but not impossibly slow.</p><h2 id="parser">Parser</h2><p>The parser for this is the same as yesterday - just a list of ints on a single line separated by <code>,</code>.</p><pre><code class="ocaml">let parse_input filename =
+  let lines = Utils.read_lines filename in
+  List.map
+    (fun l -&gt; Str.split (Str.regexp ",") l |&gt; List.map int_of_string)
+    lines
+  |&gt; List.flatten
+
+let input = parse_input "problem_7.input"
+</code></pre><h2 id="average-doesnt-work">Average doesn't work</h2><p>I have a suspicion that using the average is the key here. For the data set I was given, the using the average yeilded a result that was only 2 off the actual answer. I wonder if there is a trick here that would solve this for me. Eg, distance to the average as a float, rather than an int.</p>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/ocaml/">ocaml</a>
+    
+    <a href="/tags-output/aoc/">aoc</a>
+    
+    <a href="/tags-output/aoc2021/">aoc2021</a>
+    
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2022-02-20-pure-c-atari-st/">&laquo; Getting started with Pure-C on the Atari ST</a>
+        
+        
+        <a class="right button" href="/posts/2021-12-06-advent-of-code-2021-puzzle-6/">Advent of Code 2021 - Puzzle 6 &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Porting blog to cryogen</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Given I&#39;m really digging clojure at the moment, I thought I&#39;d port my blog over from octopress to a clojure based static site generator. I wanted something that supported the same sort of structure, with markdown, and low hassle on getting it running. Cryogen seemed to be the best documented and most modern of the few I could find.The process to port it over was as follows">
+
+<meta property="og:description" content="Given I&#39;m really digging clojure at the moment, I thought I&#39;d port my blog over from octopress to a clojure based static site generator. I wanted something that supported the same sort of structure, with markdown, and low hassle on getting it running. Cryogen seemed to be the best documented and most modern of the few I could find.The process to port it over was as follows">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2020-07-26-port-to-cryogen/" />
+<meta property="og:title" content="Porting blog to cryogen" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>July 26, 2020</strong>
+        
+    </div>
+    <h1>Porting blog to cryogen</h1>
+</div>
+<div>
+    
+    <p>Given I'm really digging clojure at the moment, I thought I'd port my blog over from octopress to a clojure based static site generator. I wanted something that supported the same sort of structure, with markdown, and low hassle on getting it running. <a href="https://cryogenweb.org/">Cryogen</a> seemed to be the best documented and most modern of the few I could find.</p><p>The process to port it over was as follows</p><ul><li>Setup the right values in <code>content/config.edn</code></li><li>Port some content</li><li>Setup deployment</li></ul><h2 id="config">Config</h2><p>The <a href="https://github.com/rickerbh/blog/blob/0ab0bd8250ab78a31d75db501892cddb9b13a7a6/content/config.edn">config file</a> was trivial. The only bits that needed tweaking were the blog-prefix (I want all content at the root so <code>/</code> is right for me), <code>page-root-uri</code> (needed to make it empty string so pages are at existing URLs), and the <code>post-root-uri</code>. The last is a bit trickier - I couldn't find a way to support the existing post structure (wordpress style, with <code>/yyyy/MM/dd/post-name</code>), but that doesn't worry me too much. Also needed to add my custom historic uploads directory in to <code>:resources</code> array.</p><h2 id="port-the-content">Port the content</h2><p>For content porting, this was a bit trickier. Cryogen requires front-matter to be in a clojure map, but octopress supported the frontmatter as yaml. So, I wrote a short (it was short, until I needed to deal with the edge cases) <a href="https://github.com/borkdude/babashka/">babashka</a> script to do this. The script will take a directory of posts (including subdirs), read, and reformat them for cryogen. Basically they port the frontmatter into clojure maps, and filter out unsupported keys.</p><p>Script available at: <a href="https://gist.github.com/rickerbh/4bcc3b3243e0f271b9ca3c8e16028948">octopress-to-cryogen.clj</a></p><h2 id="deployment">Deployment</h2><p>I was using github-pages to serve the existing site. The deployment process I had was a hassle. When I set it up I wrote a custom script that I'd need to run on my local machine to build then deploy the site to the special repo/branch to get github to deploy it. I'd always forget what the order of commands were, how I needed to init the ruby environment (did I use dotenv, or bundle, or both, or something else?), it was always a hassle.</p><p>I've used a number of different CI/automation systems (Jenkins, Travis, and CircleCI), but wanted to use this as an opportunity to learn a bit about GitHub Actions. I needed the configuration script to handle building a clojure project, and then deploying it to gh-pages. This required plugging together a few actions, but I didn't need to write any custom code for this. Everything I needed already existed, and needed to be coupled together.</p><p>The setup for the clojure part of the project just required following instructions at <a href="https://github.com/marketplace/actions/setup-clojure">https://github.com/marketplace/actions/setup-clojure</a>, and the publishing to gh-pages part at <a href="https://github.com/marketplace/actions/github-pages-action">https://github.com/marketplace/actions/github-pages-action</a>. The trickiest part was determining that because I'm publishing a "user" based page, I needed to use the <code>personal_token</code> and <code>external_repository</code> config.</p><p>GitHub Actions deployment script available at <a href="https://github.com/rickerbh/blog/blob/0ab0bd8250ab78a31d75db501892cddb9b13a7a6/.github/workflows/workflow.yml">workflow.yml</a></p><h2 id="end">End</h2><p>I <em>do</em> want to blog more - I enjoy it, and fingers crossed this simpler setup helps me do so.</p><p>Hopefully this helps you configure up cryogen for automated deployment via github actions, or the script to port content is useful!</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2020-08-12-javascript-object-compaction/">&laquo; Javascript Object Compaction</a>
+        
+        
+        <a class="right button" href="/posts/2020-07-25-brief-update/">&quot;Brief update&quot; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

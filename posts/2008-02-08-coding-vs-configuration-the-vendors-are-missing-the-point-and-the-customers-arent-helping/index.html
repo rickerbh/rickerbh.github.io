@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Coding vs Configuration - The vendors are missing the point, and the customers</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Large software vendors do (often in the long term) listen and act on what their customers say they want.  However, implementations are still missing the point.  What customers say they want and what they actually want can be very different things.Historically people (like me) in enterprises have harped on to vendors for years about how we want their large enterprise applications to be more configuration driven rather than coding driven.  The actual purpose behind this was about time to market, resource availability with the necessary skill sets required to maintain and alter the application, effort around testing and deployment, and certainty about the validity of the syntax and sensibility of the customisation.  Vendors have responded by closing the code base, but offering more complex configuration environments - which is exactly what we have asked for (see next paragraph about how we have asked for the changes).  However, what they have provided doesn&#39;t meet the actual business goals of the request.  For example, I&#39;ve been recently looking at some Product Configuration software that has a guided Java coding environment for rules definition.  This doesn&#39;t actually make the implementation simpler.  It means that your (previously) relatively unskilled (and that&#39;s flame bait if ever I&#39;ve seen it) configuration staff have to significantly increase their skills to match those of java developers.  Its called &quot;configuration&quot; because its done in a &quot;configuration&quot; tool.  The configuration tool is as much a config tool as Eclipse is (which has code completion BTW, is equally applicable for the task, probably nicer to use and definitely cheaper).  What it&#39;s done is moved the effort from the development staff, to the configuration staff.  Assuming staff are happy with what they do, developers are unlikely to want to join a &quot;configuration&quot; team, and configurators are unlikely to want to gain development skills.  One may also argue that your testing and deployment efforts are more difficult, because the coding that was done by people who know how to code, is now done by people who don&#39;t know how to code - this in my mind introduces more risk.  You also don&#39;t know which parts of the application are affected by this complex configuration activity, and this may drive for more rather than less regression testing.">
+
+<meta property="og:description" content="Large software vendors do (often in the long term) listen and act on what their customers say they want.  However, implementations are still missing the point.  What customers say they want and what they actually want can be very different things.Historically people (like me) in enterprises have harped on to vendors for years about how we want their large enterprise applications to be more configuration driven rather than coding driven.  The actual purpose behind this was about time to market, resource availability with the necessary skill sets required to maintain and alter the application, effort around testing and deployment, and certainty about the validity of the syntax and sensibility of the customisation.  Vendors have responded by closing the code base, but offering more complex configuration environments - which is exactly what we have asked for (see next paragraph about how we have asked for the changes).  However, what they have provided doesn&#39;t meet the actual business goals of the request.  For example, I&#39;ve been recently looking at some Product Configuration software that has a guided Java coding environment for rules definition.  This doesn&#39;t actually make the implementation simpler.  It means that your (previously) relatively unskilled (and that&#39;s flame bait if ever I&#39;ve seen it) configuration staff have to significantly increase their skills to match those of java developers.  Its called &quot;configuration&quot; because its done in a &quot;configuration&quot; tool.  The configuration tool is as much a config tool as Eclipse is (which has code completion BTW, is equally applicable for the task, probably nicer to use and definitely cheaper).  What it&#39;s done is moved the effort from the development staff, to the configuration staff.  Assuming staff are happy with what they do, developers are unlikely to want to join a &quot;configuration&quot; team, and configurators are unlikely to want to gain development skills.  One may also argue that your testing and deployment efforts are more difficult, because the coding that was done by people who know how to code, is now done by people who don&#39;t know how to code - this in my mind introduces more risk.  You also don&#39;t know which parts of the application are affected by this complex configuration activity, and this may drive for more rather than less regression testing.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2008-02-08-coding-vs-configuration-the-vendors-are-missing-the-point-and-the-customers-arent-helping/" />
+<meta property="og:title" content="Coding vs Configuration - The vendors are missing the point, and the customers" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>February 8, 2008</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Coding vs Configuration - The vendors are missing the point, and the customers</h1>
+</div>
+<div>
+    
+    <p>Large software vendors do (often in the long term) listen and act on what their customers say they want.  However, implementations are still missing the point.  What customers say they want and what they actually want can be <em>very</em> different things.</p><p>Historically people (like me) in enterprises have harped on to vendors for years about how we want their large enterprise applications to be more configuration driven rather than coding driven.  The actual purpose behind this was about time to market, resource availability with the necessary skill sets required to maintain and alter the application, effort around testing and deployment, and certainty about the validity of the syntax and sensibility of the customisation.  Vendors have responded by closing the code base, but offering more complex configuration environments - which is exactly what we have asked for (see next paragraph about how we have asked for the changes).  However, what they have provided doesn't meet the actual business goals of the request.  For example, I've been recently looking at some Product Configuration software that has a guided Java coding environment for rules definition.  This doesn't actually make the implementation simpler.  It means that your (previously) relatively unskilled (and that's flame bait if ever I've seen it) configuration staff have to significantly increase their skills to match those of java developers.  Its called "configuration" because its done in a "configuration" tool.  The configuration tool is as much a config tool as Eclipse is (which has code completion BTW, is equally applicable for the task, probably nicer to use and definitely cheaper).  What it's done is moved the effort from the development staff, to the configuration staff.  Assuming staff are happy with what they do, developers are unlikely to want to join a "configuration" team, and configurators are unlikely to want to gain development skills.  One may also argue that your testing and deployment efforts are more difficult, because the coding that was done by people who know how to code, is now done by people who don't know how to code - this in my mind introduces more risk.  You also don't know which parts of the application are affected by this complex configuration activity, and this may drive for <span style="font-style: italic">more</span> rather than <span style="font-style: italic">less </span>regression testing.</p><p>I've also been reading recently about user stories, which are something I've never professionally come across.  I've been working for my entire professional career on waterfall based implementation projects, with requirements and scope specified in documentation like traditional UML use cases, interaction/sequence diagrams, and <a href="http://standards.ieee.org/reading/ieee/std_public/description/se/830-1998_desc.html" target="_blank">IEEE 830</a> style requirements.  I wonder if the large enterprise is its own worst enemy when it comes to vendor software direction and influence.  We are always writing (and that's the first mistake) very specific (and that's the second mistake) requirements for vendors to implement, and influencing them through RFIs and RFPs which contain hundreds or thousands of these requirements.  Maybe if the interaction was more conversation and (business) outcome based we'd actually get what we wanted, instead of getting what we write down - which is always going to be flawed (inaccurate, incomplete, technology based rather than business value based, and driving misunderstandings between reader and writer).  Conversations about outcomes are the way to get around the limitations of written software system specifications.</p><p>What we actually want and what we get are often different things.  I'm beginning to understand that outcome driven conversations between parties playing their specific roles are the way to go.  In a supplier-customer relationship, the customer should tell the supplier what they want to achieve (in a business context), perhaps explaining why the current implementation does not meet their needs.  The suppliers role is to understand the customers issues and the drivers behind why those issues are actually issues, and then propose ways those issues could be resolved.  Often it may be a process or simple usability issue, sometimes there are fundamental issues with the implementation that require longer term efforts to fix.  Regardless, the vendors know their software and the capabilities it possesses and the customers know their business drivers and understand how they are using the software.  Each party should focus on playing their part in the relationship and achieving their eventual outcome (customer = achieving the business value and business purpose they want, and vendor = getting a satisfied customer, which hopefully translates into a big purchase order for them).</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2008-02-08-open-source-is-a-meritocracy/">&laquo; Open Source is a Meritocracy</a>
+        
+        
+        <a class="right button" href="/posts/2008-02-04-ouch-googles-response-to-the-microsoft-bid-for-yahoo/">Ouch! Google’s response to the Microsoft bid for Yahoo. &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

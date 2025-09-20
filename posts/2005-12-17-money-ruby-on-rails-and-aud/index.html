@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Money, Ruby on Rails and AUD</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I had a bit of a play with the Money and Paypal GEMs available at http://dist.leetsoft.com .  The Money API only supports Euro, US and Canadian dollars.  For my paypal integration, I need to support Australian dollar (as dirty old paypal don&#39;t support NZD).  So, I&#39;ve extended the Money class to create an AUD implementation.  There&#39;s nothing special about it, but if you&#39;re too lazy to write the couple of lines of code yourself, here it is.Also, I&#39;ve been having a bit of trouble getting the Money and Paypal GEMs to work.  The issue is that from within a rails controller it doesn&#39;t recognise the Money or Paypal classes.  It can&#39;t find them.  This is the only GEM that I&#39;m having troubles with.  My solution was to import the .rb files into the /vendor directory.  If anyone has this problem, or has a solution for this problem - or even tips, please let me know.  It&#39;s annoying me now.">
+
+<meta property="og:description" content="I had a bit of a play with the Money and Paypal GEMs available at http://dist.leetsoft.com .  The Money API only supports Euro, US and Canadian dollars.  For my paypal integration, I need to support Australian dollar (as dirty old paypal don&#39;t support NZD).  So, I&#39;ve extended the Money class to create an AUD implementation.  There&#39;s nothing special about it, but if you&#39;re too lazy to write the couple of lines of code yourself, here it is.Also, I&#39;ve been having a bit of trouble getting the Money and Paypal GEMs to work.  The issue is that from within a rails controller it doesn&#39;t recognise the Money or Paypal classes.  It can&#39;t find them.  This is the only GEM that I&#39;m having troubles with.  My solution was to import the .rb files into the /vendor directory.  If anyone has this problem, or has a solution for this problem - or even tips, please let me know.  It&#39;s annoying me now.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2005-12-17-money-ruby-on-rails-and-aud/" />
+<meta property="og:title" content="Money, Ruby on Rails and AUD" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 17, 2005</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Money, Ruby on Rails and AUD</h1>
+</div>
+<div>
+    
+    <p>I had a bit of a play with the Money and Paypal GEMs available at <a href="http://dist.leetsoft.com">http://dist.leetsoft.com</a> .  The Money API only supports Euro, US and Canadian dollars.  For my paypal integration, I need to support Australian dollar (as dirty old paypal don't support NZD).  So, I've extended the Money class to create an AUD implementation.  There's nothing special about it, but if you're too lazy to write the couple of lines of code yourself, <a href="http://homepages.ihug.co.nz/~amorph/custom78_money.rb">here it is</a>.</p><p>Also, I've been having a bit of trouble getting the Money and Paypal GEMs to work.  The issue is that from within a rails controller it doesn't recognise the Money or Paypal classes.  It can't find them.  This is the only GEM that I'm having troubles with.  My solution was to import the .rb files into the /vendor directory.  If anyone has this problem, or has a solution for this problem - or even tips, please let me know.  It's annoying me now.</p><p>If I can get this working, I won't bother with my own IPN implementation.  Why reinvent the wheel?</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2005-12-19-go-paypal/">&laquo; Go PayPal!</a>
+        
+        
+        <a class="right button" href="/posts/2005-12-12-hey-been-out-at-pub-quiz-this-evening-tomas-an/">Hey. Been out at pub quiz this evening. Tomas an... &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

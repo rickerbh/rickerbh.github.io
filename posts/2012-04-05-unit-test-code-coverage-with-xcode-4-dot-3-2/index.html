@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Unit Test Code Coverage with Xcode 4.3.2&quot;</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I upgraded to Xcode 4.3.2 and this seemed to break unit tests on iOS for me.The error that was being reported was:
+Test rig &#39;/Applications/Xcode.app/.../iPhoneSimulator.platform/.../otest&#39; exited abnormally with code 134 (it may have crashed).">
+
+<meta property="og:description" content="I upgraded to Xcode 4.3.2 and this seemed to break unit tests on iOS for me.The error that was being reported was:
+Test rig &#39;/Applications/Xcode.app/.../iPhoneSimulator.platform/.../otest&#39; exited abnormally with code 134 (it may have crashed).">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2012-04-05-unit-test-code-coverage-with-xcode-4-dot-3-2/" />
+<meta property="og:title" content="&quot;Unit Test Code Coverage with Xcode 4.3.2&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>April 5, 2012</strong>
+        
+    </div>
+    <h1>&quot;Unit Test Code Coverage with Xcode 4.3.2&quot;</h1>
+</div>
+<div>
+    
+    <p>I upgraded to Xcode 4.3.2 and this seemed to break unit tests on iOS for me.</p><p>The error that was being reported was:
+Test rig '/Applications/Xcode.app/.../iPhoneSimulator.platform/.../otest' exited abnormally with code 134 (it may have crashed).</p><p>(... used to save space)</p><p>The actual cause of this error was explained in the unit test build/run log files in Xcode:
+Detected an attempt to call a symbol in system libraries that is not present on the iPhone:
+fopen$UNIX2003 called from function llvm_gcda_start_file in image UnitTests.</p><p>I covered this issue in a prior post, but the short version of how to get around it is to include the below code in one of your test .m files, outside of the @implementation...@end block. I recommend right down the bottom of one of the files.</p><pre><code>#include &lt;stdio.h&gt;
+// Prototype declarations
+FILE *fopen$UNIX2003( const char *filename, const char *mode );
+size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d );
+
+FILE *fopen$UNIX2003( const char *filename, const char *mode ) {
+  return fopen(filename, mode);
+}
+size_t fwrite$UNIX2003( const void *a, size_t b, size_t c, FILE *d ) {
+  return fwrite(a, b, c, d);
+}
+</code></pre><p>Other settings for successful execution of the unit tests with code coverage are (in your Project's Unit Test target):</p><ul><li>Generate Test Coverage Files = YES</li><li>Instrument Program Flows = YES</li></ul><p>There is no need for linking libprofile_rt to get coverage to work.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2012-04-10-housekeeping/">&laquo; &quot;Housekeeping&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2012-01-26-continuous-integration-and-ios/">&quot;Continuous Integration and iOS&quot; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: select with value - rubyonrails</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Grrr, just spent a little while playing with the &quot;select&quot; form tag in rails.  Pain in the ass.  The issue I was having is that I want to give users an option of 2 values with a default selected value on the &quot;new&quot; form.  I also have a edit form that I want to let users update their objects with, and again, only 2 values.  These values are static, and I didn&#39;t want to have the pain of creating a db table, and an object to represent it.  That would result in unnecessary code, and unnecessary database hits.The issue with the &quot;select&quot; tag is that I cannot determine how to set the selected value, without using a collection of objects.  I had a look for a solution for this problem, and found this site.  This gave me a helper that lets me put in an object, with some methods to get the value and text options for my option set.  that was alright.  But, I didn&#39;t want the full object model to be supported.  I was after a very simple implementation with using a hash, and a string as the selected value.">
+
+<meta property="og:description" content="Grrr, just spent a little while playing with the &quot;select&quot; form tag in rails.  Pain in the ass.  The issue I was having is that I want to give users an option of 2 values with a default selected value on the &quot;new&quot; form.  I also have a edit form that I want to let users update their objects with, and again, only 2 values.  These values are static, and I didn&#39;t want to have the pain of creating a db table, and an object to represent it.  That would result in unnecessary code, and unnecessary database hits.The issue with the &quot;select&quot; tag is that I cannot determine how to set the selected value, without using a collection of objects.  I had a look for a solution for this problem, and found this site.  This gave me a helper that lets me put in an object, with some methods to get the value and text options for my option set.  that was alright.  But, I didn&#39;t want the full object model to be supported.  I was after a very simple implementation with using a hash, and a string as the selected value.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2005-12-29-select-with-value-rubyonrails/" />
+<meta property="og:title" content="select with value - rubyonrails" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 29, 2005</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>select with value - rubyonrails</h1>
+</div>
+<div>
+    
+    <p>Grrr, just spent a little while playing with the "select" form tag in rails.  Pain in the ass.  The issue I was having is that I want to give users an option of 2 values with a default selected value on the "new" form.  I also have a edit form that I want to let users update their objects with, and again, only 2 values.  These values are static, and I didn't want to have the pain of creating a db table, and an object to represent it.  That would result in unnecessary code, and unnecessary database hits.</p><p>The issue with the "select" tag is that I cannot determine how to set the selected value, without using a collection of objects.  I had a look for a solution for this problem, and found <a href="http://wiki.rubyonrails.com/rails/pages/HowtoUseFormOptionHelpers">this site</a>.  This gave me a helper that lets me put in an object, with some methods to get the value and text options for my option set.  that was alright.  But, I didn't want the full object model to be supported.  I was after a very simple implementation with using a hash, and a string as the selected value.</p><p>I hacked around with the code, and this is what I came up with.  Please feel free to pillage this.</p><p><span object="">def hash_select_with_current(object, method, hash, current_value)
+result = "&lt;select name="#</span>[<span method="">#</span>]<span value="">"&gt;"
+hash.each do |key, value|
+if current_value == value
+result &lt;&lt; "&lt;option selected="selected" value="#</span><span key="">"&gt;#</span><span value="">"
+else
+result &lt;&lt; "&lt;option value="#</span><span key="">"&gt;#</span>"
+end
+end
+result &lt;&lt; ""
+return result
+end</p><pre><code>
+Hope that's useful for someone.</code></pre>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2006-01-08-product-development/">&laquo; Product Development</a>
+        
+        
+        <a class="right button" href="/posts/2005-12-28-drinking-and-hospital/">Drinking and Hospital &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

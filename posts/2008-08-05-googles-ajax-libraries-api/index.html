@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Google&#39;s AJAX Libraries API</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="This might be old news (released end of May, I&#39;m soooo behind the times), but Google are supporting hosting for popular javascript libraries, and they are promoting people using their copies of the libraries rather than hosting their own.  I only just found this out, and I think it&#39;s pretty coolhttp://code.google.com/apis/ajaxlibs/">
+
+<meta property="og:description" content="This might be old news (released end of May, I&#39;m soooo behind the times), but Google are supporting hosting for popular javascript libraries, and they are promoting people using their copies of the libraries rather than hosting their own.  I only just found this out, and I think it&#39;s pretty coolhttp://code.google.com/apis/ajaxlibs/">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2008-08-05-googles-ajax-libraries-api/" />
+<meta property="og:title" content="Google&#39;s AJAX Libraries API" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>August 5, 2008</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Google&#39;s AJAX Libraries API</h1>
+</div>
+<div>
+    
+    <p>This might be old news (released end of May, I'm soooo behind the times), but Google are supporting hosting for popular javascript libraries, and they are promoting people using their copies of the libraries rather than hosting their own.  I only just found this out, and I think it's pretty cool</p><p><a href="http://code.google.com/apis/ajaxlibs/" target="_blank">http://code.google.com/apis/ajaxlibs/</a></p><p>The service supports either <a href="http://code.google.com/apis/ajax/documentation/" target="_blank">programmatic inclusion</a> using the google jsapi library, or <a href="http://code.google.com/apis/ajaxlibs/documentation/index.html#AjaxLibraries" target="_blank">linking directly</a> to their hosted copies.</p><p>Good things about this</p><ul><li>You save bandwidth costs, as your users download the libraries from google</li><li>Your users get faster browsing ON OTHER DOMAINS, because the more people that use a single source, the more caching should happen</li></ul>
+Bad things about this
+<ul><li>Google have more opportunity to <span style="text-decoration: line-through;">don't</span> be evil - the biggest concern for me is their increased ability to understanding which users use your application, and propensity for understanding <em>how</em> they use it.  A malicious individual within the company could put some nasty code in the js to screw with your site, or monitor and transmit back to googlebase what the user is up to.  It's <em>very</em> unlikely, but it could happen.</li></ul>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2008-08-15-radiant-cms-tutorial-custom-javascript-in-admin-pages/">&laquo; Radiant CMS Tutorial - Custom Javascript in Admin Pages</a>
+        
+        
+        <a class="right button" href="/posts/2008-07-30-there-is-a-better-way-and-its-about-time-i-started-showing-people/">There is a better way (and it&#39;s about time I started showing people) &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

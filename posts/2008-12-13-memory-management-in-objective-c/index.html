@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Memory Management in Objective-C</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I was having some issues with Memory Management and dealloc&#39;ing objects (and subsequently crashing software) and found the following resources very useful:">
+
+<meta property="og:description" content="I was having some issues with Memory Management and dealloc&#39;ing objects (and subsequently crashing software) and found the following resources very useful:">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2008-12-13-memory-management-in-objective-c/" />
+<meta property="og:title" content="Memory Management in Objective-C" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 13, 2008</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Memory Management in Objective-C</h1>
+</div>
+<div>
+    
+    <p>I was having some issues with Memory Management and dealloc'ing objects (and subsequently crashing software) and found the following resources very useful:</p><ul><li><a title="Memory Management Blog Entry on iphonedevelopertips.com" href="http://iPhoneDeveloperTips.com/objective-c/memory-management.html" target="_blank">Memory Management Blog Entry</a> (<a href="http://iphonedevelopertips.com" target="_blank">iphonedevelopertips.com</a>)</li><li><a title="Memory Management Programming Guide for Cocoa PDF" href="http://developer.apple.com/documentation/Cocoa/Conceptual/MemoryMgmt/MemoryMgmt.pdf" target="_blank">Memory Management Programming Guide for Cocoa</a> (<a href="http://developer.apple.com" target="_blank">developer.apple.com</a>)</li></ul><div>To paraphrase</div><div><ol><li>Never <code>dealloc</code>, use <code>release</code></li><li>If you create an object it's your responsibility to release it</li><li>If you want to own an object or use and object returned from another object you should <code>retain</code> it</li><li>Don't release an object you didn't create or own</li></ol><div>Now I remember why I like programming languages that take memory management out of my hands. Last time I touched memory management was at university, and it was a pain then too.</div><div></div><div>Good thing is that Objective-C/Cocoa has those simple rules/conventions to follow.  Memory Management is not onerous on the mac/iPhone, so I can't complain too much.</div></div>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2008-12-27-zazzle-discount-vouchers-codes/">&laquo; Zazzle discount vouchers / codes</a>
+        
+        
+        <a class="right button" href="/posts/2008-12-10-car-tries-to-climb-fence-in-reading/">Car tries to climb fence in Reading &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

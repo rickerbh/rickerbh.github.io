@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Advent of Code 2021 - Puzzle 5</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Puzzle 5 - Step 1Todays puzzle is about mapping a bunch of lines that have start/end coordinates, and checking for intersections. We need to count the number of intersections in the map. We are also to only consider horizontal or vertical lines.">
+
+<meta property="og:description" content="Puzzle 5 - Step 1Todays puzzle is about mapping a bunch of lines that have start/end coordinates, and checking for intersections. We need to count the number of intersections in the map. We are also to only consider horizontal or vertical lines.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2021-12-05-advent-of-code-2021-puzzle-5/" />
+<meta property="og:title" content="Advent of Code 2021 - Puzzle 5" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 5, 2021</strong>
+        
+    </div>
+    <h1>Advent of Code 2021 - Puzzle 5</h1>
+</div>
+<div>
+    
+    <h2 id="puzzle-5---step-1">Puzzle 5 - Step 1</h2><p>Todays puzzle is about mapping a bunch of lines that have start/end coordinates, and checking for intersections. We need to count the number of intersections in the map. We are also to only consider horizontal or vertical lines.</p><p>To model this, I implemented two new types to represent points, and lines.</p><pre><code class="ocaml">type point = int * int
+
+type line = point * point
+</code></pre><p>Lines are to be defined by start/end points, that look like this: <code>((0, 9), (5, 9))</code>.</p><p>To include only horizontal or vertical lines, we need a checker. To check for horizontal or verticalness, we need to ensure that either the first 2 values or the second 2 values of the points are the same.</p><pre><code class="ocaml">let is_horizontal_or_vertical line =
+  let (x1, y1), (x2, y2) = line in
+  match (x1, y1, x2, y2) with
+  | a, _, b, _ when a = b -&gt; true
+  | _, a, _, b when a = b -&gt; true
+  | _, _, _, _ -&gt; false
+</code></pre><p>To calculate the intersections, we need to consider all points along a line. So, lets generate them. I developed a function that given 2 ints, will move them closer to each other (<code>to_target</code>). We can then use this by passing in the first 2 and last 2 values from the start/end of the line, and they'll converge. We recursively generate the points of a line, until they meet. The <code>expanded_lines</code> function will take an input and generate the points for each line (i.e., the full board).</p><pre><code class="ocaml">let to_target a b =
+  match (a, b) with
+  | _, _ when a &lt; b -&gt; a + 1
+  | _, _ when a &gt; b -&gt; a - 1
+  | _ -&gt; a
+
+let rec generate_line_points line =
+  let start_point, end_point = line in
+  match start_point = end_point with
+  | true -&gt; [ start_point ]
+  | _ -&gt;
+      let (x1, y1), (x2, y2) = line in
+      let next_x = to_target x1 x2 in
+      let next_y = to_target y1 y2 in
+      start_point :: generate_line_points ((next_x, next_y), end_point)
+
+let expanded_lines input = List.map generate_line_points input
+</code></pre><p>This gives us all the tools we need to generate the list of all lines. Next step is to determine the "dangerous" points on the board i.e., where the lines intersect. To do this, I use a <code>frequency</code> function to count how many lines are at each point, and then match each of these and emit true when there are more than 1.</p><pre><code class="ocaml">let is_dangerous_vent t = match t with _, f when f &gt; 1 -&gt; true | _, _ -&gt; false
+</code></pre><p>And tying it all together...</p><pre><code class="ocaml">let problem_5_1 input =
+  let lines =
+    List.filter is_horizontal_or_vertical input
+    |&gt; expanded_lines |&gt; List.flatten
+  in
+  let freqs = Utils.frequencies lines in
+  let dangerous_count = List.filter is_dangerous_vent freqs |&gt; List.length in
+  dangerous_count
+</code></pre><p>This works, but it is <strong>SLOW</strong>.</p><h2 id="puzzle-5---step-2">Puzzle 5 - Step 2</h2><p>The twist with step 2 is that we need to include the diagonal lines. I think I cheated a bit here. The instructions were explicit with only 45º lines being supported, but I just removed the filter check for horizontal and vertical, and I was done 😅</p><pre><code class="ocaml">let problem_5_2 input =
+  let lines = expanded_lines input |&gt; List.flatten in
+  let freqs = Utils.frequencies lines in
+  let dangerous_count = List.filter is_dangerous_vent freqs |&gt; List.length in
+  dangerous_count
+</code></pre><p>Also <strong>SLOW</strong>.</p><h2 id="parser">Parser</h2><p>This parser is a bit clunky. I needed to turn a string of <code>0,9 -&gt; 0,5</code> into a <code>((0, 9), (0, 5))</code>. This is just a series of nested maps, and some fun with optionals.</p><pre><code class="ocaml">let parse_line_to_ints lines =
+  let pairs =
+    List.map (fun l -&gt; Str.split (Str.regexp " -&gt; ") l) lines
+    |&gt; List.map (fun l -&gt;
+           List.map
+             (fun p -&gt;
+               let t = Str.split (Str.regexp ",") p |&gt; List.map int_of_string in
+               match t with a :: b :: _ -&gt; Option.some (a, b) | _ -&gt; None)
+             l)
+    |&gt; List.map Utils.deoptionalize
+    |&gt; List.map (fun xs -&gt;
+           match xs with a :: b :: _ -&gt; Option.some (a, b) | _ -&gt; None)
+    |&gt; Utils.deoptionalize
+  in
+  pairs
+</code></pre><p>And the familiar function to read some lines from a file.</p><pre><code class="ocaml">let parse_input filename =
+  let lines = Utils.read_lines filename in
+  parse_line_to_ints lines
+</code></pre><h2 id="slow">Slow</h2><img src="https://memegenerator.net/img/instances/49324497.jpg" width="512" height="380" /><p>Haven't figured it out yet. Obviously one of these steps is taking a very long time, or maybe many are, or maybe there are just a lot of steps. I started to investigate potential performance tweaks with the help of <a href="https://ocaml.org/learn/tutorials/performance_and_profiling.html">Performance and Profiling on OCaml.org</a>. The low hanging fruit was to de-genericise some of the functions by providing type hints to the compiler. I'm not sure if this actually helped, as it was taking upwards of 220 seconds to run on my machine, so I feel that unless there was a massive change in speed, this wasn't the issue. There must be a fundamentally different way to solve this problem.</p><p>I also looked at generating the annotated execution stats with ocamlprof, but I'm already behind with these puzzles and couldn't immediately figure out how ocamlprof interacts with dune. 🤷</p>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/ocaml/">ocaml</a>
+    
+    <a href="/tags-output/aoc/">aoc</a>
+    
+    <a href="/tags-output/aoc2021/">aoc2021</a>
+    
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2021-12-06-advent-of-code-2021-puzzle-6/">&laquo; Advent of Code 2021 - Puzzle 6</a>
+        
+        
+        <a class="right button" href="/posts/2021-12-04-advent-of-code-2021-puzzle-4/">Advent of Code 2021 - Puzzle 4 &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

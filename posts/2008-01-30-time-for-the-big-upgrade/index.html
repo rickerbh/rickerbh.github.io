@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Time for the big upgrade</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Righto, I&#39;ve been putting it off long enough.  Got the GiST has been running on rails 1.1.6 almost since it has been launched, and I&#39;d like to take advantage on some of that RESTful 2.0 goodness.  So, I&#39;ve decided it&#39;s time to upgrade it.I&#39;ve got a couple of issues though.  I currently use (shhhh, I&#39;m about to say a dirty word) Engines to handle my user logins and roles...  They don&#39;t work with much past rails 1.1.6.  I also don&#39;t have good admin screens on the application, and whenever I need to do maintenance (which is very rare) I need to go and edit the database directly :-(">
+
+<meta property="og:description" content="Righto, I&#39;ve been putting it off long enough.  Got the GiST has been running on rails 1.1.6 almost since it has been launched, and I&#39;d like to take advantage on some of that RESTful 2.0 goodness.  So, I&#39;ve decided it&#39;s time to upgrade it.I&#39;ve got a couple of issues though.  I currently use (shhhh, I&#39;m about to say a dirty word) Engines to handle my user logins and roles...  They don&#39;t work with much past rails 1.1.6.  I also don&#39;t have good admin screens on the application, and whenever I need to do maintenance (which is very rare) I need to go and edit the database directly :-(">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2008-01-30-time-for-the-big-upgrade/" />
+<meta property="og:title" content="Time for the big upgrade" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>January 30, 2008</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Time for the big upgrade</h1>
+</div>
+<div>
+    
+    <p>Righto, I've been putting it off long enough.  <a href="http://gotthegist.co.nz">Got the GiST</a> has been running on rails 1.1.6 almost since it has been launched, and I'd like to take advantage on some of that RESTful 2.0 goodness.  So, I've decided it's time to upgrade it.</p><p>I've got a couple of issues though.  I currently use (shhhh, I'm about to say a dirty word) <em>Engines</em> to handle my user logins and roles...  They don't work with much past rails 1.1.6.  I also don't have good admin screens on the application, and whenever I need to do maintenance (which is very rare) I need to go and edit the database directly :-(</p><p>So, there are a number of things that I want to do to the app.</p><ol><li>Upgrade to Rails 2.0.2</li><li>Convert my user login goodies to use <a href="http://technoweenie.stikipad.com/plugins/show/Acts+as+Authenticated">acts_as_authenticated</a></li><li>Get another way to handle roles</li><li>Implement <a href="http://streamlinedframework.org/">Streamlined</a> for admin screens</li><li>Write some tests - I've was a bit slack when I initially wrote <a href="http://gotthegist.co.nz">Got the GiST</a></li><li>Refactor my code - this goes without saying - some of it is a bit shabby</li></ol><p>The main issue I have is that I'm not sure what order I want to do this in.  The issue that I have is there are a number of dependencies.  For example, old-style Engines doesn't work past 1.1.6 - and I have my complete login and role system built around that.  <a href="http://streamlinedframework.org/">streamlined</a> don't appear to work with Rails 1.1.x.  <a href="http://technoweenie.stikipad.com/plugins/show/Acts+as+Authenticated">acts_as_authenticated</a> requires a simple bit of script hackery to work with 1.1.6, so that might be able to come early...</p><p>I think what I'm going to do is drop Engines ASAP.  That's the main cause of my pain.  I need to recreate with acts_as_authenticated essentially the same methods for authentication as login_engine currently has, as well as find a (perhaps temporary) solution to my roles issues.  Then I'll set about writing tests.  Next step I think could be to upgrade to 1.2.6, and then implement <a href="http://streamlinedframework.org/">streamlined</a>. I think I'll then be ready for a migration to Rails 2.0.</p><p>Unless someone else has a much better suggestion!</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2008-01-30-requirements-of-charles-schwab/">&laquo; Requirements of Charles Schwab</a>
+        
+        
+        <a class="right button" href="/posts/2008-01-30-intervention-multiplies-like-lies/">Intervention multiplies like lies &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

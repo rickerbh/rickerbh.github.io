@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Advent of Code 2021 - Puzzle 2</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Puzzle 2 - Step 1For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.">
+
+<meta property="og:description" content="Puzzle 2 - Step 1For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2021-12-02-advent-of-code-2021-puzzle-2/" />
+<meta property="og:title" content="Advent of Code 2021 - Puzzle 2" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 2, 2021</strong>
+        
+    </div>
+    <h1>Advent of Code 2021 - Puzzle 2</h1>
+</div>
+<div>
+    
+    <h2 id="puzzle-2---step-1">Puzzle 2 - Step 1</h2><p>For this puzzle, a sequence of instructions need to be interpreted and change position of a submarine. My solution here was to parse the instructions into a sequence of a custom type that encodes the instructions within the type, and then reduce over that list calculating the position of the submarine. The submarine movements can easily be interpreted via a pattern match.</p><p>Lets introduce two cutom types. One for the instructions (<code>direction</code>) and one for the submarine position.</p><pre><code class="ocaml">type direction = Forward of int | Up of int | Down of int | Unknown
+
+type sub_pos = { hpos : int; depth : int }
+</code></pre><p>Then we need a way to get the input values. The file has an instruction per line, and we need to split the instructions into their direction and "amount" components. We map over the lines.</p><pre><code class="ocaml">(* OCaml doesn't support \s+ ?!*)
+let split_on_space x = Str.split (Str.regexp "[ ]+") x
+</code></pre><p>For converting the strings into instructions, we can use a pattern match. In Haskell I'd have used a <code>Parser</code>, but I haven't done enough investigation in OCaml around specific support for this. This solution seems OK though. I've implemented an <code>Unknown</code> value to handle any instructions that don't match. None were encountered though.</p><pre><code class="ocaml">let direction_generator s i =
+  match s with
+  | "forward" -&gt; Forward (int_of_string i)
+  | "down" -&gt; Down (int_of_string i)
+  | "up" -&gt; Up (int_of_string i)
+  | _ -&gt; Unknown
+
+let convert_input (instruction::num::_) = direction_generator instruction num;
+</code></pre><p>For handling the movement, we implement a simple match that will create a new <code>sub_pos</code> type from the move and the provided position.</p><pre><code class="ocaml">let move acc d = match d with
+  | Forward i -&gt; {hpos= acc.hpos + i; depth= acc.depth}
+  | Up i -&gt; {hpos= acc.hpos; depth= acc.depth - i}
+  | Down i -&gt; {hpos= acc.hpos; depth= acc.depth + i}
+  | Unknown -&gt; {hpos= acc.hpos; depth= acc.depth}
+</code></pre><p>And then we just tie it all together</p><pre><code class="ocaml">let answer = List.map split_on_space input |&gt; List.map convert_input |&gt; List.fold_left move {hpos = 0; depth = 0} in
+  answer.hpos * answer.depth
+</code></pre><h2 id="puzzle-2---step-2">Puzzle 2 - Step 2</h2><p>There are a couple of changes required for step 2. The first is that the custom type that represents the position of the sub needs a third datapoint to represent the aim. The second is that the movement calculation needs to be changed. No biggie.</p><pre><code class="ocaml">type sub_pos2 = { hpos : int; depth : int ; aim: int}
+
+let move2 acc d = match d with
+  | Forward i -&gt; {hpos= acc.hpos + i; depth= acc.depth + (acc.aim * i); aim= acc.aim}
+  | Up i -&gt; {hpos= acc.hpos; depth= acc.depth; aim = acc.aim - i}
+  | Down i -&gt; {hpos= acc.hpos; depth= acc.depth; aim = acc.aim + i}
+  | Unknown -&gt; {hpos= acc.hpos; depth= acc.depth; aim = acc.aim}
+</code></pre><p>And then, we just execute with this different move function.</p><pre><code class="ocaml">    let answer = List.map split_on_space input |&gt; List.map convert_input |&gt; List.fold_left move2 {hpos= 0; depth=0; aim=0} in
+    answer.hpos * answer.depth
+</code></pre>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/ocaml/">ocaml</a>
+    
+    <a href="/tags-output/aoc/">aoc</a>
+    
+    <a href="/tags-output/aoc2021/">aoc2021</a>
+    
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2021-12-03-advent-of-code-2021-puzzle-3/">&laquo; Advent of Code 2021 - Puzzle 3</a>
+        
+        
+        <a class="right button" href="/posts/2021-12-01-advent-of-code-2021-setup/">Advent of Code 2021 - Puzzle 1 &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

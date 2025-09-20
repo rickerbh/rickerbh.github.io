@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Firefox 3.0.3 and 500 Internal Errors with Javascript</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I had a very confusing situation today with a multipart form that was for uploading a picture to a new web service I&#39;m working on.In Safari the form upload worked. Even in Internet Explorer 6 the form upload worked (after I fixed the dodgy MIME-type that IE passes through for JPG images - image/pjpeg for those interested).">
+
+<meta property="og:description" content="I had a very confusing situation today with a multipart form that was for uploading a picture to a new web service I&#39;m working on.In Safari the form upload worked. Even in Internet Explorer 6 the form upload worked (after I fixed the dodgy MIME-type that IE passes through for JPG images - image/pjpeg for those interested).">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2008-10-26-firefox-303-and-500-internal-errors-with-javascript/" />
+<meta property="og:title" content="Firefox 3.0.3 and 500 Internal Errors with Javascript" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>October 26, 2008</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Firefox 3.0.3 and 500 Internal Errors with Javascript</h1>
+</div>
+<div>
+    
+    <p>I had a very confusing situation today with a multipart form that was for uploading a picture to a new web service I'm working on.</p><p>In Safari the form upload worked. Even in Internet Explorer 6 the form upload worked (after I fixed the dodgy MIME-type that IE passes through for JPG images - image/pjpeg for those interested).</p><p>The form I was trying to submit had the multipart attribute set correctly, and also had some javascript to disable the file selection, form submission button, and show a spinner to indicate that something is happening, and they don't try and submit the file twice if they're sending in a large image.</p><p>My submit tag orginally looked like this (Ruby on Rails)</p><pre><code class="ruby">
+&amp;lt;%= submit_tag 'Upload Photo', :class =&amp;gt; "formbutton", :id =&amp;gt; "submit-button", :onClick =&amp;gt; "$('upload-form').submit();Form.disable('upload-form');Effect.toggle('footnote', 'appear', {duration: 0});Effect.toggle('spinner', 'appear', {duration: 0});" %&amp;gt;
+
+</code></pre><p>I was very confused as it did work in those other browsers, but not in Firefox.</p><p>The key to fixing this was to add return false; to the end of the javascript statement...</p><pre><code class="ruby">
+&amp;lt;%= submit_tag 'Upload Photo', :class =&amp;gt; "formbutton", :id =&amp;gt; "submit-button", :onClick =&amp;gt; "$('upload-form').submit();Form.disable('upload-form');Effect.toggle('footnote', 'appear', {duration: 0});Effect.toggle('spinner', 'appear', {duration: 0});return false;" %&amp;gt;
+
+</code></pre><p>What I find particularly confusing about this is that everything I read on the "return false;" statement leads me to believe that this form should not be submitted - however - return true does not work (500 Internal Server Error returned). But what the hey - it works.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2008-11-04-linkedin-iphone-application/">&laquo; LinkedIn iPhone Application</a>
+        
+        
+        <a class="right button" href="/posts/2008-10-17-great-job-title/">Great job title &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

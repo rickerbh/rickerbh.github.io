@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Getting Things Done</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="(from wikipedia)">
+
+<meta property="og:description" content="(from wikipedia)">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2007-03-13-getting-things-done/" />
+<meta property="og:title" content="Getting Things Done" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>March 13, 2007</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Getting Things Done</h1>
+</div>
+<div>
+    
+    <p>(from <a href="http://en.wikipedia.org/wiki/Getting_Things_Done">wikipedia</a>)</p><blockquote>Getting Things Done, commonly abbreviated as GTD, is an action management method, and the title of a book by David Allen.
+GTD rests on the principle that a person needs to move tasks out of the mind by recording them somewhere. That way, the mind is freed from the job of remembering everything that needs to be done, and can concentrate on actually performing those tasks.</blockquote>
+I have previously used the GTD method when I was leaving Auckland, so I could ensure that I managed the many tasks I needed to complete to move countries.  Since then, my GTD implementation (based on <a href="http://www.rousette.org.uk/projects/">tracks</a>) slipped back to becoming a home for stagnant tasks.  My tracks implementation was also local to my home machine, and I couldn't use it for my day job.  I also had a couple of usability issues with tracks (which I _should_ really write patches for and submit).
+<p>BUT, a couple of days ago I discovered <a href="http://www.gtd-php.com/">gtd-php</a>.  It seems like a more complete (read: strict) implementation of the GTD methodology.  I installed it with ease over at textdrive (it's PHP, so requires none of the proxy-forwarding malarky that Rails needs to run under lighttpd), and have started to use it for work and home(work).  It seems like a good implementation, and I've experienced few issues with it so far.  The only thing I don't like is the inability to see what contexts exist without pretending to create an action to access them via the dropdown box - I added some, and made a mistake, and had to drop into the database to correct it.  It's quite a new implementation I think, but it looks very promising.</p><p>I also got lots of stuff done yesterday.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2007-05-25-off-to-bruges/">&laquo; Off to Bruges</a>
+        
+        
+        <a class="right button" href="/posts/2007-02-06-betavine/">Betavine &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

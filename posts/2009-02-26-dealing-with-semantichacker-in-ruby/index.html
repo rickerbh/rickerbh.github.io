@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Dealing with SemanticHacker in Ruby</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I&#39;m having a bit of a play with SemanticHacker at the moment, seeing what their service thinks of some text I&#39;m poking at it.  To make this a bit simpler I created a small ruby lib that wraps their API to make my life a little easier.  And hopefully it&#39;ll make someone elses life easier - enjoy.(It requires hpricot for XML parsing - make sure it&#39;s installed)">
+
+<meta property="og:description" content="I&#39;m having a bit of a play with SemanticHacker at the moment, seeing what their service thinks of some text I&#39;m poking at it.  To make this a bit simpler I created a small ruby lib that wraps their API to make my life a little easier.  And hopefully it&#39;ll make someone elses life easier - enjoy.(It requires hpricot for XML parsing - make sure it&#39;s installed)">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2009-02-26-dealing-with-semantichacker-in-ruby/" />
+<meta property="og:title" content="Dealing with SemanticHacker in Ruby" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>February 26, 2009</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Dealing with SemanticHacker in Ruby</h1>
+</div>
+<div>
+    
+    <p>I'm having a bit of a play with <a href="http://www.semantichacker.com/">SemanticHacker</a> at the moment, seeing what their service thinks of some text I'm poking at it.  To make this a bit simpler I created a small ruby lib that wraps their API to make my life a little easier.  And hopefully it'll make someone elses life easier - enjoy.</p><p>(It requires <a href="http://github.com/why/hpricot/tree/master">hpricot</a> for XML parsing - make sure it's installed)</p><pre><code class="ruby">require 'rubygems'
+require 'hpricot'
+require 'cgi'
+require 'open-uri'
+
+class SemanticHacker
+
+  URL = "http://api.semantichacker.com"
+  attr_accessor :token, :doc, :content
+
+  def initialize(token)
+    @token = token
+  end
+
+  def get_signature(content)
+    @content = ::CGI::escape(content)
+    url = "#{URL}/#{@token}/signature?content=#{@content}"
+    @doc = Hpricot.XML(open(url))
+  end
+
+  def get_concepts(content)
+    @content = ::CGI::escape(content)
+    url = "#{URL}/#{@token}/concept?content=#{@content}"
+    @doc = Hpricot.XML(open(url))
+  end
+
+  def get_categories(content)
+    @content = ::CGI::escape(content)
+    url = "#{URL}/#{@token}/category?content=#{@content}"
+    @doc = Hpricot.XML(open(url))
+  end
+
+  def type
+    (doc/:response/:about/:systemType).inner_html
+  end
+
+  def config_id
+    (doc/:response/:about/:configId).inner_html
+  end
+
+  def categories
+    response = []
+    (doc/:response/:categorizer/:categorizerResponse/:categories/:category).each do |item|
+      response &lt;&lt; {:id =&gt; item.attributes['id'], :weight =&gt; item.attributes['weight']}
+    end
+    response
+  end
+
+  def concepts
+    response = []
+    (doc/:response/:conceptExtractor/:conceptExtractorResponse/:concepts/:concept).each do |item|
+      response &lt;&lt; {:label =&gt; item.attributes['label'], :weight =&gt; item.attributes['weight']}
+    end
+    response
+  end
+
+  def signatures
+    response = []
+    (doc/:response/:siggen/:siggenResponse/:signature/:dimension).each do |item|
+      response &lt;&lt; {:index =&gt; item.attributes['index'], :weight =&gt; item.attributes['weight']}
+    end
+    response
+  end
+
+end
+</code></pre><p>And to make things happen</p><pre><code class="ruby">sh = SemanticHacker.new("mysecrettoken")
+sh.get_signature("Wow!  Some semantic analysis on my text")
+puts sh.signatures.inspect 
+#returns an array of hashes with the weights and indexes of the categories
+</code></pre>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2009-03-02-esta-and-confusion/">&laquo; ESTA and Confusion</a>
+        
+        
+        <a class="right button" href="/posts/2009-02-20-installing-f2c-on-a-mac/">Installing f2c on a mac &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

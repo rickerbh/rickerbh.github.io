@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;A small functional refactoring of Javascript&quot;</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I&#39;m working on a web based productivity application at the moment, and have been modifying some old code. This code deals with synchronisation of data with external services, and storage of metadata about the synchronisation of that data. The application had quite a bit of duplication in dealing with this metadata; specifically in extracting data from the stored structures. In the interests of having very DRY Javascript, it was time to refactor.The configuration/metadata structures typically look like">
+
+<meta property="og:description" content="I&#39;m working on a web based productivity application at the moment, and have been modifying some old code. This code deals with synchronisation of data with external services, and storage of metadata about the synchronisation of that data. The application had quite a bit of duplication in dealing with this metadata; specifically in extracting data from the stored structures. In the interests of having very DRY Javascript, it was time to refactor.The configuration/metadata structures typically look like">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2016-07-05-a-small-functional-refactoring-of-some-javascript/" />
+<meta property="og:title" content="&quot;A small functional refactoring of Javascript&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>July 5, 2016</strong>
+        
+    </div>
+    <h1>&quot;A small functional refactoring of Javascript&quot;</h1>
+</div>
+<div>
+    
+    <p>I'm working on a web based productivity application at the moment, and have been modifying some old code. This code deals with synchronisation of data with external services, and storage of metadata about the synchronisation of that data. The application had quite a bit of duplication in dealing with this metadata; specifically in extracting data from the stored structures. In the interests of having very DRY Javascript, it was time to refactor.</p><p>The configuration/metadata structures typically look like</p><pre><code>{
+  ...
+  config: [{ key: 'attribute-name', value: { value: 'attribute-value' }}],
+}
+</code></pre><p><em>Sidenote: value is embedded in value because the top-level value item actually receives an object to store, so other fields can be added in the future</em></p><p>The metadata object was then optionally attached to other user-entered data entities, and queried when updates that require synchronisation to be triggered.</p><pre><code>const containerObject = {...
+  config: [
+      { key: 'itemId', value: { value: 12345 }}, 
+      { key: 'itemState', value: { value: 'active' }}
+    ],
+};
+</code></pre><p>The application was already using <a href="http://ramdajs.com/">RamdaJS</a> to extract data from these types of structures.  To query, there was a whole bunch of duplicated code that traversed the containing objects, and extracted data. Example below.</p><pre><code>// Extract config object, maybe.
+const syncData = R.propOr({}, 'config')(containerObject);
+// Find a structure with a specific key value
+const itemSyncData = R.find(R.propEq('key', 'itemId'), syncData) || {};
+// Extract the value from the entity with that key
+const itemId = R.path(['value', 'value'], itemSyncData);
+</code></pre><p>To DRY all this up, I looked at the possibility of using <a href="https://en.wikipedia.org/wiki/Currying">Currying</a> and <a href="https://en.wikipedia.org/wiki/Partial_application">Partial Application</a> to help me define generic extraction functions, and reuse them.</p><p>First of all, I turned the above into a composed function, with the results of one step flowing as the inputs to the next.</p><pre><code>// compose reads from the bottom up, like you're feeding in the object from
+// the end and it's consuming it, right to left.
+const composedFunction = R.compose(
+  R.path(['value', 'value'],
+  R.find(R.propEq('key', 'itemId')),
+  R.propOr({}, 'config')
+); 
+
+// How to use?
+const itemId = composedFunction(containerObject);
+</code></pre><p>However, this only supports <code>config</code> objects in the container, and <code>itemId</code>'s inside that. We can make this more generic.</p><pre><code>const composedGenericFunction = (data, key) =&gt; R.compose(
+  R.path(['value', 'value'],
+  R.find(R.propEq('key', key)),
+  R.propOr({}, data)
+); 
+
+// How to use?
+const itemId = composedGenericFunction('config', 'itemId')(containerObject);
+const itemState = composedGenericFunction('config', 'itemState')(containerObject);
+</code></pre><p>Better because we get more reuse, but we still are repeating ourselves with the definition of the attribute that houses the config. So, lets make our function even more reusable with currying and partial application.</p><pre><code>const composedGenericCurriedFunction = R.curry((data, key) =&gt; R.compose(
+  R.path(['value', 'value'],
+  R.find(R.propEq('key', key)),
+  R.propOr({}, data)
+)); 
+
+// How to use?
+const configGetter = composedGenericCurriedFunction('config'); // Partial Application
+const itemId = configGetter('itemId')(containerObject);
+const itemState = configGetter('itemState')(containerObject);
+</code></pre><p>We can take this a step further with something like below, and generate a getter that will retrieve the itemId from different containerObjects.</p><pre><code>const idGetter = configGetter('itemId');
+const idOne = idGetter(containerObject);
+const idTwo = idGetter(containerObjectTwo);
+</code></pre><p>We can also extract fields from other objects that conform to the same structure, but aren't under a <code>config</code> key.</p><pre><code>const syncDataGetter = composedGenericCurriedFunction('syncData');
+</code></pre><p>So, with the use of currying and partial application with Ramda, we can create generic, reusable functions that are then used to generate other functions that we can use in our application. Super easy and effective way to DRY out your javascript.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2016-07-20-function-arguments/">&laquo; &quot;Function Arguments&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2016-06-29-meteor-heroku-and-bcrypt/">&quot;Meteor, Heroku, and bcrypt&quot; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

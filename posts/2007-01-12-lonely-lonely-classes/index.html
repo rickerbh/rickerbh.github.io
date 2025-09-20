@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Lonely, lonely classes</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I just had my most pleasant experience with Singletons ever.  I had a little problem I was trying to solve in ruby, and I contacted a friend of mine who is quite a good developer.  He suggested I should be looking at global variables, to static (class) variables, or singletons.  I gave globals a go, and they didn&#39;t give me the love I expected, so I said &quot;bye bye&quot; to them - probably never to be used again.  I next tried Singletons.Ruby defines a Singleton module.  This is mixin&#39;d with your code thusly:">
+
+<meta property="og:description" content="I just had my most pleasant experience with Singletons ever.  I had a little problem I was trying to solve in ruby, and I contacted a friend of mine who is quite a good developer.  He suggested I should be looking at global variables, to static (class) variables, or singletons.  I gave globals a go, and they didn&#39;t give me the love I expected, so I said &quot;bye bye&quot; to them - probably never to be used again.  I next tried Singletons.Ruby defines a Singleton module.  This is mixin&#39;d with your code thusly:">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2007-01-12-lonely-lonely-classes/" />
+<meta property="og:title" content="Lonely, lonely classes" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>January 12, 2007</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Lonely, lonely classes</h1>
+</div>
+<div>
+    
+    <p>I just had my most pleasant experience with Singletons ever.  I had a little problem I was trying to solve in ruby, and I contacted a friend of mine who is quite a good developer.  He suggested I should be looking at global variables, to static (class) variables, or singletons.  I gave globals a go, and they didn't give me the love I expected, so I said "bye bye" to them - probably never to be used again.  I next tried Singletons.</p><p>Ruby defines a Singleton module.  This is mixin'd with your code thusly:</p><pre><code class="ruby">class Lonely
+include Singleton
+end
+</code></pre><p>Easy peasy.</p><p>That, creates a singleton of Lonely for you.  The include modifies the signatures of the new and allocate Class methods (Lonely.new and Lonely.allocate) to be private, and creates (or modifies) some other methods to provide some loveliness (gory details to be found at <a href="http://www.ruby-doc.org/stdlib/libdoc/singleton/rdoc/index.html">http://www.ruby-doc.org/stdlib/libdoc/singleton/rdoc/index.html</a>).</p><p>Basically, then all you need to do is call the instance method of the class you have created.</p><pre><code class="ruby">m = Lonely.instance
+</code></pre><p>And then you can use m as you like.  You can create more</p><pre><code class="ruby">m = Lonely.instance
+n = Lonely.instance
+</code></pre><p>And m and n refer to the same instance.  Nice Singleton.  No need for me to check out class variables.  I think my Singleton will be more portable.  BTW - Don't try to .new your class - you'll get a NoMethodError thrown as the new method has been made private by the mixin.</p><p>Ruby rocks.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2007-01-24-mojax/">&laquo; mojax</a>
+        
+        
+        <a class="right button" href="/posts/2007-01-10-taking-the-vietnam-out-of-iraq/">Taking the Vietnam out of Iraq &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

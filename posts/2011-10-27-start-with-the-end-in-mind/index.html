@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Start With the End in Mind&quot;</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="The product I&#39;m going to make could be very large. There are loads of features it could support, but one of the first jobs I need to do is decide what it must do for a first release, that delivers value to customers. I&#39;ve started getting in touch with small business people that I know to understand what they would value in such a product, but there are just so many diverse suggestions, even when I&#39;ve given them initial scope for what I think the first release could do. I find myself thinking &quot;that&#39;s easy, that&#39;ll only add a day or two&quot; to certain features, but I&#39;m fairly confident when it comes time to design these things, the duration and complexity will explode.One thing that is common in pharmaceuticals (@mrsrickerby works in that industry, so I have a little understanding of how things work there) is that a &quot;Core Data Sheet&quot; - aka a core product specification - is written before and during development and testing of the product . This document specifies needs and wants which at the end of each phase of development are used as the yardstick to make go/no-go decisions. For example, if you want to show a 5% improvement in some disease state but your phase 2 study doesn&#39;t achieve this, you stop development. It is a living document which, as data is collected, the actual product profile is documented which ultimately becomes the package insert (the bit of paper in the box).">
+
+<meta property="og:description" content="The product I&#39;m going to make could be very large. There are loads of features it could support, but one of the first jobs I need to do is decide what it must do for a first release, that delivers value to customers. I&#39;ve started getting in touch with small business people that I know to understand what they would value in such a product, but there are just so many diverse suggestions, even when I&#39;ve given them initial scope for what I think the first release could do. I find myself thinking &quot;that&#39;s easy, that&#39;ll only add a day or two&quot; to certain features, but I&#39;m fairly confident when it comes time to design these things, the duration and complexity will explode.One thing that is common in pharmaceuticals (@mrsrickerby works in that industry, so I have a little understanding of how things work there) is that a &quot;Core Data Sheet&quot; - aka a core product specification - is written before and during development and testing of the product . This document specifies needs and wants which at the end of each phase of development are used as the yardstick to make go/no-go decisions. For example, if you want to show a 5% improvement in some disease state but your phase 2 study doesn&#39;t achieve this, you stop development. It is a living document which, as data is collected, the actual product profile is documented which ultimately becomes the package insert (the bit of paper in the box).">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2011-10-27-start-with-the-end-in-mind/" />
+<meta property="og:title" content="&quot;Start With the End in Mind&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>October 27, 2011</strong>
+        
+    </div>
+    <h1>&quot;Start With the End in Mind&quot;</h1>
+</div>
+<div>
+    
+    <p>The product I'm going to make could be very large. There are loads of features it could support, but one of the first jobs I need to do is decide what it must do for a first release, that delivers value to customers. I've started getting in touch with small business people that I know to understand what they would value in such a product, but there are just so many diverse suggestions, even when I've given them initial scope for what I think the first release could do. I find myself thinking "that's easy, that'll only add a day or two" to certain features, but I'm fairly confident when it comes time to design these things, the duration and complexity will explode.</p><p>One thing that is common in pharmaceuticals (<a href="http://twitter.com/mrsrickerby">@mrsrickerby</a> works in that industry, so I have a little understanding of how things work there) is that a "Core Data Sheet" - aka a core product specification - is written before and during development and testing of the product . This document specifies <em>needs</em> and <em>wants</em> which at the end of each phase of development are used as the yardstick to make go/no-go decisions. For example, if you want to show a 5% improvement in some disease state but your phase 2 study doesn't achieve this, you stop development. It is a living document which, as data is collected, the actual product profile is documented which ultimately becomes the package insert (the bit of paper in the box).</p><p>This made me think about how I can manage my scope. The main marketing materials for me will be (1) a web site and (2) the Mac App Store description. I figure that writing the app store description will be the most effortless way to describe the product, the problem it solves, and how it solves that problem for the customers. If I can't write down the very simple things like what problem this solves, and how it does it, then I should stop right now.</p><p>I think this also aligns with something I read recently (<em>although I swear I've read this before months and months ago...</em>) from the world's toughest programmer, <a href="http://twitter.com/bmf">Mike Lee</a>. <a href="http://www.readwriteweb.com/enterprise/2011/09/app-genius-mike-lee-talks-prod.php">App Genius Mike Lee Talks Product Engineering</a> mentions that you should produce some marketing materials (he suggests a video) to explain why people should buy your product. I don't plan on making a video, but the app store description fulfils the same purpose, and I'd argue that it's more valuable, as it saves on a job later as it will be refined over time.</p><p>This is the approach I'll be taking to my scoping.</p><ol><li>Define the problem my customers are experiencing</li><li>Describe how my software solves those problems for them</li><li>Scope the software to solve those problems, and eliminate unnecessary features (and <em>keep</em> them out!)</li></ol>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2011-10-28-6-%3C-36/">&laquo; &quot;6 &lt; 36&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2011-10-24-work-plans/">&quot;Work Plans&quot; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

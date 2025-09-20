@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Advent of Code 2021 - Puzzle 3</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="PrefaceThe OCaml dev tools are doing my head in. I know this must be 100% my fault, but it&#39;s so frustrating not being able to do seemingly simple things with the tooling. My main issues are that I can&#39;t get a bit of shared code actually shared, and I&#39;m struggling to find a sensible way to structure the multiple days of puzzles into separate sets of code that don&#39;t have ridiculous build setups. Anyway, I took some time out and worked on this for a night. I&#39;m backdating these posts for a while...">
+
+<meta property="og:description" content="PrefaceThe OCaml dev tools are doing my head in. I know this must be 100% my fault, but it&#39;s so frustrating not being able to do seemingly simple things with the tooling. My main issues are that I can&#39;t get a bit of shared code actually shared, and I&#39;m struggling to find a sensible way to structure the multiple days of puzzles into separate sets of code that don&#39;t have ridiculous build setups. Anyway, I took some time out and worked on this for a night. I&#39;m backdating these posts for a while...">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2021-12-03-advent-of-code-2021-puzzle-3/" />
+<meta property="og:title" content="Advent of Code 2021 - Puzzle 3" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 3, 2021</strong>
+        
+    </div>
+    <h1>Advent of Code 2021 - Puzzle 3</h1>
+</div>
+<div>
+    
+    <h2 id="preface">Preface</h2><p>The OCaml dev tools are doing my head in. I know this must be 100% my fault, but it's so frustrating not being able to do seemingly simple things with the tooling. My main issues are that I can't get a bit of shared code actually shared, and I'm struggling to find a sensible way to structure the multiple days of puzzles into separate sets of code that don't have ridiculous build setups. Anyway, I took some time out and worked on this for a night. I'm backdating these posts for a while...</p><p>What I ended up doing to resolve the tooling issues was:</p><ul><li>Separate each days code into a separate directory with it's own dune file that produces an exectutable.</li><li>At the root directory that contains each of these day dirs, I have a dune-project file.</li><li>The shared code is in another dir, with it's own separate dune file that produces a library.</li></ul><p>To compile, I can <code>dune build</code> from the root project dir and each of the subdirectories is built, as well as the library code.</p><p>To run (this is still painful), I need to <code>cd</code> to each directory and then <code>dune exec ./main.exe</code> the application. Mine are all called main for convenience. What I'd like to do is have a top level script that can execute each of the days programs, so they can all run one after each other.</p><p>This is good enough for now. There still have issues where I can't reference the library code from within the individual programs in VSCode, but it works when building.</p><h2 id="puzzle-3---step-1">Puzzle 3 - Step 1</h2><p>This puzzle involves manipulating a list of strings that represent binary data as a series of <code>0</code> and <code>1</code> characters. There are a bunch of manipulation functions that I needed to create to be able to convert the string into other types for simpler manipulation. I "borrowed" some of this code from stack overflow. I guess I didn't consider this to be the essence of the puzzle, but maybe it was 🤷</p><pre><code class="ocaml">type binary = bool list
+
+let rec int_of_bin = function
+  | [] -&gt; 0
+  | true :: bs -&gt; 1 + (2 * int_of_bin bs)
+  | false :: bs -&gt; 2 * int_of_bin bs
+
+let bool_of_bin_char = function '1' -&gt; true | _ -&gt; false
+
+let int_of_bin_char xs = List.rev xs |&gt; int_of_bin
+
+let explode s = List.init (String.length s) (String.get s)
+
+let bools_of_bin_string s = List.map bool_of_bin_char (explode s)
+</code></pre><p><code>int_of_bin</code> turns a list of <code>true</code> <code>false</code> values into an integer (in reverse). <code>explode</code> will take a string and turn it into a list of <code>char</code>. The <code>int_of_bin_char</code> function takes a list of true/false values, reverses it, and passes this into <code>int_of_bin</code>.</p><p>To actually solve the puzzle we need to calculate the most common bit in each position in each of the provided binary strings. The easiest way I could think about solving this was to do a matrix transformation on the binary strings, getting rows of each position. There were a couple of helper functions to do this, but the general gist was to get a list of all the first elements in the list, then all the rest of the elements.</p><pre><code class="ocaml">let rec first_elems ys =
+  match ys with (x :: _) :: xss -&gt; x :: first_elems xss | _ -&gt; []
+
+let rec rest_elems ys =
+  match ys with (_ :: xs) :: xss -&gt; xs :: rest_elems xss | _ -&gt; []
+
+let rec transpose_matrix xs =
+  match xs with
+  | [] -&gt; []
+  | _ -&gt;
+      let rest = rest_elems xs in
+      first_elems xs :: transpose_matrix rest
+</code></pre><p>Once we have the data rotated, we need to start thinking about how to calculate the 2 rates. The algorithm for the rate calculation is basically the same, except that the epsilon rate takes the most common bit, and the gamma rate takes the least common bit. I solved this by calculating the frequency of each bit type in each item (which because it's rotated, represents a bit position), and then sorting these frequencies by highest/lowest values for the 2 rates. Again, there were a couple of helper functions for this...</p><pre><code class="ocaml">let count_item acc v =
+  let count = List.assoc_opt v acc in
+  match count with
+  | Some x -&gt; (v, x + 1) :: List.remove_assoc v acc
+  | None -&gt; (v, 1) :: acc
+
+let sort_tuple_second_int x y =
+  let xv, xc = x in
+  let _, yc = y in
+  match (xc, yc) with
+  | _ when xc &gt; yc -&gt; -1
+  | _ when xc &lt; yc -&gt; 1
+  | _ -&gt; if xv then -1 else 1
+
+let sort_reverse_tuple_second_int x y =
+  let xv, xc = x in
+  let _, yc = y in
+  match (xc, yc) with
+  | _ when xc &gt; yc -&gt; 1
+  | _ when xc &lt; yc -&gt; -1
+  | _ -&gt; if xv then 1 else -1
+
+let take_first xs = match xs with [] -&gt; None | x :: _ -&gt; Some x
+
+let extract_first t =
+  let a, _ = t in
+  a
+</code></pre><ul><li><code>count_item</code> will update <code>acc</code> (list of tuples) by incrementing a count if <code>v</code> is already seen, otherwise it pops in <code>(v,1)</code> into the list.</li><li>The 2x sorting functions are comparators that will return a sort result based on the second value of a tuple.</li><li><code>take_first</code> and <code>extract_first</code> will get out the first element of a list and the first element of a tuple respectively. These will also sort the <code>true</code> and <code>false</code> fields first respectively, if the second tuple elements are equal.</li></ul><p>This gives us all the base pieces we need to solve the puzzle.</p><pre><code class="ocaml">let calculate_problem_3_1_rate counts sort_f =
+  counts
+  |&gt; List.map (fun x -&gt; List.sort sort_f x)
+  |&gt; List.map take_first |&gt; Utils.deoptionalize |&gt; List.map extract_first
+  |&gt; int_of_bin_char
+
+let problem_3_1 input =
+  let counts =
+    List.map bools_of_bin_string input
+    |&gt; transpose_matrix
+    |&gt; List.map (fun x -&gt; List.fold_left count_item [] x)
+  in
+
+  let epsilon_rate = calculate_problem_3_1_rate counts sort_tuple_second_int in
+  let gamma_rate =
+    calculate_problem_3_1_rate counts sort_reverse_tuple_second_int
+  in
+  epsilon_rate * gamma_rate
+</code></pre><p>Previously I noted that the gamma and epsilon rate calculation only differ in sort order, so <code>calculate_problem_3_1_rate</code> is a solver for both, which differs based on a provided sorting function. It will receive a list of counts of each of the values, sort them according to the frequency, take the first of each set (highest/lowest), deoptionalize them (helper function to convert <code>Some x -&gt; x</code> and remove the <code>None</code>s), then extract the first element from each tuple (true/false), and then convert that list into an int.</p><p><code>problem_3_1</code> will convert the string input into the true/false lists, transpose the array, and perform the frequency calculation. It then calls the calculate function with each of the sorting algos, and takes these results and multiplies them together to give the answer.</p><h2 id="puzzle-3---step-2">Puzzle 3 - Step 2</h2><p>Again, this is a variant on the first puzzle. All the required helpers are the same, and the function that does the heavy lifing on calculation for each of the two values only differs by sort order. My solution for this feels a bit gross though. I'm sure there are more elegant ways to solve this. Anyway, here goes. The solution for this required calculating a result from the first bit position, and using this to filter the string values to then run the next result calculation over.</p><pre><code class="ocaml">let rec calculate_problem_3_2_rate sort_f remaining idx =
+  match List.length remaining with
+  | 0 -&gt; []
+  | 1 -&gt; List.nth remaining 0
+  | _ -&gt;
+      let counts =
+        List.map (fun x -&gt; Utils.drop idx x) remaining
+        |&gt; transpose_matrix
+        |&gt; List.map (fun x -&gt; List.fold_left count_item [] x)
+        |&gt; List.map (fun x -&gt; List.sort sort_f x)
+        |&gt; take_first
+      in
+      let first_set =
+        match counts with Some xs -&gt; take_first xs | _ -&gt; Option.none
+      in
+      let first_one =
+        (* gross solution - defaults to false, not that it should ever be used though *)
+        match first_set with Some xs -&gt; extract_first xs | _ -&gt; false
+      in
+      let new_remaining =
+        List.filter (fun x -&gt; Bool.equal first_one (List.nth x idx)) remaining
+      in
+      calculate_problem_3_2_rate sort_f new_remaining (idx + 1)
+
+</code></pre><p>What this function does is recursively calculate the most/least common bit, and uses this to filter the <code>remaining</code> to reduce the possible answer set. The idx value indicates which position we are up to, so we can drop that many "bits" from the input strings and then run the transform/count functions over them. <code>first_set</code> is the first item from an the list, and first_one is the first tuple from within that item. We then filter the <code>remaining</code> list based on checking the value in the converted string with the most/least frequent bit. There are 3 things I don't like about this.</p><ol><li>It feels like it's too long. I think I should be able to extract the first value from the first tuple in the first element in an array in fewer than 7 lines of ocamlformat formatted code. This extraction mess obscures the algorithm. I could hide it out in a separate function I guess.</li><li>There are a couple of patterns in the matches that are only there to please the compiler. In the first one, the empty set should never be hit. In the second one (the one prefixed with <code>gross solution</code>), the <code>_ -&gt; false</code> never executes as the item that goes into it always has data. I guess a dependently typed language could solve this, but maybe it's not possible without some more custom type work in OCaml.</li><li>The counts for all bits are calculated each iteration. There is a bunch of wasted cycles.</li></ol><p>And to tie it all together...</p><pre><code class="ocaml">let problem_3_2 input =
+  let xs = List.map bools_of_bin_string input in
+  let oxy_rate =
+    calculate_problem_3_2_rate sort_tuple_second_int xs 0 |&gt; int_of_bin_char
+  in
+  let cos_rate =
+    calculate_problem_3_2_rate sort_reverse_tuple_second_int xs 0
+    |&gt; int_of_bin_char
+  in
+  cos_rate * oxy_rate
+</code></pre><p>Long solution, but the long code was mostly helper functions for sorting and extracting data.</p>
+</div>
+
+<div id="post-tags">
+    <br/> 
+    <b>Tags: </b>
+    
+    <a href="/tags-output/ocaml/">ocaml</a>
+    
+    <a href="/tags-output/aoc/">aoc</a>
+    
+    <a href="/tags-output/aoc2021/">aoc2021</a>
+    
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2021-12-04-advent-of-code-2021-puzzle-4/">&laquo; Advent of Code 2021 - Puzzle 4</a>
+        
+        
+        <a class="right button" href="/posts/2021-12-02-advent-of-code-2021-puzzle-2/">Advent of Code 2021 - Puzzle 2 &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

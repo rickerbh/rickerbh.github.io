@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Go PayPal!</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Woohoo!  I got PayPal IPN integration working.  Now you can register with my application, make a payment via PayPal, and PayPal will come back to my web app and let me know that you&#39;ve registered.  Clever stuff.I used the PayPal IPN GEM from http://dist.leetsoft.com, and integrated it with my own Payment object.  I don&#39;t really have the need for a full &quot;ordering&quot;-type system with my application.  There is only ever 1 line item per order, so only a single payment object is required.  I could have implemented an order, with order_line_items, and shipping and billing addresses, and tax and handling calculations, but I don&#39;t need them.">
+
+<meta property="og:description" content="Woohoo!  I got PayPal IPN integration working.  Now you can register with my application, make a payment via PayPal, and PayPal will come back to my web app and let me know that you&#39;ve registered.  Clever stuff.I used the PayPal IPN GEM from http://dist.leetsoft.com, and integrated it with my own Payment object.  I don&#39;t really have the need for a full &quot;ordering&quot;-type system with my application.  There is only ever 1 line item per order, so only a single payment object is required.  I could have implemented an order, with order_line_items, and shipping and billing addresses, and tax and handling calculations, but I don&#39;t need them.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2005-12-19-go-paypal/" />
+<meta property="og:title" content="Go PayPal!" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 19, 2005</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Go PayPal!</h1>
+</div>
+<div>
+    
+    <p>Woohoo!  I got <a href="http://www.paypal.com/">PayPal</a> IPN integration working.  Now you can register with my application, make a payment via PayPal, and PayPal will come back to my web app and let me know that you've registered.  Clever stuff.</p><p>I used the PayPal IPN GEM from <a href="http://dist.leetsoft.com/">http://dist.leetsoft.com</a>, and integrated it with my own Payment object.  I don't really have the need for a full "ordering"-type system with my application.  There is only ever 1 line item per order, so only a single payment object is required.  I could have implemented an order, with order_line_items, and shipping and billing addresses, and tax and handling calculations, but I don't need them.</p><p>I need to look into the IPN integration a little more tho.  When I say I've got it working, I mean I've had 1 payment through that successfully updated a users registration details.  PayPal seem to be pushing the transaction to me twice - I handle that correctly (checking for unique transaction IDs), but I think I need to respond to them in some other way.  I better re-read those docs.</p><p>I'm quite pleased.  Maybe a congratulatory coffee &amp; and an apple are in order.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2005-12-24-xmas-eve/">&laquo; Xmas Eve</a>
+        
+        
+        <a class="right button" href="/posts/2005-12-17-money-ruby-on-rails-and-aud/">Money, Ruby on Rails and AUD &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

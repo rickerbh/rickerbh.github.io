@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;UISearchBar&#39;s UITextField&quot;</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="For an update that I&#39;m making to Moving Van (you should buy it now!) I need to customise the font that is displayed in a UISearchBar&#39;s text field. The search bar does not actually expose it&#39;s UITextField property, but because the search bar is a UIView, it&#39;s trivial to access the field to allow customisation.">
+
+<meta property="og:description" content="For an update that I&#39;m making to Moving Van (you should buy it now!) I need to customise the font that is displayed in a UISearchBar&#39;s text field. The search bar does not actually expose it&#39;s UITextField property, but because the search bar is a UIView, it&#39;s trivial to access the field to allow customisation.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2012-05-19-uisearchbars-uitextfield/" />
+<meta property="og:title" content="&quot;UISearchBar&#39;s UITextField&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>May 19, 2012</strong>
+        
+    </div>
+    <h1>&quot;UISearchBar&#39;s UITextField&quot;</h1>
+</div>
+<div>
+    
+    <p>For an update that I'm making to <a href="http://click.linksynergy.com/fs-bin/stat?id=*W1h7qYtoaI&amp;offerid=146261&amp;type=3&amp;subid=0&amp;tmpid=1826&amp;RD_PARM1=http%253A%252F%252Fitunes.apple.com%252Fus%252Fapp%252Fmoving-van%252Fid357418069%253Fmt%253D8%2526uo%253D4%2526partnerId%253D30">Moving Van</a> (<em>you should buy it now!</em>) I need to customise the font that is displayed in a UISearchBar's text field. The search bar does not actually expose it's UITextField property, but because the search bar is a UIView, it's trivial to access the field to allow customisation.</p><pre><code>for (UIView *searchSubview in mySearchBar.subviews) {
+  if ([searchSubview isKindOfClass:[UITextField class]]) {
+    // Do your text field customisation in here
+    [(UITextField *)searchSubview setTextColor:[UIColor redColor]];
+  }
+}
+</code></pre><p>HTH.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2012-06-04-core-data-migrations-and-large-data-sets/">&laquo; &quot;Core Data Migrations and Large Data Sets&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2012-04-30-ibooks-crashing/">&quot;iBooks Crashing?&quot; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

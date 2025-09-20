@@ -1,0 +1,46 @@
+/* ==================================================
+   Menu
+================================================== */
+
+#menu {
+    float: left;
+    width: 100%;
+    padding: 0 20px;
+}
+
+#menu ul {
+    float: left;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#menu ul li {
+    float: left;
+    width: 100%;
+    margin: 0 0 5px 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+#menu ul li a {
+    float: left;
+    width: 100%;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    opacity: 0.6;
+    border-bottom: none;
+    transition: opacity 0.2s ease;
+}
+
+#menu ul li a:hover {
+    opacity: 1;
+}
+
+#menu ul li.active a {
+    opacity: 1;
+}

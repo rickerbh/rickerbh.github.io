@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Sandboxing&quot;</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="Since the last post and this one, we&#39;ve moved 10500 miles (that&#39;s nearly 17,000 kilometres!) and only yesterday got all our utilities sorted out, meaning that I&#39;ve basically been offline (bar mobile phone for the past 3 weeks). Melbourne is fantastic. I really like it here.Anyway, I&#39;ve been doing a little bit of work on my application, mostly completion of the requirements, data model, and competitor analysis, as well as reading up a bit on UX and Mac way of doing things (I&#39;ll probably cover this in another entry), and most recently have been prototyping some code that I thought would be particularly tricky.">
+
+<meta property="og:description" content="Since the last post and this one, we&#39;ve moved 10500 miles (that&#39;s nearly 17,000 kilometres!) and only yesterday got all our utilities sorted out, meaning that I&#39;ve basically been offline (bar mobile phone for the past 3 weeks). Melbourne is fantastic. I really like it here.Anyway, I&#39;ve been doing a little bit of work on my application, mostly completion of the requirements, data model, and competitor analysis, as well as reading up a bit on UX and Mac way of doing things (I&#39;ll probably cover this in another entry), and most recently have been prototyping some code that I thought would be particularly tricky.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2011-12-22-sandboxing/" />
+<meta property="og:title" content="&quot;Sandboxing&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>December 22, 2011</strong>
+        
+    </div>
+    <h1>&quot;Sandboxing&quot;</h1>
+</div>
+<div>
+    
+    <p>Since the last post and this one, we've moved 10500 miles (that's nearly 17,000 kilometres!) and only yesterday got all our utilities sorted out, meaning that I've basically been offline (bar mobile phone for the past 3 weeks). Melbourne is fantastic. I really like it here.</p><p>Anyway, I've been doing a little bit of work on my application, mostly completion of the requirements, data model, and competitor analysis, as well as reading up a bit on UX and Mac way of doing things (I'll probably cover this in another entry), and most recently have been prototyping some code that I thought would be particularly tricky.</p><p>What this code does is synchronise data across other applications on your mac, with my (intended) application. The reason behind this was to make the act of populating my application with data, and keeping the data fresh over time, simpler for users - or as John Maeda states in his Second Law of Simplicity:</p><blockquote><p>The positive emotional response derived from a simplicity experience has less to do with utility, and more to do with saving time.</p></blockquote><p>I'm into saving time for my (future) happy users, and reusing data that is already on their Mac helps with this - they don't need to double key or manually join-the-dots between the applications.</p><p>The prototyping I was creating was using ScriptingBridge to access data that's available in other applications that a user may use. The prototype was going well - I had managed to get some queries and filtering down from 5 minutes to 90 seconds to 6 seconds which was a nice level optimisation, and although there are some issues with ScriptingBridge, it was going to let me do what I wanted to do.</p><p>One of the key things with the distribution of this application for me is to have it in the Mac App Store. New mac users are a growth market (look <a href="http://mashable.com/2011/09/12/apple-set-to-break-record-for-mac-sales-this-fall-report/">at</a> <a href="http://www.appleinsider.com/articles/11/11/14/apple_on_pace_to_sell_record_5_3m_macs_in_holiday_quarter.html">the</a> <a href="http://www.appleinsider.com/articles/11/12/12/quarterly_us_mac_sales_up_13_expected_to_grow_in_december.html">stats</a>), and Apple is pushing them down the Mac App Store route to discover and purchase applications. Not having the app in the Mac App Store would be foolish from my perspective.</p><p>Today, I was seeing how I could get the application working under sandboxing - as this is now a requirement for new Mac Apps. It's all about making applications safer for users in terms of the resources they can use in terms of network, disk access etc (<em>although some <a href="http://blog.wilshipley.com/2011/11/real-security-in-mac-os-x-requires.html">prominent developers</a> aren't convinced</em>).</p><p>I was sad to discover that ScriptingBridge is precisely one of the technologies that is hit hard by the sandboxing. Basically, applications can receive AppleEvents, send AppleEvents to themselves, and respond to AppleEvents they receive (<a href="http://developer.apple.com/library/mac/#documentation/Miscellaneous/Reference/EntitlementKeyReference/AppSandboxTemporaryExceptionEntitlements/AppSandboxTemporaryExceptionEntitlements.html#//apple_ref/doc/uid/TP40011195-CH5-SW1">source</a>). The upshot of this is that AppleEvents are pretty useless in a environment of sandboxed applications, as you can only send them to yourself (and no-one else can send them to you).</p><p>There may be a way around this - Temporary Exceptions to the AppleEvent sending issue. You can obtain a temporary exception to send AppleEvents to other applications through the <code>com.apple.security.temporary-exception.apple-events</code> key-value pair in your Entitlements file. The main issues I see with this are:</p><ol><li>They are likely to attract more attention in the review cycle - this in general is a good thing as it's important that Apple check what your application is doing to ensure that it's being a good citizen. However, this is likely to slow down the review process and I suspect guidance on what's acceptable is not consistently applied.</li><li>They are <em>temporary</em> - Apple could disallow/reject them in the app updates, or just remove the function. The clue is in the name, people.</li><li>The intent behind the exception - I suspect that the intention behind the temporary exception is to allow pre-existing applications to migrate to a 100% compliant sandboxing world over time, not for new applications. Approval is at risk here, and I don't want to sink significant effort into getting rock solid sync only to be told it's not allowed.</li><li>The overall future of AppleEvents - this (in my mind) is a clear intention that AppleEvents will not have a strategic future at Apple, and that existing applications may drop support for them as no sandboxing compliant applications can actually use the functions. It seems to me risky to use a technology that seems to have a limited future.</li></ol><p>This leaves me with two options. I can either remove the synchronisation functionality from the application, or I can distribute it outside the Mac App Store. My wife actually suggested a third - do both. I think that's what I'll do. Mac App Store is first priority, and depending on the markets response, I'll look at options for data synchronisation.</p><p>Still, it's a massive PITA.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2011-12-29-user-experience-books/">&laquo; &quot;User Experience Books&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2011-11-27-im-on-a-list/">&quot;I&#39;m on a list&quot; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

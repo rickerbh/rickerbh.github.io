@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: Installing f2c on a mac</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="I have recently had to install f2c on my mac to convert Fortran to C code - for the gory details about this library check http://www.netlib.org/f2c/f2c.pdfAlso, don&#39;t ask why I&#39;m installing this - lets just say there is some maths that needs doing, and fortran has the libraries to help with it.">
+
+<meta property="og:description" content="I have recently had to install f2c on my mac to convert Fortran to C code - for the gory details about this library check http://www.netlib.org/f2c/f2c.pdfAlso, don&#39;t ask why I&#39;m installing this - lets just say there is some maths that needs doing, and fortran has the libraries to help with it.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2009-02-20-installing-f2c-on-a-mac/" />
+<meta property="og:title" content="Installing f2c on a mac" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>February 20, 2009</strong>
+        
+        <span class="col-lg-6 right">By: &lt;a href=&quot;/about&quot;&gt;Hamish Rickerby&lt;/a&gt;</span>
+        
+    </div>
+    <h1>Installing f2c on a mac</h1>
+</div>
+<div>
+    
+    <p>I have recently had to install f2c on my mac to convert Fortran to C code - for the gory details about this library check <a href="http://www.netlib.org/f2c/f2c.pdf" target="_blank">http://www.netlib.org/f2c/f2c.pdf</a></p><p>Also, don't ask why I'm installing this - lets just say there is some maths that needs doing, and fortran has the libraries to help with it.</p><p>The installation process on the mac isn't really catered for with the package, and it's not available via macports.  I found an install script at <a href="http://hpc.sourceforge.net/buildf2c" target="_blank">http://hpc.sourceforge.net/buildf2c</a> but I found it doesn't work as advertised.</p><p>Below is a fixed version of this script - hope this helps someone.  This will download the source as well as build and install it.</p><pre><code>#!/bin/sh
+############################################################
+# This UNIX script builds the f2c FORTRAN --&gt; C translator #
+# under Mac OS X.                                          #
+# Make this script executable with "chmod +x buildf2c"     #
+############################################################
+echo "==================================="
+echo "Build f2c FORTRAN --&gt; C translator."
+echo "==================================="
+echo "USAGE:  ./buildf2c"
+
+######################################
+# Set trap to allow abort on signal: #
+######################################
+trap 'echo "Interrupted by signal" &gt;&amp;2; exit' 1 2 3 15
+
+########################################################
+# 1. Download f2c source from Bell Labs.               #
+# (Tar file is not visible - it's created on the fly.) #
+########################################################
+echo "--------------------------------------------"
+echo "1. Downloading f2c source from Bell Labs ..."
+echo "--------------------------------------------"
+# wget --passive-ftp ftp://netlib.bell-labs.com/netlib/f2c.tar
+curl http://netlib.sandia.gov/cgi-bin/netlib/netlibfiles.tar?filename=netlib/f2c -o "f2c.tar"
+echo "... done."
+
+#####################################
+# 2. Uncompress f2c tarred archive: #
+#####################################
+echo "-------------------------------"
+echo "2. Uncompressing f2c source ..."
+echo "-------------------------------"
+tar -xvf f2c.tar
+gunzip -rf f2c/*
+cd f2c
+mkdir libf2c
+mv libf2c.zip libf2c
+cd libf2c
+unzip libf2c.zip
+cd ../..
+echo "... done."
+
+###############################################################
+# 3. Prepare the unix makefiles for building the f2c library. #
+#    Note: CC compiler switched from 'cc' to '/usr/bin/cc'   #
+###############################################################
+echo "-------------------------------------------"
+echo "3. Preparing makefiles for building f2c ..."
+echo "-------------------------------------------"
+sed 's/CC = cc/CC = \/usr\/bin\/cc/' f2c/libf2c/makefile.u &gt; f2c/libf2c/makefile
+sed 's/CC = cc/CC = \/usr\/bin\/cc/' f2c/src/makefile.u &gt; f2c/src/makefile
+echo "... done."
+
+##########################################
+# 4. Create and install f2c header file. #
+# If you use a C++ compiler:  make hadd  #
+# Otherwise:                  make f2c.h #
+##########################################
+echo "----------------------------------------------------"
+echo "4. Creating and installing f2c header file f2c.h ..."
+echo "----------------------------------------------------"
+cd f2c/libf2c
+make f2c.h
+if test ! -d /usr/local/include; then
+mkdir -p /usr/local/include
+fi
+cp f2c.h /usr/local/include/
+echo "... done."
+
+################################################
+# 5. Create and install f2c library "libf2c.a" #
+################################################
+echo "-----------------------------------------------------"
+echo "5. Creating and installing f2c library "libf2c.a" ..."
+echo "-----------------------------------------------------"
+make
+if test ! -d /usr/local/lib; then
+mkdir -p /usr/local/lib
+fi
+cp libf2c.a /usr/local/lib/
+ranlib /usr/local/lib/libf2c.a
+echo "... done."
+
+######################################
+# 6. Make executable f2c translator: #
+######################################
+echo "---------------------------------------------"
+echo "6. Creating and installing f2c translator ..."
+echo "---------------------------------------------"
+cd ../src
+make
+if test ! -d /usr/local/bin; then
+mkdir -p /usr/local/bin
+fi
+cp f2c /usr/local/bin/
+ln -s /usr/local/bin/f2c /bin/f2c
+echo "... done."
+
+################################################################
+# 7. Install fc script:                                        #
+#                                                              #
+# 1. Remove "-Olimit 2000" in the -O processing options within #
+#    the 'fc' script.                                          #
+# 2. Eliminate all references to the math library (-lm) in     #
+#    the script 'fc' since it is included the System framework #
+#    and is linked by default under Mac OS X.                  #
+# 3. Eliminate '-u MAIN__' at the bottom of the 'fc' script.   #
+#    You will have to explitly load FORTRAN MAIN programs      #
+#    (explicitly mention the relevant .f or .o file).          #
+################################################################
+echo "---------------------------"
+echo "7. Installing fc script ..."
+echo "---------------------------"
+cd ..
+mv fc fc.orig
+sed 's/ -Olimit 2000//g; s/ -lm//g; s/ -u MAIN__//g' fc.orig &gt; fc
+chmod +x fc
+cp fc /usr/local/bin/
+ln -s /usr/local/bin/fc /bin/fc
+ln -s /usr/local/bin/fc /bin/f77
+echo "... done."
+
+#########################
+# 8. Install man pages: #
+#########################
+echo "---------------------------"
+echo "8. Installing man pages ..."
+echo "---------------------------"
+cp f2c.1t /usr/share/man/man1/f2c.1
+echo "... done."
+
+################
+# 9. Clean up: #
+################
+echo "------------------"
+echo "9. Cleaning up ..."
+echo "------------------"
+cd src
+make clean
+cd ../libf2c
+make clean
+cd ../..
+echo "... All done!"
+
+#############################################
+# 10. Test f2c on your FORTRAN source code: #
+#############################################
+echo "======================================================"
+echo "======================================================"
+echo "======================================================"
+echo "   === To test f2c on your FORTRAN source code: ==="
+echo "   === cd ~/wherever/your/code/is               ==="
+echo "   === 1. f2c myprog.f                          ==="
+echo "   ===    cc -O -o myprog.exe myprog.c -lf2c    ==="
+echo "   ===    myprog.exe                            ==="
+echo "   === 2. fc -O -w -o myprog.exe myprog.f       ==="
+echo "   ===    myprog.exe                            ==="
+echo "======================================================"
+echo "======================================================"
+echo "======================================================"
+
+exit
+</code></pre>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2009-02-26-dealing-with-semantichacker-in-ruby/">&laquo; Dealing with SemanticHacker in Ruby</a>
+        
+        
+        <a class="right button" href="/posts/2009-02-01-cocos2d-iphone-blocking-touch-events/">cocos2d-iphone blocking touch events &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+/* ==================================================
+   Buttons
+================================================== */
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.button:hover {
+    opacity: 0.8;
+    color: #fff;
+}
+
+.button.light {
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
+}
+
+.button.light:hover {
+    opacity: 0.8;
+    color: #000;
+}

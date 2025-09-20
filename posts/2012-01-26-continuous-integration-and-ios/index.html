@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hamish Rickerby: &quot;Continuous Integration and iOS&quot;</title>
+    
+<meta name="keywords" content="ocaml,aoc,linux,aoc2021,emacs,programming,dhall,atari st,c">
+
+<meta name="description" content="The client project I&#39;m currently working on is quite large. There are over 90 different screens required in the application, and regression testing all of these, with the different data variants and scenarios is not something I&#39;d like to attempt by hand, and is not something I would expect my client to pay for me (or anyone for that matter) to do. Both unit and application tests can be automated, and I figured that this was something that I should do for this project to ensure changes I introduce don&#39;t break existing functionality, and any bugs found won&#39;t be introduced.To solve this challenge I have introduced a Continuous Integration (CI) server to my workflow. My goals were to have unit and application tests automatically executed when an commit is made to a specific branch in a (local) git repository, and if both of these phases are successful, have the application packaged up, ready for distribution. I also wanted this successful build to be deployed on a daily basis to TestFlight so my client (and any other human testers in the future) could pick it up on their devices. I also wanted code coverage reporting, for both the unit and application tests, so I can see what parts of the application logic and screen flows are actually being tested to give me a level of confidence that the right stuff is getting the attention. The application tests also needed to be executed in a headless manner - I don&#39;t have a physically separate machine (or VM) to run the CI server in, so I don&#39;t want the simulator popping up and distracting me.">
+
+<meta property="og:description" content="The client project I&#39;m currently working on is quite large. There are over 90 different screens required in the application, and regression testing all of these, with the different data variants and scenarios is not something I&#39;d like to attempt by hand, and is not something I would expect my client to pay for me (or anyone for that matter) to do. Both unit and application tests can be automated, and I figured that this was something that I should do for this project to ensure changes I introduce don&#39;t break existing functionality, and any bugs found won&#39;t be introduced.To solve this challenge I have introduced a Continuous Integration (CI) server to my workflow. My goals were to have unit and application tests automatically executed when an commit is made to a specific branch in a (local) git repository, and if both of these phases are successful, have the application packaged up, ready for distribution. I also wanted this successful build to be deployed on a daily basis to TestFlight so my client (and any other human testers in the future) could pick it up on their devices. I also wanted code coverage reporting, for both the unit and application tests, so I can see what parts of the application logic and screen flows are actually being tested to give me a level of confidence that the right stuff is getting the attention. The application tests also needed to be executed in a headless manner - I don&#39;t have a physically separate machine (or VM) to run the CI server in, so I don&#39;t want the simulator popping up and distracting me.">
+
+<meta property="og:url" content="https://hamishrickerby.com/posts/2012-01-26-continuous-integration-and-ios/" />
+<meta property="og:title" content="&quot;Continuous Integration and iOS&quot;" />
+<meta property="og:type" content="article" />
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="images/ico/favicon.png">
+    <link href="/css/buttons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typography.css" rel="stylesheet" type="text/css" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/github-dark.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="site-logo">
+            <a title="Hamish Rickerby" href="/">
+                <span class="text">Hamish Rickerby</span>
+            </a>
+        </div>
+        <div class="hamburger-menu">
+            <button id="menu-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <nav class="menu-container">
+        <ul class="menu">
+            <li ><a title="Home" href="/">Home</a></li>
+            <li ><a title="Archives" href="/archives/">Archives</a></li>
+            
+            <li ><a title="Tags" href="/tags/">Tags</a></li>
+            
+            
+            <li >
+                <a href="/about/">About Hamish</a>
+            </li>
+            
+            <li><a title="RSS" href="/feed.xml">RSS</a></li>
+        </ul>
+        
+        <div class="social-links">
+            <ul>
+                <li><a title="GitHub" href="https://github.com/rickerbh/" rel="external"><span class="fa-brands fa-github"></span></a></li>
+                <li><a title="Stack Overflow" href="https://stackoverflow.com/users/249762/rickerbh" rel="extenal"><span class="fa-brands fa-stack-overflow"></span></a></li>
+                <li><a title="LinkedIn" href="https://www.linkedin.com/in/hamishrickerby/" rel="external"><span class="fa-brands fa-linkedin"></span></a></li>
+                <li><a title="Mastodon" rel="me" href="https://mastodon.nz/@rickerbh"><span class="fa-brands fa-mastodon"></span></a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="menu-overlay"></div>
+
+<main class="main-content">
+    
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <strong>January 27, 2012</strong>
+        
+    </div>
+    <h1>&quot;Continuous Integration and iOS&quot;</h1>
+</div>
+<div>
+    
+    <p>The client project I'm currently working on is quite large. There are over 90 different screens required in the application, and regression testing all of these, with the different data variants and scenarios is not something I'd like to attempt by hand, and is not something I would expect my client to pay for me (or anyone for that matter) to do. Both unit and application tests can be automated, and I figured that this was something that I should do for this project to ensure changes I introduce don't break existing functionality, and any bugs found won't be introduced.</p><p>To solve this challenge I have introduced a Continuous Integration (CI) server to my workflow. My goals were to have unit and application tests automatically executed when an commit is made to a specific branch in a (local) git repository, and if both of these phases are successful, have the application packaged up, ready for distribution. I also wanted this successful build to be deployed on a daily basis to TestFlight so my client (and any other human testers in the future) could pick it up on their devices. I also wanted code coverage reporting, for both the unit and application tests, so I can see what parts of the application logic and screen flows are actually being tested to give me a level of confidence that the right stuff is getting the attention. The application tests also needed to be executed in a headless manner - I don't have a physically separate machine (or VM) to run the CI server in, so I don't want the simulator popping up and distracting me.</p><p><em>Warning - this is long and involved. I've also written this after the fact. I hope I've captured all the steps but if something doesn't work for you please let me know and I'll try to help and update this guide.</em></p><h2 id="toolkit">Toolkit</h2><p>I used a set of existing tools to help with this</p><ol><li>CI Server - Jenkins</li><li>Unit Tests - SenTest/OCUnit - it's baked right into Xcode and meets my needs. It's hard for me to justify using something else like GHUnit because of the pre-integration.</li><li>Application (UI) Tests - Frank - I wanted to use a behaviour driven approach to UI testing, as well as something my client could actually specify tests in. Frank is cucumber based, so uses an english language syntax, making it easy for non-developers to specify and understand tests.</li><li>Deployment - Curl - low tech, but the TestFlight API is simple to use, so nothing more complex is really required here. It could be wrapped in a Jenkins plugin, but I'm not the guy to create that...</li></ol><p>And this is how I did it. I cobbled together all the tools I needed with help from various blogs, stack overflow answers, and vendor documentation. I've referenced the sources where I can. Hat tips to all.</p><h2 id="installation-of-prerequisites">Installation of Prerequisites</h2><h3 id="install-rvm">Install rvm</h3><p>You'll need ruby for compiling Frank, and I recommend you use <a href="http://beginrescueend.com/">rvm</a> for this. Paste the following into a shell and follow the instructions.</p><p><code>bash -s stable &lt; &lt;(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)</code></p><p>Extra install instructions (head builds, multi-user etc) are available at <a href="http://beginrescueend.com/rvm/install/">http://beginrescueend.com/rvm/install/</a></p><p>You'll need to close and open shell after following the instructions (including modification of your <code>.bash_profile</code>). You'll also need to install your favourite ruby. I recommend installing 1.9.2 with <code>rvm install 1.9.2</code></p><p>You'll also need rake (for managing Frank's build process), so you can get that with <code>gem install rake</code></p><h3 id="install-homebrew">Install homebrew</h3><p>I used <a href="http://mxcl.github.com/homebrew/">homebrew</a> to install Jenkins. It's a good package manager for OSX, and well maintained. Instructions are at <a href="https://github.com/mxcl/homebrew/wiki/installation">https://github.com/mxcl/homebrew/wiki/installation</a> but you can just paste the following into a shell and it'll install.</p><p><code>/usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"</code></p><h3 id="install-python-and-gcovr">Install Python and gcovr</h3><p>gcovr (and python) are needed to generate the coverage files from the unit and application test output. <em>If you already have a modern python installation (2.7) then skip the python installation step and just install gcovr with your own copy of easy_install</em></p><p>You can use homebrew to install python. Do so with:</p><p><code>brew install python</code></p><p>Then you will need easy_install (or the distribute tools)</p><pre><code>curl -O http://peak.telecommunity.com/dist/ez_setup.py
+/usr/local/bin/python ez_setup.py
+</code></pre><p>You will then need to get gcovr.</p><p><code>/usr/local/share/python/easy_install gcovr</code></p><h2 id="install-and-configure-jenkins">Install and configure Jenkins</h2><p>Thanks to homebrew, the installation step is very easy. Just paste the following into the shell and it'll install.</p><p><code>brew install jenkins</code></p><p>There are a couple of configuration steps that are required as well. Thanks to <a href="http://mattonrails.wordpress.com/2011/06/08/jenkins-homebrew-mac-daemo/">http://mattonrails.wordpress.com/2011/06/08/jenkins-homebrew-mac-daemo/</a> for the configuration required.</p><h3 id="create-a-service-account">Create a service account</h3><p>First of all find an ID that is free on your system. <code>dscl . -search /Users uid 600</code> searches for users with ID 600, and <code>dscl . -search /Groups gid 600</code> looks for groups with ID 600. Change the number until you find an empty ID. Then (with appropriate ID changes)...</p><pre><code>sudo mkdir /var/jenkins
+sudo /usr/sbin/dseditgroup -o create -r 'Jenkins CI Group' -i 600 _jenkins
+sudo dscl . -append /Groups/_jenkins passwd "*"
+sudo dscl . -create /Users/_jenkins
+sudo dscl . -append /Users/_jenkins RecordName jenkins
+sudo dscl . -append /Users/_jenkins RealName "Jenkins CI Server"
+sudo dscl . -append /Users/_jenkins uid 600
+sudo dscl . -append /Users/_jenkins gid 600
+sudo dscl . -append /Users/_jenkins shell /usr/bin/false
+sudo dscl . -append /Users/_jenkins home /var/jenkins
+sudo dscl . -append /Users/_jenkins passwd "*"
+sudo dscl . -append /Groups/_jenkins GroupMembership _jenkins
+sudo chown -R jenkins /var/jenkins
+</code></pre><h3 id="starting-up-jenkins">Starting up Jenkins</h3><p>Create a file at <code>/Library/LaunchDaemons/org.jenkins-ci.plist</code> with the following contents (check the version number in directory for Jenkins!). This will ensure Jenkins starts when the system boots.</p><pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    &lt;key&gt;Label&lt;/key&gt;
+    &lt;string&gt;Jenkins&lt;/string&gt;
+    &lt;key&gt;ProgramArguments&lt;/key&gt;
+    &lt;array&gt;
+    &lt;string&gt;/usr/bin/java&lt;/string&gt;
+    &lt;string&gt;-jar&lt;/string&gt;
+    &lt;string&gt;/usr/local/Cellar/jenkins/1.428/lib/jenkins.war&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;OnDemand&lt;/key&gt;
+    &lt;false/&gt;
+    &lt;key&gt;RunAtLoad&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;UserName&lt;/key&gt;
+    &lt;string&gt;jenkins&lt;/string&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre><p>and load it with <code>sudo launchctl load /Library/LaunchDaemons/org.jenkins-ci.plist</code></p><p>At this point, Jenkins should be installed and running. Head to <a href="http://localhost:8080">http://localhost:8080</a> and it should be running.</p><h3 id="configuring-jenkins">Configuring Jenkins</h3><p>In the Jenkins menu, click on Manage Jenkins, Manage Plugins, and then Available. Install the following plugins and make sure the "Restart Jenkins when installation is complete and no jobs are running" checkbox (on the screen after the "Install" button) is checked.</p><ul><li>Jenkins Cobertura Plugin - <em>for code coverage report processing</em></li><li>Jenkins GIT plugin - <em>for integration with git</em></li><li>Xcode Integration - <em>for execution and understanding of Xcode files</em></li></ul><p>Install the github plugins if your project is on github. I won't be covering configuration of this here, but it should be relatively simple.</p><p>Once these are installed and Jenkins has restarted, you'll need to configure the plugins. In the Jenkins menu, click on Manage Jenkins, Configure System and fill in the parameters for your git installation(s) and Xcode Builder paths.  Click Save and we're ready to go.</p><h2 id="configure-your-xcode-project">Configure your Xcode project</h2><p>We're going to take a little departure from Jenkins for the moment to prep Xcode for integration. We are going to setup our project for unit tests and Frank.</p><h3 id="unit-tests">Unit Tests</h3><p>If you don't have one already, you'll need to set up a new target for Unit Tests in your Xcode project. Select your top level project in the in Project Navigator, and then "Add Target". Under iOS -&gt; Other choose the "Cocoa Touch Unit Testing Bundle". Give it a name and then write some tests.</p><p>The other thing we'll need to do here is set up Code Coverage. In the Build Phases area of your new Target, under Link Binary With Libraries, hit the + and select Add Other. Then navigate to <code>/Developer/usr/lib</code> and select <code>libprofile_rt.dylib</code>. This is the library that enables the profiling goodness. After this, select the Build Settings area, and set "Generate Test Coverage Files" and "Instrument Program Flow" both to Yes in the column for your Unit Test target. Ensure that "Library Search Paths" includes <code>$(DEVELOPER_DIR)/usr/lib</code>, but this should be there already.</p><p>You should be set up for code coverage now. If you want to check this is working, ensure your build target (up the top on the right on the Run &amp; Stop buttons) is set to your Unit Test target and iPhone Simulator, then build and test your unit test target. Then, open Organizer, choose the Projects item from the toolbar, select your project, and then click the little arrow next to the Derived Data directory. This will open the build location in Finder. In here, open the selected directory, then navigate to <code>Build/Intermediates/&lt;Your Project&gt;.build/Debug-iphonesimulator/&lt;Your Unit Test Target&gt;.build/Objects-normal/i386/</code> and in there there should be a set of <code>.gcno</code> (generated at build) and <code>.gcda</code> (generated when your test target executed and finished) files. These are the code coverage files. If you'd like to have a look at them before we integrate back into Jenkins, get <a href="http://code.google.com/p/coverstory/">CoverStory</a> and open them up.</p><h3 id="application-ui-tests-with-frank">Application (UI) Tests with Frank</h3><p>Now we'll set up the application test target with <a href="https://github.com/moredip/Frank">Frank</a>. First of all, we need to install Frank and cucumber.</p><p>We will need to use a customised version of Frank to enable the iOS Simulator to exit after execution of the tests. The standard build does not include a method to terminate an application so we'll need to build this in. Thanks to Martin Hauner at <a href="http://softnoise.wordpress.com/2010/11/14/ios-running-cucumberfrank-with-code-coverage-in-hudson/">http://softnoise.wordpress.com/2010/11/14/ios-running-cucumberfrank-with-code-coverage-in-hudson/</a> for the tip on this. I've forked frank and included this exit method, and you can get it from <a href="https://github.com/rickerbh/Frank/tree/exitCommand">https://github.com/rickerbh/Frank/tree/exitCommand</a> with the command <code>git clone git@github.com:rickerbh/Frank.git</code> and then switch to the exitCommand branch. You'll also need to <code>git submodule init</code> and <code>git submodule update</code>, and then check the submodules that are pulled in as I recall the submodules have submodules :-/</p><p>Once all that is done, you'll need to be in the root directory of Frank that you cloned, and compile my branch of Frank with the following command.</p><p><code>rake build_lib</code></p><p>After this is finished, there should be a file at <code>dist/libFrank.a</code>. This is the customised library that we'll need to use with the exit command built in.</p><p>(Full Frank installation instructions available at <a href="http://www.testingwithfrank.com/installing.html">http://www.testingwithfrank.com/installing.html</a> - I'll paraphrase here with a couple of sightly different steps for the custom library and code coverage inclusion) For convenience of installation, I actually installed the proper Frank gem rather than my customised build. You can do this with <code>gem install frank-cucumber</code>. Then, <code>cd</code> to your project directory, and run <code>frank-skeleton</code>. This installs Frank in your project directory. It also copies a version of the official <code>libFrank.a</code> file into <code>Frank/</code>. You'll need to replace that with the version that we built.</p><p>To add Frank to your Xcode project, you'll need a new target (you don't want the Frank server installed in the Release version of your application). Duplicate your main application target by right clicking on it and selecting Duplicate. Rename the new target "&lt;Your app name&gt; Frankified". Then, add the Frank directory (that was created when you ran <code>frank-skeleton</code>) to your Xcode project. Ensure that it's only added to your frankified target, not your main application target. Add <code>CFNetwork.framework</code> to the Frankified "Link Binary With Libraries" section of the Build Phases. Then, add <code>-all_load</code> and <code>-ObjC</code> to the "Other Linker Flags" Build Setting.</p><p>To enable code coverage for Frank,  add <code>--coverage</code> to the "Other Linker Flags" Build Setting, and set "Generate Test Coverage Files" and "Instrument Program Flow" both to Yes in the column for your Frankified target.</p><p>If you build and run the Frankified target for the iPhone simulator of your application, it should build OK and start the simulator. Head to <a href="http://localhost:37265">http://localhost:37265</a> and you should see the Symbiote browser of your iPhone application.</p><p>If you want to see if the coverage is working, head to <code>Build/Intermediates/&lt;Your Project&gt;.build/Debug-iphonesimulator/&lt;Your Frankified Target&gt;.build/Objects-normal/i386/</code> just like with the Unit Tests area above.</p><p>You should then write some tests in cucumber and make sure they work.</p><h4 id="troubleshooting-frank-and-code-coverage">Troubleshooting Frank and Code Coverage</h4><p>I had a lot of trial and error (mostly <em>error</em> actually) getting coverage working with Frank. I had to play a bit with the "Library Search Paths" Build Setting so it could find the correct coverage library to include. I have <code>$(Developer)/Platforms/iPhoneOS.platform/Developer/usr/lib</code> added in the setting, but can't recall if this is required or not - apologies for this.</p><p>If you are getting the <code>.gcno</code> created but not the <code>.gcda</code> files, it could be an issue of your application not exiting correctly when the simulator terminates (as the <code>.gcda</code> files are only written when the application terminates). If this is the case, head into the Info area for your Frankified build target. Add/Set the "Application does not run in background" property to the application, and set it to YES. This will ensure the app terminates when the home button is pressed, and the <code>.gcda</code> files are created.</p><p>I also had an issue when the application was attempting to write the <code>.gcda</code> files. It was complaining that <code>fopen$UNIX2003 called from function llvm_gcda_start_file</code>. I found <a href="http://stackoverflow.com/questions/8732393/code-coverage-with-xcode-4-2-missing-files">this entry in stackoverflow</a> and created the c methods in my main.m file and it enabled the application to write the files correctly.</p><p>You may also need to enable the Accessibility inspector in the iPhone Simulators Settings app under General &gt; Accessibility - instructions from <a href="http://developer.apple.com/library/ios/#documentation/UserExperience/Conceptual/iPhoneAccessibility/Testing_Accessibility/Testing_Accessibility.html">Apple</a>.</p><p>If you are getting a message that says <code>Couldn't register XXXX with the bootstrap server. Error: unknown error code. This generally means that another instance of this process was already running or is hung in the debugger.</code> this means that either the Simulator is already running (it must be quit for the headless build to run) or that there is a previous version of the headless test exection that has hung. You can find these with <code>ps -ef | grep Fran</code> (Fran for frankified). Kill them with the <code>kill</code> command.</p><h3 id="configuring-frank-for-headless-tests-under-jenkins">Configuring Frank for Headless Tests under Jenkins</h3><p>There will be a file in your Xcode project under the Frank directory at <code>support/env.rb</code> - this will contain some environmental settings that are used for executing the cucumber tests. Replace the content with the below with the appropriate text replacements. You will need different settings for manual command line based test execution, and the Jenkins based tests, so there is an environment based conditional in the file. Default is for command line based testing.</p><p><em>For the replacement text for <em><Your ui="ui" testing="testing" jenkins="jenkins" job="job" name="name"></Your></em>, just type in what you'll call your Jenkins UI test job, and remember this for later.</em></p><pre><code>require 'frank-cucumber'
+
+ENV['TESTING_ENV'] ||= 'command_line'
+environment = ENV['TESTING_ENV']
+
+if environment == 'command_line'
+ BASE_DIR = "&lt;Your home directory&gt;/Library/Developer/Xcode/DerivedData/&lt;Your long and random derived data dir from Xcodes project organizer&gt;/"
+ APP_BUNDLE_PATH =  "#{BASE_DIR}Build/Products/Debug-iphonesimulator/&lt;Your frankified target&gt;.app"
+ APP_DIR = "#{BASE_DIR}Build/Intermediates/&lt;Your project name&gt;.build/Debug-iphonesimulator/&lt;Your frankified target&gt;.build"
+elsif environment == 'jenkins'
+ BASE_DIR = "&lt;Your Jenkins install location&gt;/jobs/&lt;Your UI Testing Jenkins Job Name&gt;/workspace/"
+ APP_BUNDLE_PATH =  "#{BASE_DIR}build/Debug-iphonesimulator/&lt;Your frankified target&gt;.app"
+ APP_DIR = "#{BASE_DIR}build/&lt;Your project name&gt;.build/Debug-iphonesimulator/&lt;Your frankified target&gt;.build"
+end
+
+#### Common ####
+SDK_DIR = "/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk"
+APP_BINARY = "#{APP_BUNDLE_PATH}/&lt;Your frankified target&gt;"
+USER_DIR = "iPhone Simulator/User"
+PREF_DIR = "#{USER_DIR}/Library/Preferences"
+</code></pre><p>In your Xcode project under the Frank directory, there will be another directory named <code>step_definitions</code>. This should contain a .rb file that has some ruby and cucumber/frank definitions it it. We need to add a couple of things to that file. <em>Again thanks to <a href="http://softnoise.wordpress.com/2010/11/14/ios-running-cucumberfrank-with-code-coverage-in-hudson">Martin Hauner</a> here.</em></p><p>Add the following lines to the top of the ruby file in the step_definitions directory. I'll explain what these are...</p><pre><code>require 'fileutils'
+
+ACCESIBILITY_PLIST   = "com.apple.Accessibility.plist"
+ACCESIBILITY_CONTENT = &lt;&lt;PLIST
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+&lt;key&gt;ApplicationAccessibilityEnabled&lt;/key&gt;
+&lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+PLIST
+
+Before do
+  # check that pwd contains the "build" dir as we are creating
+  # items relative to it.
+  #Dir["build"].length.should == 1
+
+  # make sure we do start with a clean environment
+  FileUtils.remove_dir("#{USER_DIR}",true)
+
+  pwd     = "#{Dir.pwd}"
+  prefdir = "#{PREF_DIR}"
+  FileUtils.mkdir_p prefdir
+
+  File.open("#{PREF_DIR}/#{ACCESIBILITY_PLIST}", 'w') do |f|
+    f &lt;&lt;ACCESIBILITY_CONTENT
+  end
+
+  ENV['SDKROOT']               = "#{SDK_DIR}"
+  ENV['DYLD_ROOT_PATH']        = "#{SDK_DIR}"
+  ENV['IPHONE_SIMULATOR_ROOT'] = "#{SDK_DIR}"
+  ENV['TEMP_FILES_DIR']        = "#{APP_DIR}"
+  ENV['CFFIXED_USER_HOME']     = "#{pwd}/#{USER_DIR}"
+end
+
+After do
+  frankly_exit
+end
+
+def launch_app_headless
+  @apppid = fork do
+    exec(APP_BINARY, "-RegisterForSystemEvents")
+  end
+  wait_for_frank_to_come_up
+end
+
+def frankly_exit
+  get_to_uispec_server('exit')
+  # calling exit in the app will not return any response
+  # so we simply catch the error caused by exiting.
+  rescue EOFError
+end
+
+Given /^I launch the headless app$/ do
+  launch_app_headless
+end
+</code></pre><p>The <code>Before</code> block gets executed before any tests are run. The accessibility plist/content section sets up a file that enables the accessibility settings for the simulator. This is created every time the cucumber tests are run to ensure accessibility is in the correct state. The <code>SDKROOT</code>, <code>DYLD_ROOT_PATH</code>, <code>IPHONE_SIMULATOR_ROOT</code>, <code>TEMP_FILES_DIR</code>, and <code>CFFIXED_USER_HOME</code> are all directories for the simulator to function correctly. Thanks to <a href="http://cocoawithlove.com/2008/11/automated-user-interface-testing-on.html">Matt Gallagher's blog entry</a> for aiding my understanding of these.</p><p>The <code>launch_app_headless</code> method adds a flag when launching the application so it launches headlessly. If you wanted, you could actually add a conditional so that the headless method is only used when launching under jenkins.</p><p>The <code>frankly_exit</code> method will call the new exit method that we built into <code>libFrank.a</code>. This is called from the <code>After</code> block, which gets called after the tests are executed.</p><p>That should be all the configuration you need. If you alter your frank/cucumber tests to use the "Given I launch the headless app" call to start the application, you should now be able to run it in a headless manner. Execute <code>cucumber</code> in your Frank directory inside your Xcode project dir to test it out.</p><h2 id="setting-up-the-jobs-in-jenkins">Setting up the jobs in Jenkins</h2><p>The way I have structured my tasks in jenkins is that I have 4 different jobs. I have a unit test execution job that triggers off a git push. If this is successful, I have the UI test job that executes. If this is successful, I then package and archive the binary that was generated from that push. The last job that is configured is a daily distribution of the last successfully tested application to a group on TestFlight.</p><h3 id="setting-up-the-unit-test-job-in-jenkins">Setting up the unit test job in Jenkins</h3><p>Navigate to <a href="http://localhost:8080">Jenkins</a> and click on "New Job". Give it a name (I called mine "Project Unit Tests"), and select the "Build a free-style software project" radio button, then click OK.</p><p>You should now be in a screen to configure the build settings for your unit test target. In the source code management area, choose git. Enter your repo name (something like <code>git@localhost:my-project.git</code>). If you have a specific branch you want to build from put it in the "Branches to build" box (mine is <code>*/develop</code>). In the "Build Triggers" area below, select "Poll SCM". I've set my schedule to <code>* * * * *</code> meaning it'll look every minute for a new push.</p><p>Navigate down the screen until you find the "Add build step" button. Click it and select Xcode. Then, fill in the following boxes.</p><ul><li>Clean before build - check this box. I like clean builds before testing.</li><li>Target - set this to the unit test target name from Xcode (no escaping of spaces required)</li><li>SDK - set this to the SDK you want to build for. Mine is <code>/Developer/Platform/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/</code></li><li>Configuration - set this to <code>DEBUG</code></li><li>Keychain path - this should already be set to <code>${HOME}/Library/Keychains/login.keychain</code></li></ul><p>That's all the Xcode build information set up. Now, to generate the coverage test files. Add an "Execute Shell" build step with the "Add build step" button. In the "Command" box, call gcovr (<code>which gcovr</code> to find your own install location) with <code>/usr/local/share/python/gcovr -r "&lt;Your Jenkins install location&gt;/jobs/Project Unit Tests/workspace" --exclude '.*UnitTests.*' --xml &gt; "&lt;Your Jenkins install location&gt;/jobs/Project Unit Tests/workspace/coverage.xml"</code></p><p>In the Post-build Actions section, check the "Archive the artifacts" box and set the "Files to archive" field to <code>build/Debug-iphoneos/*.ipa</code></p><p>Check the "Publish Cobertura Coverage Report" box and set the "Cobertura xml report pattern" to <code>**/coverage.xml</code>.</p><p>Also check the "Publish JUnit test result report" box and set the "Test report XMLs" to <code>test-reports/*.xml</code>.</p><p>Click the Save button down the bottom, and then attempt to run your unit tests manually. The code should be checked out from your git repo, build the unit test target, run the tests and produce the unit test reports and coverage results.</p><h3 id="setting-up-the-application-test-job-in-jenkins">Setting up the application test job in Jenkins</h3><p>Navigate to <a href="http://localhost:8080">Jenkins</a> and click on "New Job". Give it a name (I called mine "Project UI Tests"), and select the radio button to copy the unit test job that was previously set up. In the Configuration screen for the new job, alter the following fields.</p><ul><li>Build Triggers - set this to be "Build after other projects are built" and type in the name of your unit test job.</li><li>Build Triggers - uncheck poll scm</li><li>Target - Set this to your Frankified target name from Xcode</li></ul><p>Change the existing "Execute shell" step to use your UI Test build job name rather than the unit test job name. <code>/usr/local/share/python/gcovr -r "&lt;Your Jenkins install location&gt;/jobs/Project UI Tests/workspace" --exclude '.*UnitTests.*' --xml &gt; "&lt;Your Jenkins install location&gt;/jobs/Project UI Tests/workspace/coverage.xml"</code></p><p>Create a new "Execute shell build step", and click and drag it (with the little 4x4 set of boxes on the right of the "Execute shell" label on screen) to move it inbetween the Xcode step and the gcovr step. Insert the following commands in the shell box.</p><pre><code>source &lt;Your home dir&gt;/.rvm/environments/&lt;your ruby version&gt;
+export TESTING_ENV="jenkins"
+cd "&lt;Your Jenkins install location&gt;/jobs/Project UI Tests/workspace/Frank"
+cucumber -f junit --out ../test-reports
+</code></pre><p><em>The source line sets up the environment for rvm so the frank gem is included correctly - set it to the appropriate ruby version in the ~/.rvm/environments directory. Mine is ~/.rvm/environments/ruby-1.9.2-p290</em></p><p>Uncheck the "Archive the artifacts" option, and click save. You can now attempt to run your application tests via Frank. This will check out the code, build the Frankified target, execute the tests and then process the unit test and coverage reports.</p><p><em>FYI - my unit test reports for this step are empty. If someone figures out how to get cucumber to put something useful in them please let me know!</em></p><h3 id="setting-up-the-archive-job">Setting up the archive job</h3><p>Similar to the application test job, create a new job that copies the Unit Test job. I called mine Project Developer Build. In the Configuration screen for the new job, alter the following fields.</p><ul><li>Build Triggers - set this to be "Build after other projects are built" and type in the name of your application/UI test job.</li><li>Build Triggers - uncheck poll scm</li><li>Target - Set this to your application target name from Xcode (mine is Project TestFlight - I have a specific target that includes the TestFlight SDK)</li><li>Configuration - I have this set to release. Be sure to setup and test the signing identities correctly in Xcode for this. You must use the adhoc profile that should be used in TestFlight.</li><li>Build IPA - check this.</li></ul><p>Remove the execute shell build step with the Delete button.</p><p>Uncheck the Cobertura and Unit test report generation Post-build actions. Change the Archive files location to <code>build/Release-iphoneos/*.ipa</code></p><p>Click save, and now whenever both your unit and application test steps pass, you'll have a version of the application built and archived ready to go to TestFlight.</p><h3 id="distributing-to-testflight">Distributing to TestFlight</h3><p><em>Thanks to the Shine Technologies team for their <a href="http://blog.shinetech.com/2011/06/23/ci-with-jenkins-for-ios-apps-build-distribution-via-testflightapp-tutorial/">blog entry</a> that helped here.</em></p><p>Create another free-style software project job (last one, I promise!) in Jenkins - I've called mine Project TestFlight Deployment. Set the build triggers to "Build periodically" and set the schedule to whatever time you want to upload the application to TestFlight. Mine is set to 10pm (<code>0 22 * * *</code>).</p><p>Add an Execute shell build step. This will call curl to upload the application to TestFlight. You will need your API token and Team token from Testflight. Set the Command to the following</p><pre><code>cd ../..
+curl http://testflightapp.com/api/builds.json -F file=@Project\ TestFlight/lastSuccessful/archive/build/Release-iphoneos/Project\ TestFlight-Release.ipa -F api_token=’&lt;api token&gt;’ -F team_token=’&lt;team token&gt;’ -F notes=’This is an auto deploy build of the develop branch with Release configuration’ -F notify=True -F distribution_lists=’&lt;name of test distribution list&gt;’
+</code></pre><p>The ipa that's being uploaded there is the version that was saved in the last build job. For the name, just look inside the Project TestFlight job and it'll have the name of the "Last Successful Artifact" - this is what you need to upload.</p><p>That should be it.</p><h2 id="end---finally">End - finally</h2><p>If you experience issues with this, have corrections or useful troubleshooting steps then please let me know. This process was a bit of a pain to get working correctly so I hope this guide is useful for someone. You should also <a href="http://twitter.com/rickerbh">follow me</a> on twitter <a href="http://twitter.com/rickerbh">@rickerbh</a>.</p>
+</div>
+
+<br/>
+
+    <div id="prev-next">
+        
+        <a class="button" href="/posts/2012-04-05-unit-test-code-coverage-with-xcode-4-dot-3-2/">&laquo; &quot;Unit Test Code Coverage with Xcode 4.3.2&quot;</a>
+        
+        
+        <a class="right button" href="/posts/2012-01-26-on-hold-dot-dot-dot-temporarily/">&quot;On hold...temporarily&quot; &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+    
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>Copyright &copy; 2025 Hamish Rickerby</p>
+        </div>
+    </footer>
+</main>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="/js/highlight.pack.js" type="application/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="/js/scripts.js" type="application/javascript"></script>
+<script src="/js/menu.js" type="application/javascript"></script>
+
+
+</body>
+</html>
